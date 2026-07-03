@@ -3,1530 +3,1034 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MentorBridge – Connecting Minds, Empowering Youth</title>
-<meta name="description" content="MentorBridge provides verified home tutors for Class 1–10 students in Muzaffarpur and Bihar. Personalised learning plans, progress tracking, and complete parent transparency.">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>MentorBridge – Verified Home Tutors | Muzaffarpur, Bihar</title>
+<meta name="description" content="MentorBridge connects students (Nursery–Class 10) with verified, qualified home tutors in Bihar. Personalised learning, monthly reports, free demo class.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ===== RESET & VARIABLES ===== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --orange:#E85D26;
-  --orange-light:#FFF0EA;
-  --orange-mid:#F4894F;
+  --orange:#E8601A;
+  --orange2:#FF7A35;
+  --orange-bg:#FFF1EA;
   --teal:#1D7A6B;
-  --teal-light:#E8F7F5;
-  --teal-mid:#2A9D8F;
+  --teal2:#2A9D8F;
+  --teal-bg:#E6F4F1;
   --gold:#C9992A;
-  --gold-light:#FFF8E8;
+  --gold-bg:#FFF8E6;
   --navy:#0F2137;
-  --navy2:#1A2F4A;
+  --navy2:#1A3050;
   --white:#FFFFFF;
-  --bg:#F8FFFE;
-  --bg2:#F0FAF8;
-  --text:#1A2F1E;
-  --muted:#546670;
-  --border:#E2EDE8;
-  --radius-sm:8px;
-  --radius-md:12px;
+  --bg:#F7FFFE;
+  --bg2:#EEF8F5;
+  --text:#1C2B22;
+  --muted:#556B62;
+  --border:#D8EDE8;
+  --radius:12px;
   --radius-lg:20px;
-  --shadow-sm:0 2px 12px rgba(29,122,107,0.08);
-  --shadow-md:0 8px 32px rgba(29,122,107,0.12);
-  --shadow-lg:0 20px 60px rgba(15,33,55,0.15);
+  --shadow:0 4px 24px rgba(29,122,107,0.10);
+  --shadow-lg:0 12px 48px rgba(15,33,55,0.14);
 }
 html{scroll-behavior:smooth}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
-img{max-width:100%;display:block}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 a{text-decoration:none;color:inherit}
-button{cursor:pointer;font-family:'Nunito',sans-serif;border:none;outline:none}
+button{cursor:pointer;font-family:'Nunito',sans-serif;border:none}
 input,select,textarea{font-family:'Nunito',sans-serif;outline:none}
+.container{max-width:1120px;margin:0 auto;padding:0 20px}
+.page{display:none}.page.active{display:block}
 
-/* ===== UTILITIES ===== */
-.container{max-width:1140px;margin:0 auto;padding:0 24px}
-.section-pad{padding:88px 0}
-.text-orange{color:var(--orange)}
-.text-teal{color:var(--teal)}
-.text-gold{color:var(--gold)}
-.hidden{display:none!important}
-.page{display:none}
-.page.active{display:block}
-
-/* ===== BUTTONS ===== */
-.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:50px;font-size:15px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.22s;letter-spacing:0.2px;border:2px solid transparent}
-.btn-primary{background:var(--orange);color:#fff;border-color:var(--orange)}
-.btn-primary:hover{background:#c94d1a;border-color:#c94d1a;transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,93,38,0.35)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:50px;font-weight:700;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;border:2px solid transparent;cursor:pointer;white-space:nowrap}
+.btn-orange{background:var(--orange);color:#fff;border-color:var(--orange)}
+.btn-orange:hover{background:#c44d10;transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,96,26,.35)}
 .btn-teal{background:var(--teal);color:#fff;border-color:var(--teal)}
-.btn-teal:hover{background:#155a4e;border-color:#155a4e;transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,122,107,0.35)}
+.btn-teal:hover{background:#155a4e;transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,122,107,.35)}
+.btn-white{background:#fff;color:var(--orange);border-color:#fff}
+.btn-white:hover{background:var(--orange-bg);transform:translateY(-2px)}
+.btn-outline-white{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+.btn-outline-white:hover{background:rgba(255,255,255,.12);border-color:#fff}
 .btn-outline{background:transparent;color:var(--teal);border-color:var(--teal)}
-.btn-outline:hover{background:var(--teal);color:#fff;transform:translateY(-2px)}
-.btn-outline-white{background:transparent;color:#fff;border-color:rgba(255,255,255,0.6)}
-.btn-outline-white:hover{background:rgba(255,255,255,0.12);border-color:#fff}
+.btn-outline:hover{background:var(--teal);color:#fff}
 .btn-sm{padding:9px 20px;font-size:13px}
-.btn-lg{padding:16px 36px;font-size:16px}
+.btn-lg{padding:15px 34px;font-size:16px}
 
-/* ===== BADGES ===== */
-.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:0.5px;font-family:'Plus Jakarta Sans',sans-serif}
-.badge-orange{background:var(--orange-light);color:var(--orange)}
-.badge-teal{background:var(--teal-light);color:var(--teal)}
-.badge-gold{background:var(--gold-light);color:var(--gold)}
-.badge-green{background:#E8F5E9;color:#2E7D32}
-
-/* ===== SECTION HEADERS ===== */
-.section-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
-.section-eyebrow::before{content:'';width:24px;height:2px;background:currentColor;border-radius:2px}
-.section-eyebrow.orange{color:var(--orange)}
-.section-eyebrow.teal{color:var(--teal)}
-.section-eyebrow.gold{color:var(--gold)}
-.section-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:40px;font-weight:800;line-height:1.15;color:var(--navy);margin-bottom:16px}
-.section-title span{color:var(--orange)}
-.section-sub{font-size:17px;color:var(--muted);line-height:1.75;max-width:580px}
-.section-header-center{text-align:center}
-.section-header-center .section-sub{margin:0 auto}
-
-/* ===== NAVBAR ===== */
-#navbar{position:sticky;top:0;z-index:1000;background:var(--white);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
-.logo{display:flex;align-items:center;gap:12px;cursor:pointer}
-.logo-icon{width:44px;height:44px;position:relative;flex-shrink:0}
-.logo-text-wrap{line-height:1}
-.logo-brand{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.5px}
-.logo-brand .mentor{color:var(--orange)}
-.logo-brand .bridge{color:var(--teal)}
-.logo-tagline{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:0.8px;text-transform:uppercase}
-.nav-links{display:flex;align-items:center;gap:4px;list-style:none}
-.nav-links a{padding:8px 14px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;color:var(--muted);transition:all 0.18s;font-family:'Plus Jakarta Sans',sans-serif}
-.nav-links a:hover,.nav-links a.active{color:var(--teal);background:var(--teal-light)}
-.nav-ctas{display:flex;align-items:center;gap:10px}
-.hamburger{display:none;flex-direction:column;gap:5px;padding:8px;cursor:pointer}
-.hamburger span{width:24px;height:2px;background:var(--navy);border-radius:2px;transition:all 0.3s}
-.mobile-menu{display:none;position:fixed;inset:0;background:var(--white);z-index:999;padding:80px 24px 32px;flex-direction:column;gap:8px}
+/* NAV */
+nav{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1.5px solid var(--border);box-shadow:0 2px 12px rgba(29,122,107,.07)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-img{height:52px;width:auto}
+.nav-links{display:flex;align-items:center;gap:2px;list-style:none}
+.nav-links a{padding:8px 13px;border-radius:8px;font-size:14px;font-weight:700;color:var(--muted);transition:all .18s;font-family:'Plus Jakarta Sans',sans-serif}
+.nav-links a:hover,.nav-links a.active{color:var(--teal);background:var(--teal-bg)}
+.nav-ctas{display:flex;gap:10px;align-items:center}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:8px;cursor:pointer;background:none;border:none}
+.hamburger span{width:24px;height:2.5px;background:var(--navy);border-radius:2px;transition:.3s;display:block}
+.mobile-menu{display:none;position:fixed;inset:0;background:#fff;z-index:999;padding:80px 24px 32px;flex-direction:column;gap:6px;overflow-y:auto}
 .mobile-menu.open{display:flex}
-.mobile-menu a{padding:14px 20px;border-radius:var(--radius-md);font-size:16px;font-weight:700;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif;border-bottom:1px solid var(--border)}
-.mobile-menu a:hover{background:var(--teal-light);color:var(--teal)}
-.mobile-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;color:var(--navy)}
+.mobile-menu a{padding:14px 18px;border-radius:10px;font-size:16px;font-weight:700;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif;border-bottom:1px solid var(--border)}
+.mobile-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;border:none;font-family:sans-serif}
 
-/* ===== HERO ===== */
-.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#0D3A30 100%);min-height:calc(100vh - 72px);display:flex;align-items:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-100px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(29,122,107,0.2) 0%,transparent 70%);pointer-events:none}
-.hero::after{content:'';position:absolute;bottom:-80px;left:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(232,93,38,0.12) 0%,transparent 70%);pointer-events:none}
-.hero-grid{display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:center;position:relative;z-index:2;padding:80px 0}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:8px 16px;border-radius:50px;margin-bottom:28px}
-.hero-eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
-.hero-eyebrow span{font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:0.3px}
-.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:54px;font-weight:800;line-height:1.08;color:#fff;margin-bottom:24px;letter-spacing:-1.5px}
-.hero h1 .highlight{color:var(--orange)}
-.hero h1 .highlight2{color:var(--teal-mid)}
-.hero-desc{font-size:17px;color:rgba(255,255,255,0.65);line-height:1.8;margin-bottom:36px;max-width:500px}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:48px}
-.hero-trust{display:flex;gap:0;flex-wrap:wrap}
-.trust-item{display:flex;align-items:center;gap:8px;padding-right:24px;margin-right:24px;border-right:1px solid rgba(255,255,255,0.12)}
-.trust-item:last-child{border-right:none;padding-right:0;margin-right:0}
-.trust-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.trust-text{font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);font-family:'Plus Jakarta Sans',sans-serif}
-.trust-sub{font-size:11px;color:rgba(255,255,255,0.45);margin-top:1px}
-
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#0A2E22 100%);min-height:90vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero-bg-circle{position:absolute;border-radius:50%;pointer-events:none}
+.hero-bg-circle.c1{width:500px;height:500px;background:radial-gradient(circle,rgba(29,122,107,.18) 0%,transparent 70%);top:-100px;right:-80px}
+.hero-bg-circle.c2{width:300px;height:300px;background:radial-gradient(circle,rgba(232,96,26,.10) 0%,transparent 70%);bottom:-60px;left:-40px}
+.hero-inner{display:grid;grid-template-columns:1fr 400px;gap:56px;align-items:center;padding:72px 0;position:relative;z-index:2}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:7px 16px;border-radius:50px;margin-bottom:24px}
+.hero-tag-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-tag span{font-size:13px;font-weight:700;color:rgba(255,255,255,.85);font-family:'Plus Jakarta Sans',sans-serif}
+.hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:50px;font-weight:800;line-height:1.1;color:#fff;margin-bottom:14px;letter-spacing:-1.5px}
+.hero h1 .o{color:var(--orange)}
+.hero h1 .t{color:#4ECDC4}
+.hero-sub{font-size:18px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:14px;max-width:480px;font-weight:500}
+.hero-sub strong{color:rgba(255,255,255,.9)}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:10px}
+.hero-chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:7px 14px;border-radius:50px;font-size:12px;font-weight:700;color:rgba(255,255,255,.75);font-family:'Plus Jakarta Sans',sans-serif}
 /* Hero card */
-.hero-card-wrap{position:relative}
-.hero-card{background:var(--white);border-radius:24px;padding:28px;box-shadow:var(--shadow-lg);position:relative}
-.hero-card-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between}
-.hero-card-title span{font-size:12px;font-weight:600;color:var(--teal);background:var(--teal-light);padding:3px 10px;border-radius:50px}
-.teacher-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-.teacher-row:last-of-type{border-bottom:none}
-.t-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0}
-.t-info{flex:1}
-.t-name{font-size:14px;font-weight:700;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif}
-.t-meta{font-size:12px;color:var(--muted);margin-top:2px}
-.t-right{text-align:right}
-.verified-pill{background:var(--teal-light);color:var(--teal);font-size:10px;font-weight:800;padding:2px 9px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap}
-.t-rating{font-size:12px;font-weight:700;color:var(--gold);margin-top:4px}
-.hero-card-cta{width:100%;margin-top:20px;justify-content:center}
-.float-badge{position:absolute;top:-16px;right:-16px;background:var(--orange);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;padding:8px 14px;border-radius:50px;box-shadow:0 4px 16px rgba(232,93,38,0.4);white-space:nowrap}
+.hero-card{background:#fff;border-radius:20px;padding:24px;box-shadow:var(--shadow-lg)}
+.hero-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.hero-card-head h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:var(--navy)}
+.hero-card-head span{background:var(--teal-bg);color:var(--teal);font-size:11px;font-weight:800;padding:3px 10px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif}
+.hero-teacher{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.hero-teacher:last-of-type{border-bottom:none}
+.h-ava{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0;position:relative}
+.h-ava .vbadge{position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;background:var(--teal);border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff}
+.h-info{flex:1}
+.h-name{font-size:13px;font-weight:800;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif}
+.h-meta{font-size:11px;color:var(--muted);margin-top:1px}
+.h-rating{font-size:12px;font-weight:800;color:var(--gold);white-space:nowrap}
+.hero-card-btn{width:100%;margin-top:16px;justify-content:center}
 
-/* Bridge SVG divider */
-.bridge-divider{width:100%;overflow:hidden;line-height:0;margin-top:-2px}
-.bridge-divider svg{display:block;width:100%}
-
-/* ===== STATS BAR ===== */
-.stats-bar{background:var(--teal);padding:40px 0}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
-.stat-item{text-align:center;padding:8px 24px;border-right:1px solid rgba(255,255,255,0.15)}
+/* STATS */
+.stats{background:var(--teal);padding:36px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat-item{text-align:center;padding:8px 16px;border-right:1px solid rgba(255,255,255,.15)}
 .stat-item:last-child{border-right:none}
-.stat-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:44px;font-weight:800;color:#fff;line-height:1}
-.stat-num sup{font-size:24px}
-.stat-label{font-size:13px;color:rgba(255,255,255,0.7);margin-top:6px;font-weight:600}
+.stat-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:42px;font-weight:800;color:#fff;line-height:1}
+.stat-label{font-size:13px;color:rgba(255,255,255,.7);margin-top:6px;font-weight:600}
 
-/* ===== WHY SECTION ===== */
-.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
-.why-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:32px 28px;transition:all 0.25s;position:relative;overflow:hidden}
-.why-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform 0.3s}
-.why-card:hover{border-color:var(--orange);box-shadow:var(--shadow-md);transform:translateY(-4px)}
-.why-card:hover::before{transform:scaleX(1)}
-.why-icon-box{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px}
-.why-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:10px}
-.why-card p{font-size:14px;color:var(--muted);line-height:1.7}
+/* SECTION COMMON */
+.sec{padding:80px 0}
+.sec-tag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.sec-tag::before{content:'';width:20px;height:2px;background:currentColor;border-radius:2px}
+.sec-tag.orange{color:var(--orange)}
+.sec-tag.teal{color:var(--teal)}
+.sec-tag.gold{color:var(--gold)}
+.sec-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:var(--navy);line-height:1.2;margin-bottom:12px}
+.sec-title span{color:var(--orange)}
+.sec-sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:540px}
+.center{text-align:center}
+.center .sec-sub{margin:0 auto}
+.center .sec-tag{justify-content:center}
 
-/* ===== PROBLEM/SOLUTION ===== */
-.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:52px}
-.ps-card{border-radius:var(--radius-lg);padding:36px 32px}
-.ps-card.problem{background:var(--navy);color:#fff}
-.ps-card.solution{background:var(--teal);color:#fff}
-.ps-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-.ps-list{list-style:none;display:flex;flex-direction:column;gap:12px}
-.ps-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85)}
-.ps-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);margin-top:7px;flex-shrink:0}
-.ps-card.solution .ps-list li::before{background:#fff}
+/* WHY CARDS */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+.why-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:28px 24px;transition:all .25s;position:relative;overflow:hidden}
+.why-card::after{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:.3s}
+.why-card:hover{border-color:var(--orange);box-shadow:var(--shadow);transform:translateY(-3px)}
+.why-card:hover::after{transform:scaleX(1)}
+.why-icon{font-size:32px;margin-bottom:14px}
+.why-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.why-card p{font-size:14px;color:var(--muted);line-height:1.65}
 
-/* ===== HOW IT WORKS ===== */
-.how-section{background:var(--bg2)}
-.steps-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:56px;position:relative}
-.steps-grid::before{content:'';position:absolute;top:32px;left:10%;width:80%;height:2px;background:linear-gradient(90deg,var(--orange),var(--teal));z-index:0;border-radius:2px}
-.step-item{text-align:center;padding:0 12px;position:relative;z-index:1}
-.step-circle{width:64px;height:64px;border-radius:50%;background:var(--white);border:3px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--orange);box-shadow:var(--shadow-sm);transition:all 0.25s}
-.step-item:hover .step-circle{background:var(--orange);color:#fff;transform:scale(1.1)}
-.step-emoji{font-size:26px}
-.step-item h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy);margin-bottom:8px}
-.step-item p{font-size:12px;color:var(--muted);line-height:1.6}
+/* HOW IT WORKS */
+.how-sec{background:var(--navy)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:52px;position:relative}
+.steps::before{content:'';position:absolute;top:30px;left:10%;width:80%;height:2px;background:linear-gradient(90deg,var(--orange),var(--teal));z-index:0}
+.step{text-align:center;padding:0 10px;position:relative;z-index:1}
+.step-num{width:60px;height:60px;border-radius:50%;background:var(--navy);border:2.5px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:24px;transition:.25s}
+.step:hover .step-num{background:var(--orange);transform:scale(1.1)}
+.step h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;color:#fff;margin-bottom:6px}
+.step p{font-size:12px;color:rgba(255,255,255,.45);line-height:1.6}
 
-/* ===== SERVICES ===== */
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:52px}
-.service-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all 0.25s}
-.service-card:hover{border-color:var(--teal);box-shadow:var(--shadow-md);transform:translateY(-4px)}
-.service-card-top{padding:28px;border-bottom:1px solid var(--border)}
-.service-icon{font-size:36px;margin-bottom:16px}
-.service-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:800;color:var(--navy);margin-bottom:8px}
-.service-card>div>p{font-size:14px;color:var(--muted);line-height:1.65}
-.service-card-bottom{padding:20px 28px}
-.service-features{list-style:none;display:flex;flex-direction:column;gap:8px}
-.service-features li{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);font-weight:600}
-.service-features li::before{content:'✓';width:18px;height:18px;border-radius:50%;background:var(--teal-light);color:var(--teal);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800}
-.skills-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:52px}
-.skill-chip{background:var(--white);border:1.5px solid var(--border);border-radius:50px;padding:8px 18px;font-size:13px;font-weight:700;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s}
-.skill-chip:hover{border-color:var(--orange);background:var(--orange-light);color:var(--orange)}
+/* SERVICES */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.srv-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .25s}
+.srv-card:hover{border-color:var(--teal);box-shadow:var(--shadow);transform:translateY(-3px)}
+.srv-top{padding:26px 24px 18px}
+.srv-icon{font-size:36px;margin-bottom:14px}
+.srv-top h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.srv-top p{font-size:14px;color:var(--muted);line-height:1.65}
+.srv-bottom{padding:16px 24px;background:var(--bg2);border-top:1px solid var(--border)}
+.srv-features{list-style:none;display:flex;flex-direction:column;gap:7px}
+.srv-features li{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text)}
+.srv-features li::before{content:'✓';width:18px;height:18px;border-radius:50%;background:var(--teal-bg);color:var(--teal);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800}
 
-/* ===== TEACHERS ===== */
-.teachers-section{background:var(--bg2)}
-.teachers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:52px}
-.teacher-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all 0.25s}
-.teacher-card:hover{box-shadow:var(--shadow-md);transform:translateY(-4px);border-color:var(--teal)}
-.teacher-card-top{padding:28px 24px 20px;text-align:center;border-bottom:1px solid var(--border)}
-.tc-avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;border:3px solid var(--border)}
-.tc-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--navy)}
-.tc-qual{font-size:13px;color:var(--muted);margin-top:4px}
-.tc-verified{margin-top:10px;display:inline-flex;align-items:center;gap:5px;background:var(--teal-light);color:var(--teal);font-size:11px;font-weight:800;padding:4px 12px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif}
-.teacher-card-bottom{padding:20px 24px}
-.tc-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:10px}
-.tc-row-label{color:var(--muted);font-weight:600}
-.tc-row-val{color:var(--navy);font-weight:700;font-family:'Plus Jakarta Sans',sans-serif}
-.tc-stars{color:var(--gold);font-size:14px}
-.teacher-card-bottom .btn{width:100%;justify-content:center;margin-top:16px}
+/* TEACHERS */
+.teachers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.t-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .25s}
+.t-card:hover{border-color:var(--teal);box-shadow:var(--shadow);transform:translateY(-3px)}
+.t-card-top{padding:24px 20px 18px;text-align:center;border-bottom:1px solid var(--border)}
+.t-ava-wrap{position:relative;width:80px;height:80px;margin:0 auto 12px}
+.t-ava-img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--border)}
+.t-ava-svg{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;border:3px solid var(--border)}
+.t-vbadge{position:absolute;bottom:0;right:0;background:var(--teal);color:#fff;font-size:9px;font-weight:800;padding:3px 7px;border-radius:50px;border:2px solid #fff;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap}
+.t-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:var(--navy)}
+.t-qual{font-size:12px;color:var(--muted);margin-top:3px}
+.t-stars{color:var(--gold);font-size:13px;margin-top:6px;font-weight:700}
+.t-card-bottom{padding:16px 20px}
+.t-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px}
+.t-row-label{color:var(--muted);font-weight:600}
+.t-row-val{color:var(--navy);font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;text-align:right}
+.t-card-bottom .btn{width:100%;justify-content:center;margin-top:14px}
 
-/* ===== TESTIMONIALS ===== */
-.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
-.testi-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:30px 28px;position:relative}
-.testi-quote{font-size:48px;color:var(--orange);line-height:1;position:absolute;top:20px;right:24px;opacity:0.2;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800}
-.testi-stars{color:var(--gold);font-size:17px;margin-bottom:14px;letter-spacing:2px}
-.testi-text{font-size:15px;color:var(--text);line-height:1.75;margin-bottom:22px;font-style:italic}
-.testi-author{display:flex;align-items:center;gap:12px}
-.testi-ava{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0}
-.testi-name{font-size:14px;font-weight:800;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif}
-.testi-role{font-size:12px;color:var(--muted)}
+/* REVIEWS */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+.rv-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:26px;position:relative}
+.rv-quote{position:absolute;top:18px;right:20px;font-size:40px;color:var(--orange);opacity:.15;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;line-height:1}
+.rv-stars{color:var(--gold);font-size:17px;margin-bottom:12px;letter-spacing:2px}
+.rv-text{font-size:14px;color:var(--text);line-height:1.75;margin-bottom:18px;font-style:italic}
+.rv-author{display:flex;align-items:center;gap:10px}
+.rv-ava{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0}
+.rv-name{font-size:14px;font-weight:800;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif}
+.rv-role{font-size:11px;color:var(--muted)}
+.rv-verified{font-size:10px;color:var(--teal);font-weight:800;margin-top:2px}
+.overall-rating{background:var(--navy);border-radius:var(--radius-lg);padding:32px;display:flex;align-items:center;gap:40px;margin-top:32px;flex-wrap:wrap}
+.or-big{text-align:center}
+.or-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:56px;font-weight:800;color:#fff;line-height:1}
+.or-stars{color:var(--gold);font-size:22px;letter-spacing:3px}
+.or-count{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
+.or-bars{flex:1}
+.or-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.or-bar-label{font-size:12px;color:rgba(255,255,255,.7);font-weight:700;width:36px;text-align:right;white-space:nowrap}
+.or-bar-track{flex:1;height:8px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden}
+.or-bar-fill{height:100%;border-radius:4px;background:var(--gold)}
+.or-bar-pct{font-size:12px;color:rgba(255,255,255,.5);font-weight:700;width:32px}
 
-/* ===== FAQ ===== */
-.faq-section{background:var(--bg2)}
-.faq-wrap{max-width:760px;margin:52px auto 0}
-.faq-item{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-md);margin-bottom:12px;overflow:hidden;transition:border-color 0.2s}
+/* FAQ */
+.faq-wrap{max-width:740px;margin:48px auto 0}
+.faq-item{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
 .faq-item.open{border-color:var(--teal)}
-.faq-q{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px;cursor:pointer;font-size:15px;font-weight:700;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;font-size:15px;font-weight:700;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif}
 .faq-q:hover{background:var(--bg2)}
-.faq-icon{width:28px;height:28px;border-radius:50%;background:var(--teal-light);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:transform 0.25s;font-weight:300}
+.faq-icon{width:28px;height:28px;border-radius:50%;background:var(--teal-bg);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;transition:transform .25s;font-weight:300;line-height:1}
 .faq-item.open .faq-icon{transform:rotate(45deg);background:var(--teal);color:#fff}
-.faq-a{padding:0 24px 20px;font-size:14px;color:var(--muted);line-height:1.75;display:none}
+.faq-a{padding:0 22px 18px;font-size:14px;color:var(--muted);line-height:1.75;display:none}
 .faq-a.show{display:block}
 
-/* ===== CTA BANNER ===== */
-.cta-banner{background:linear-gradient(135deg,var(--orange) 0%,#c94d1a 100%);padding:72px 0;text-align:center}
-.cta-banner h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:42px;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-0.5px}
-.cta-banner p{font-size:17px;color:rgba(255,255,255,0.8);margin:0 auto 36px;max-width:520px;line-height:1.7}
-.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+/* CTA BANNER */
+.cta-banner{background:linear-gradient(135deg,var(--orange) 0%,#B84510 100%);padding:68px 0;text-align:center}
+.cta-banner h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:38px;font-weight:800;color:#fff;margin-bottom:12px}
+.cta-banner p{font-size:16px;color:rgba(255,255,255,.8);margin:0 auto 32px;max-width:480px;line-height:1.7}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
-/* ===== ABOUT PAGE ===== */
-.about-hero{background:linear-gradient(135deg,var(--navy) 0%,#0D3A30 100%);padding:100px 0;text-align:center;position:relative;overflow:hidden}
-.about-hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(29,122,107,0.2) 0%,transparent 70%)}
-.about-hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:48px;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-1px;position:relative;z-index:1}
-.about-hero p{font-size:18px;color:rgba(255,255,255,0.65);max-width:560px;margin:0 auto;line-height:1.75;position:relative;z-index:1}
-.vm-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:52px}
-.vm-card{border-radius:var(--radius-lg);padding:36px 32px}
-.vm-card.vision{background:var(--navy);color:#fff}
-.vm-card.mission{background:var(--teal);color:#fff}
-.vm-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-.vm-card p{font-size:15px;color:rgba(255,255,255,0.8);line-height:1.75}
-.founder-box{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:40px;margin-top:52px;display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center}
-.founder-ava{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:#fff;flex-shrink:0}
-.founder-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--navy)}
-.founder-role{font-size:14px;color:var(--orange);font-weight:700;margin-top:4px;margin-bottom:12px}
-.founder-bio{font-size:15px;color:var(--muted);line-height:1.75}
+/* ABOUT */
+.about-hero{background:linear-gradient(135deg,var(--navy) 0%,#0A2E22 100%);padding:90px 0;text-align:center}
+.about-hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:44px;font-weight:800;color:#fff;margin-bottom:14px}
+.about-hero p{font-size:17px;color:rgba(255,255,255,.6);max-width:540px;margin:0 auto;line-height:1.75}
+.vm-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px}
+.vm-card{border-radius:var(--radius-lg);padding:32px 28px}
+.vm-card.v{background:var(--navy);color:#fff}
+.vm-card.m{background:var(--teal);color:#fff}
+.vm-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.vm-card p{font-size:15px;color:rgba(255,255,255,.8);line-height:1.75}
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px}
+.ps-card{border-radius:var(--radius-lg);padding:32px 28px}
+.ps-card.prob{background:var(--navy)}
+.ps-card.sol{background:var(--teal)}
+.ps-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.ps-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ps-list li{display:flex;align-items:flex-start;gap:9px;font-size:14px;color:rgba(255,255,255,.82);line-height:1.6}
+.ps-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);margin-top:6px;flex-shrink:0}
+.ps-card.sol .ps-list li::before{background:#fff}
+.founder-box{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:36px;margin-top:48px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.f-ava{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:34px;font-weight:800;color:#fff;flex-shrink:0}
+.f-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:var(--navy)}
+.f-role{font-size:14px;color:var(--orange);font-weight:700;margin:4px 0 12px}
+.f-bio{font-size:14px;color:var(--muted);line-height:1.75}
 
-/* ===== FORMS ===== */
-.form-page-hero{background:linear-gradient(135deg,var(--teal) 0%,#0D3A30 100%);padding:80px 0;text-align:center}
-.form-page-hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:42px;font-weight:800;color:#fff;margin-bottom:12px}
-.form-page-hero p{font-size:16px;color:rgba(255,255,255,0.7);max-width:500px;margin:0 auto}
-.form-wrap{max-width:680px;margin:0 auto;padding:64px 0}
-.form-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:40px 36px;box-shadow:var(--shadow-md)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.form-group{margin-bottom:20px}
-.form-group label{display:block;font-size:13px;font-weight:800;color:var(--navy);margin-bottom:7px;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:0.2px}
-.form-group label .req{color:var(--orange)}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:var(--bg);transition:border-color 0.2s;font-family:'Nunito',sans-serif}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(29,122,107,0.08)}
-.form-group textarea{resize:vertical;min-height:100px}
-.form-submit{width:100%;justify-content:center;margin-top:8px}
-.form-note{font-size:13px;color:var(--muted);text-align:center;margin-top:16px}
-.success-msg{display:none;background:#E8F5E9;border:1.5px solid #4CAF50;border-radius:var(--radius-md);padding:20px 24px;margin-bottom:20px;font-weight:700;color:#2E7D32;font-family:'Plus Jakarta Sans',sans-serif;align-items:center;gap:10px}
-.success-msg.show{display:flex}
+/* FORMS */
+.form-hero{padding:72px 0;text-align:center}
+.form-hero.orange-bg{background:linear-gradient(135deg,var(--orange) 0%,#B84510 100%)}
+.form-hero.teal-bg{background:linear-gradient(135deg,var(--navy) 0%,#0A2E22 100%)}
+.form-hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:38px;font-weight:800;color:#fff;margin-bottom:10px}
+.form-hero p{font-size:16px;color:rgba(255,255,255,.7);max-width:500px;margin:0 auto}
+.form-outer{max-width:700px;margin:0 auto;padding:56px 0}
+.form-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:36px 32px;box-shadow:var(--shadow)}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.f-group{margin-bottom:18px}
+.f-group label{display:block;font-size:13px;font-weight:800;color:var(--navy);margin-bottom:6px;font-family:'Plus Jakarta Sans',sans-serif}
+.f-group label .req{color:var(--orange)}
+.f-group input,.f-group select,.f-group textarea{width:100%;padding:11px 15px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;color:var(--text);background:var(--bg);transition:border-color .2s}
+.f-group input:focus,.f-group select:focus,.f-group textarea:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(29,122,107,.07)}
+.f-group textarea{resize:vertical;min-height:90px}
+.f-group .file-input{padding:10px;cursor:pointer}
+.form-submit{width:100%;justify-content:center;margin-top:6px}
+.form-note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
+.success-box{display:none;background:#E8F5E9;border:1.5px solid #4CAF50;border-radius:var(--radius);padding:18px 22px;margin-bottom:18px;font-weight:700;color:#2E7D32;font-family:'Plus Jakarta Sans',sans-serif;align-items:center;gap:10px;font-size:15px}
+.success-box.show{display:flex}
 
-/* ===== CONTACT ===== */
-.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;margin-top:52px}
-.contact-info-card{background:var(--navy);border-radius:var(--radius-lg);padding:36px 32px;color:#fff}
-.contact-info-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;margin-bottom:24px}
-.contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:24px}
-.contact-icon{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.contact-label{font-size:12px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;font-family:'Plus Jakarta Sans',sans-serif}
-.contact-val{font-size:14px;color:rgba(255,255,255,0.9);font-weight:600}
-.contact-val a{color:var(--gold);transition:opacity 0.2s}
-.contact-val a:hover{opacity:0.8}
-.wa-btn-big{display:flex;align-items:center;gap:12px;background:#25D366;border-radius:12px;padding:14px 20px;margin-top:28px;width:100%;justify-content:center;font-size:15px;font-weight:800;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;cursor:pointer;border:none}
-.wa-btn-big:hover{background:#1faa52;transform:translateY(-2px)}
-.contact-form-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:36px 32px;box-shadow:var(--shadow-md)}
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:32px;margin-top:48px}
+.c-info{background:var(--navy);border-radius:var(--radius-lg);padding:32px 28px}
+.c-info h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:24px}
+.c-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:22px}
+.c-icon{width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.c-label{font-size:11px;color:rgba(255,255,255,.45);font-weight:700;letter-spacing:.5px;text-transform:uppercase;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:3px}
+.c-val{font-size:14px;color:rgba(255,255,255,.85);font-weight:600}
+.c-val a{color:var(--gold);transition:opacity .2s}
+.wa-big{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;border-radius:10px;padding:13px;margin-top:24px;font-size:15px;font-weight:800;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:none;width:100%;transition:all .2s}
+.wa-big:hover{background:#1faa52;transform:translateY(-2px)}
+.c-form-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:32px 28px;box-shadow:var(--shadow)}
 
-/* ===== FOOTER ===== */
-footer{background:#070F1E;color:rgba(255,255,255,0.55);padding:64px 0 28px}
-.footer-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
-.footer-brand .footer-logo-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;margin-bottom:12px}
-.footer-brand .footer-logo-text .mentor{color:var(--orange)}
-.footer-brand .footer-logo-text .bridge{color:var(--teal)}
-.footer-desc{font-size:13px;line-height:1.8;margin-bottom:20px;max-width:280px}
-.footer-contacts a{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:8px;transition:color 0.2s;font-weight:600}
-.footer-contacts a:hover{color:var(--gold)}
-.footer-col h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:rgba(255,255,255,0.9);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px}
-.footer-col a{display:block;color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:10px;transition:color 0.2s;font-weight:600}
-.footer-col a:hover{color:var(--gold)}
-.footer-bottom{border-top:1px solid rgba(255,255,255,0.07);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:12px;flex-wrap:wrap;gap:12px}
-.footer-love{color:rgba(255,255,255,0.3)}
-.footer-love span{color:var(--orange)}
+/* FOOTER */
+footer{background:#060E1A;padding:56px 0 24px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.foot-logo{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px}
+.foot-logo .o{color:var(--orange)}
+.foot-logo .t{color:var(--teal2)}
+.foot-desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.8;margin-bottom:18px;max-width:260px}
+.foot-contacts a{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.5);font-size:13px;margin-bottom:7px;font-weight:600;transition:color .2s}
+.foot-contacts a:hover{color:var(--gold)}
+.foot-col h4{font-size:11px;font-weight:800;color:rgba(255,255,255,.8);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;font-family:'Plus Jakarta Sans',sans-serif}
+.foot-col a{display:block;color:rgba(255,255,255,.45);font-size:13px;margin-bottom:9px;transition:color .2s;font-weight:600}
+.foot-col a:hover{color:var(--gold);cursor:pointer}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,.3);flex-wrap:wrap;gap:8px}
+.foot-heart span{color:var(--orange)}
 
-/* ===== WHATSAPP FLOAT ===== */
-.wa-float{position:fixed;bottom:28px;right:28px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.5);z-index:500;font-size:26px;cursor:pointer;text-decoration:none;transition:all 0.25s;animation:bounce 3s infinite}
-.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,0.6)}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:24px;right:24px;width:54px;height:54px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.5);z-index:500;font-size:26px;text-decoration:none;transition:all .25s;animation:bob 3s infinite}
+.wa-float:hover{transform:scale(1.12)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 
-/* ===== RESPONSIVE ===== */
+/* SKILLS CHIPS */
+.chips-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:40px}
+.chip{background:#fff;border:1.5px solid var(--border);border-radius:50px;padding:7px 16px;font-size:13px;font-weight:700;color:var(--navy);font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;cursor:default}
+.chip:hover{border-color:var(--orange);background:var(--orange-bg);color:var(--orange)}
+
+/* RESPONSIVE */
 @media(max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:40px}
-  .hero-card-wrap{display:none}
-  .hero h1{font-size:38px}
+  .hero-inner{grid-template-columns:1fr;gap:32px}
+  .hero-card{display:none}
+  .hero h1{font-size:36px}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .stat-item:nth-child(2){border-right:none}
-  .stat-item:nth-child(3){border-right:1px solid rgba(255,255,255,0.15)}
-  .why-grid{grid-template-columns:1fr 1fr}
-  .steps-grid{grid-template-columns:1fr 1fr;gap:24px}
-  .steps-grid::before{display:none}
-  .services-grid{grid-template-columns:1fr 1fr}
-  .teachers-grid{grid-template-columns:1fr 1fr}
-  .testi-grid{grid-template-columns:1fr}
-  .ps-grid{grid-template-columns:1fr}
-  .vm-grid{grid-template-columns:1fr}
-  .founder-box{grid-template-columns:1fr;text-align:center}
-  .founder-ava{margin:0 auto}
+  .stat-item:nth-child(3){border-right:1px solid rgba(255,255,255,.15)}
+  .why-grid,.services-grid,.teachers-grid,.reviews-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:repeat(3,1fr);gap:20px}
+  .steps::before{display:none}
+  .vm-grid,.ps-grid{grid-template-columns:1fr}
   .contact-grid{grid-template-columns:1fr}
-  .footer-grid{grid-template-columns:1fr 1fr}
-  .form-row{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .founder-box{grid-template-columns:1fr;text-align:center}
+  .f-ava{margin:0 auto}
   .nav-links,.nav-ctas{display:none}
   .hamburger{display:flex}
-  .section-title{font-size:30px}
-  .hero-btns .btn{font-size:14px;padding:11px 22px}
+  .sec-title{font-size:28px}
+  .f-row{grid-template-columns:1fr}
+  .overall-rating{flex-direction:column;gap:20px}
 }
-@media(max-width:580px){
-  .why-grid{grid-template-columns:1fr}
-  .services-grid{grid-template-columns:1fr}
-  .teachers-grid{grid-template-columns:1fr}
-  .hero-trust{flex-direction:column;gap:12px}
-  .trust-item{border-right:none;padding-right:0;margin-right:0}
-  .footer-grid{grid-template-columns:1fr}
+@media(max-width:560px){
+  .why-grid,.services-grid,.teachers-grid,.reviews-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .hero-chips{gap:6px}
+  .foot-grid{grid-template-columns:1fr}
   .cta-btns{flex-direction:column;align-items:center}
 }
 </style>
 </head>
 <body>
 
-<!-- WhatsApp Float -->
-<a class="wa-float" href="https://wa.me/919XXXXXXXXX" target="_blank" title="Chat on WhatsApp">💬</a>
+<a class="wa-float" href="https://wa.me/919876543210" target="_blank">💬</a>
 
-<!-- NAVBAR -->
-<nav id="navbar">
+<!-- NAV -->
+<nav>
   <div class="container nav-inner">
-    <div class="logo" onclick="showPage('home')">
-      <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Book base -->
-        <path d="M4 32C4 32 10 28 22 28C34 28 40 32 40 32" stroke="#0F2137" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- Book pages left -->
-        <path d="M22 28V10" stroke="#0F2137" stroke-width="2" stroke-linecap="round"/>
+    <div class="logo" onclick="go('home')">
+      <!-- Logo SVG matching the actual MentorBridge logo colors -->
+      <svg height="52" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- Book open -->
+        <path d="M30 42 Q50 36 70 42" stroke="#0F2137" stroke-width="2.5" fill="none" stroke-linecap="round"/>
         <!-- Left page -->
-        <path d="M22 10C22 10 14 8 6 12V30C14 26 22 28 22 28" fill="#FFF8E8" stroke="#C9992A" stroke-width="1.5"/>
+        <path d="M70 42 Q60 20 46 16 Q36 14 30 18 L30 42 Z" fill="#FFF1EA" stroke="#E8601A" stroke-width="1.5"/>
         <!-- Right page -->
-        <path d="M22 10C22 10 30 8 38 12V30C30 26 22 28 22 28" fill="#E8F7F5" stroke="#1D7A6B" stroke-width="1.5"/>
-        <!-- People -->
-        <circle cx="15" cy="7" r="3" fill="#E85D26"/>
-        <circle cx="22" cy="5" r="3.5" fill="#1D7A6B"/>
-        <circle cx="29" cy="7" r="3" fill="#C9992A"/>
+        <path d="M70 42 Q76 20 86 16 Q94 14 100 18 L100 42 Z" fill="#E6F4F1" stroke="#1D7A6B" stroke-width="1.5"/>
+        <!-- Spine -->
+        <line x1="70" y1="16" x2="70" y2="42" stroke="#0F2137" stroke-width="2"/>
+        <!-- Person 1 (orange) -->
+        <circle cx="52" cy="11" r="4" fill="#E8601A"/>
+        <path d="M48 17 Q52 20 56 17" stroke="#E8601A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Person 2 (teal - center, taller) -->
+        <circle cx="70" cy="9" r="5" fill="#1D7A6B"/>
+        <path d="M65 16 Q70 20 75 16" stroke="#1D7A6B" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Person 3 (gold) -->
+        <circle cx="88" cy="11" r="4" fill="#C9992A"/>
+        <path d="M84 17 Q88 20 92 17" stroke="#C9992A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
         <!-- Arms up -->
-        <path d="M12 10L9 7" stroke="#E85D26" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M18 10L21 7" stroke="#E85D26" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M26 10L23 7" stroke="#1D7A6B" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M32 10L35 7" stroke="#C9992A" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="50" y1="15" x2="46" y2="11" stroke="#E8601A" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="54" y1="15" x2="58" y2="11" stroke="#E8601A" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="66" y1="14" x2="61" y2="9" stroke="#1D7A6B" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="74" y1="14" x2="79" y2="9" stroke="#1D7A6B" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="86" y1="15" x2="82" y2="11" stroke="#C9992A" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="90" y1="15" x2="94" y2="11" stroke="#C9992A" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- M letter (orange person + arch) -->
+        <text x="110" y="34" font-family="Plus Jakarta Sans,sans-serif" font-weight="800" font-size="20" fill="#E8601A">i</text>
+        <!-- MentorBridge text -->
+        <text x="118" y="34" font-family="Plus Jakarta Sans,sans-serif" font-weight="800" font-size="20" fill="#E8601A">Mentor</text>
+        <text x="118" y="52" font-family="Plus Jakarta Sans,sans-serif" font-weight="800" font-size="16" fill="#1D7A6B">Bridge</text>
+        <!-- Gold M arch -->
+        <path d="M110 24 Q113 18 116 24" stroke="#C9992A" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
-      <div class="logo-text-wrap">
-        <div class="logo-brand"><span class="mentor">Mentor</span><span class="bridge">Bridge</span></div>
-        <div class="logo-tagline">Connecting Minds, Empowering Youth</div>
-      </div>
     </div>
     <ul class="nav-links">
-      <li><a href="#" onclick="showPage('home');return false" class="active" id="nav-home">Home</a></li>
-      <li><a href="#" onclick="showPage('about');return false" id="nav-about">About Us</a></li>
-      <li><a href="#" onclick="showPage('services');return false" id="nav-services">Services</a></li>
-      <li><a href="#" onclick="showPage('teachers');return false" id="nav-teachers">Our Teachers</a></li>
-      <li><a href="#" onclick="showPage('contact');return false" id="nav-contact">Contact</a></li>
+      <li><a href="#" onclick="go('home');return false" id="n-home" class="active">Home</a></li>
+      <li><a href="#" onclick="go('about');return false" id="n-about">About Us</a></li>
+      <li><a href="#" onclick="go('services');return false" id="n-services">Services</a></li>
+      <li><a href="#" onclick="go('teachers');return false" id="n-teachers">Teachers</a></li>
+      <li><a href="#" onclick="go('contact');return false" id="n-contact">Contact</a></li>
     </ul>
     <div class="nav-ctas">
-      <button class="btn btn-outline btn-sm" onclick="showPage('tutor-form')">Find a Tutor</button>
-      <button class="btn btn-primary btn-sm" onclick="showPage('teacher-form')">Become a Tutor</button>
+      <button class="btn btn-outline btn-sm" onclick="go('tutor-form')">🔍 Find a Tutor</button>
+      <button class="btn btn-orange btn-sm" onclick="go('teacher-form')">Apply as Tutor</button>
     </div>
-    <div class="hamburger" onclick="toggleMenu()" id="hamburger">
-      <span></span><span></span><span></span>
-    </div>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-close" onclick="toggleMenu()">✕</div>
-  <a href="#" onclick="showPage('home');toggleMenu();return false">🏠 Home</a>
-  <a href="#" onclick="showPage('about');toggleMenu();return false">ℹ️ About Us</a>
-  <a href="#" onclick="showPage('services');toggleMenu();return false">📚 Services</a>
-  <a href="#" onclick="showPage('teachers');toggleMenu();return false">👩‍🏫 Our Teachers</a>
-  <a href="#" onclick="showPage('tutor-form');toggleMenu();return false">🔍 Find a Tutor</a>
-  <a href="#" onclick="showPage('teacher-form');toggleMenu();return false">✏️ Become a Tutor</a>
-  <a href="#" onclick="showPage('contact');toggleMenu();return false">📞 Contact</a>
+<div class="mobile-menu" id="mob">
+  <button class="mobile-close" onclick="toggleMenu()">✕</button>
+  <a href="#" onclick="go('home');toggleMenu();return false">🏠 Home</a>
+  <a href="#" onclick="go('about');toggleMenu();return false">ℹ️ About Us</a>
+  <a href="#" onclick="go('services');toggleMenu();return false">📚 Services</a>
+  <a href="#" onclick="go('teachers');toggleMenu();return false">👩‍🏫 Teachers</a>
+  <a href="#" onclick="go('tutor-form');toggleMenu();return false">🔍 Find a Tutor</a>
+  <a href="#" onclick="go('teacher-form');toggleMenu();return false">✏️ Apply as Tutor</a>
+  <a href="#" onclick="go('contact');toggleMenu();return false">📞 Contact</a>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE: HOME -->
-<!-- ============================================================ -->
-<div id="page-home" class="page active">
+<!-- ==================== HOME ==================== -->
+<div id="p-home" class="page active">
 
-  <!-- HERO -->
   <section class="hero">
-    <div class="container hero-grid">
+    <div class="hero-bg-circle c1"></div>
+    <div class="hero-bg-circle c2"></div>
+    <div class="container hero-inner">
       <div>
-        <div class="hero-eyebrow">
-          <div class="hero-eyebrow-dot"></div>
-          <span>Muzaffarpur & Bihar's Most Trusted Home Tutoring Platform</span>
-        </div>
-        <h1>Your Child Deserves a <span class="highlight">Verified</span> <span class="highlight2">Teacher</span></h1>
-        <p class="hero-desc">MentorBridge connects students (Nursery–Class 10) with background-checked, qualification-verified tutors — personalised learning plans, monthly progress reports, and complete parent transparency.</p>
+        <div class="hero-tag"><div class="hero-tag-dot"></div><span>Bihar's Most Trusted Home Tutoring Platform</span></div>
+        <h1>Find a <span class="o">Verified</span><br>Home Tutor<br>in <span class="t">24 Hours</span></h1>
+        <p class="hero-sub">We connect your child (Nursery–Class 10) with <strong>background-checked, qualified teachers</strong> — personalised learning, monthly progress reports, and a free demo class.</p>
         <div class="hero-btns">
-          <button class="btn btn-primary btn-lg" onclick="showPage('tutor-form')">🔍 Find a Tutor — Free</button>
-          <button class="btn btn-outline-white btn-lg" onclick="showPage('teacher-form')">Join as Teacher →</button>
+          <button class="btn btn-orange btn-lg" onclick="go('tutor-form')">🔍 Find a Tutor — Free</button>
+          <button class="btn btn-outline-white btn-lg" onclick="go('teacher-form')">Apply as Tutor →</button>
         </div>
-        <div class="hero-trust">
-          <div class="trust-item">
-            <div class="trust-icon">🛡️</div>
-            <div>
-              <div class="trust-text">Police Verified</div>
-              <div class="trust-sub">All Teachers</div>
-            </div>
-          </div>
-          <div class="trust-item">
-            <div class="trust-icon">📋</div>
-            <div>
-              <div class="trust-text">Monthly Reports</div>
-              <div class="trust-sub">Progress Tracking</div>
-            </div>
-          </div>
-          <div class="trust-item">
-            <div class="trust-icon">🔄</div>
-            <div>
-              <div class="trust-text">Free Replacement</div>
-              <div class="trust-sub">No Questions Asked</div>
-            </div>
-          </div>
+        <div class="hero-chips">
+          <div class="hero-chip">🛡️ Police Verified</div>
+          <div class="hero-chip">🎓 Free Demo Class</div>
+          <div class="hero-chip">📊 Monthly Reports</div>
+          <div class="hero-chip">🔄 Free Replacement</div>
+          <div class="hero-chip">📍 Muzaffarpur & Bihar</div>
         </div>
       </div>
-      <div class="hero-card-wrap">
-        <div class="float-badge">🎓 Free Demo Class!</div>
-        <div class="hero-card">
-          <div class="hero-card-title">
-            <span>Featured Teachers</span>
-            <span>All Verified ✓</span>
-          </div>
-          <div class="teacher-row">
-            <div class="t-avatar" style="background:#FFF0EA;color:#E85D26">PK</div>
-            <div class="t-info">
-              <div class="t-name">Priya Kumari</div>
-              <div class="t-meta">Maths & Science · Class 6–10</div>
-            </div>
-            <div class="t-right">
-              <div class="verified-pill">✓ Verified</div>
-              <div class="t-rating">★ 4.9</div>
-            </div>
-          </div>
-          <div class="teacher-row">
-            <div class="t-avatar" style="background:#E8F7F5;color:#1D7A6B">RS</div>
-            <div class="t-info">
-              <div class="t-name">Rahul Sharma</div>
-              <div class="t-meta">English & SST · Class 1–8</div>
-            </div>
-            <div class="t-right">
-              <div class="verified-pill">✓ Verified</div>
-              <div class="t-rating">★ 4.8</div>
-            </div>
-          </div>
-          <div class="teacher-row">
-            <div class="t-avatar" style="background:#FFF8E8;color:#C9992A">AN</div>
-            <div class="t-info">
-              <div class="t-name">Anjali Nair</div>
-              <div class="t-meta">Hindi & EVS · Class 1–5</div>
-            </div>
-            <div class="t-right">
-              <div class="verified-pill">✓ Verified</div>
-              <div class="t-rating">★ 5.0</div>
-            </div>
-          </div>
-          <div class="teacher-row">
-            <div class="t-avatar" style="background:#F3E8FF;color:#7B2D8B">MV</div>
-            <div class="t-info">
-              <div class="t-name">Mohit Verma</div>
-              <div class="t-meta">Science & Maths · Class 8–10</div>
-            </div>
-            <div class="t-right">
-              <div class="verified-pill">✓ Verified</div>
-              <div class="t-rating">★ 4.9</div>
-            </div>
-          </div>
-          <button class="btn btn-teal hero-card-cta" onclick="showPage('teachers')">View All 150+ Teachers →</button>
+      <div class="hero-card">
+        <div class="hero-card-head"><h3>Featured Teachers</h3><span>All Verified ✓</span></div>
+        <div class="hero-teacher">
+          <div class="h-ava" style="background:#FFF1EA;color:#E8601A">PK<div class="vbadge">✓</div></div>
+          <div class="h-info"><div class="h-name">Priya Kumari</div><div class="h-meta">Maths & Science · Class 6–10</div></div>
+          <div class="h-rating">★ 4.9</div>
         </div>
+        <div class="hero-teacher">
+          <div class="h-ava" style="background:#E6F4F1;color:#1D7A6B">RS<div class="vbadge">✓</div></div>
+          <div class="h-info"><div class="h-name">Rahul Sharma</div><div class="h-meta">English & SST · Class 1–8</div></div>
+          <div class="h-rating">★ 4.8</div>
+        </div>
+        <div class="hero-teacher">
+          <div class="h-ava" style="background:#FFF8E6;color:#C9992A">SK<div class="vbadge">✓</div></div>
+          <div class="h-info"><div class="h-name">Suman Kumari</div><div class="h-meta">Hindi & EVS · Class 1–5</div></div>
+          <div class="h-rating">★ 5.0</div>
+        </div>
+        <div class="hero-teacher">
+          <div class="h-ava" style="background:#F3E8FF;color:#7B2D8B">MV<div class="vbadge">✓</div></div>
+          <div class="h-info"><div class="h-name">Mohit Verma</div><div class="h-meta">Physics & Maths · Class 8–10</div></div>
+          <div class="h-rating">★ 4.9</div>
+        </div>
+        <button class="btn btn-teal hero-card-btn" onclick="go('tutor-form')">Book Free Demo Class 🎯</button>
       </div>
     </div>
   </section>
 
-  <!-- BRIDGE DIVIDER -->
-  <div class="bridge-divider" style="background:var(--navy)">
-    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,0 Q360,60 720,40 Q1080,20 1440,60 L1440,60 L0,60 Z" fill="#F8FFFE"/>
-    </svg>
+  <!-- STATS -->
+  <div class="stats">
+    <div class="container stats-grid">
+      <div class="stat-item"><div class="stat-num">150+</div><div class="stat-label">Verified Teachers</div></div>
+      <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Happy Students</div></div>
+      <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label">Parent Satisfaction</div></div>
+      <div class="stat-item"><div class="stat-num">5+</div><div class="stat-label">Cities in Bihar</div></div>
+    </div>
   </div>
 
-  <!-- STATS BAR -->
-  <section class="stats-bar">
-    <div class="container stats-grid">
-      <div class="stat-item">
-        <div class="stat-num">150<sup>+</sup></div>
-        <div class="stat-label">Verified Teachers</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">500<sup>+</sup></div>
-        <div class="stat-label">Active Students</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">98<sup>%</sup></div>
-        <div class="stat-label">Parent Satisfaction</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">5<sup>+</sup></div>
-        <div class="stat-label">Cities in Bihar</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- WHY MENTORBRIDGE -->
-  <section class="section-pad">
+  <!-- WHY -->
+  <section class="sec">
     <div class="container">
-      <div class="section-eyebrow orange">Why MentorBridge</div>
-      <h2 class="section-title">Not Just a Tutor. A Complete <span>Learning System.</span></h2>
-      <p class="section-sub">We don't just send someone to your home. We take responsibility for your child's entire learning journey — from finding the right teacher to tracking their progress every month.</p>
+      <div class="sec-tag orange">Why MentorBridge</div>
+      <h2 class="sec-title">Not Just a Tutor —<br>A Complete <span>Learning System</span></h2>
+      <p class="sec-sub">We take full responsibility for your child's learning journey — from finding the right teacher to tracking progress every month.</p>
       <div class="why-grid">
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#FFF0EA">🛡️</div>
-          <h3>Triple-Verified Teachers</h3>
-          <p>Every teacher undergoes ID verification, educational qualification check, and police background verification before being approved on our platform.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#E8F7F5">📋</div>
-          <h3>Personalised Learning Plans</h3>
-          <p>Each child learns differently. We assess your child's learning style — visual, auditory, or practical — and design a custom study plan around it.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#FFF8E8">📊</div>
-          <h3>Monthly Progress Reports</h3>
-          <p>Detailed monthly reports covering subject-wise performance, homework completion, attendance, test results, and teacher feedback — all shared with parents.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#FFF0EA">🤝</div>
-          <h3>Dedicated Parent Support</h3>
-          <p>Your questions don't go unanswered. We hold regular Parent-Teacher discussions so you always know exactly how your child is progressing.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#E8F7F5">🔄</div>
-          <h3>Free Teacher Replacement</h3>
-          <p>Not satisfied? We replace your teacher within 48 hours — no questions asked, no extra cost. Your child's learning never stops.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#FFF8E8">🌱</div>
-          <h3>Future-Ready Skills</h3>
-          <p>Beyond academics — Spoken English, AI basics, Coding, Personality Development, and Digital Literacy to prepare your child for tomorrow's world.</p>
-        </div>
+        <div class="why-card"><div class="why-icon">🛡️</div><h3>Triple-Verified Teachers</h3><p>ID check, qualification verification & police background check — all three, every teacher.</p></div>
+        <div class="why-card"><div class="why-icon">📋</div><h3>Personalised Learning Plan</h3><p>Custom study plan for every child based on their learning style — visual, auditory, or practical.</p></div>
+        <div class="why-card"><div class="why-icon">📊</div><h3>Monthly Progress Reports</h3><p>Subject-wise performance, attendance, homework & test results — sent to parents every month.</p></div>
+        <div class="why-card"><div class="why-icon">🤝</div><h3>Dedicated Parent Support</h3><p>Regular parent-teacher discussions. Questions answered within hours, not days.</p></div>
+        <div class="why-card"><div class="why-icon">🔄</div><h3>Free Teacher Replacement</h3><p>Not satisfied? New teacher within 48 hours — no questions asked, no extra cost.</p></div>
+        <div class="why-card"><div class="why-icon">🌱</div><h3>Future-Ready Skills</h3><p>Spoken English, AI basics, Coding & Personality Development — beyond just academics.</p></div>
       </div>
     </div>
   </section>
 
   <!-- HOW IT WORKS -->
-  <section class="section-pad how-section">
+  <section class="sec how-sec">
     <div class="container">
-      <div class="section-header-center">
-        <div class="section-eyebrow teal" style="justify-content:center">Our Process</div>
-        <h2 class="section-title" style="text-align:center">From Enquiry to <span>Excellence</span></h2>
-        <p class="section-sub" style="text-align:center;margin:0 auto">A simple 5-step process that ensures the right verified teacher reaches your home within 24 hours.</p>
+      <div class="center">
+        <div class="sec-tag" style="color:var(--gold);justify-content:center">How It Works</div>
+        <h2 class="sec-title" style="color:#fff;text-align:center">5 Simple Steps to the <span>Right Teacher</span></h2>
+        <p class="sec-sub center" style="color:rgba(255,255,255,.5)">From your first call to your child's first class — in as little as 24 hours.</p>
       </div>
-      <div class="steps-grid">
-        <div class="step-item">
-          <div class="step-circle"><span class="step-emoji">📝</span></div>
-          <h3>Share Requirement</h3>
-          <p>Tell us your child's class, subjects, board, preferred timing, and any special needs</p>
-        </div>
-        <div class="step-item">
-          <div class="step-circle"><span class="step-emoji">🔍</span></div>
-          <h3>Teacher Matching</h3>
-          <p>We shortlist 5–10 verified teacher profiles matched to your exact requirements</p>
-        </div>
-        <div class="step-item">
-          <div class="step-circle"><span class="step-emoji">🎯</span></div>
-          <h3>Free Demo Class</h3>
-          <p>Your child attends a trial session. You choose — no pressure, no commitment needed</p>
-        </div>
-        <div class="step-item">
-          <div class="step-circle"><span class="step-emoji">📚</span></div>
-          <h3>Learning Begins</h3>
-          <p>Classes start with a personalised plan, scheduled at your most convenient timing</p>
-        </div>
-        <div class="step-item">
-          <div class="step-circle"><span class="step-emoji">📈</span></div>
-          <h3>Track Progress</h3>
-          <p>Monthly reports and assessments keep you fully informed every step of the way</p>
-        </div>
+      <div class="steps">
+        <div class="step"><div class="step-num">📝</div><h3>Share Requirement</h3><p>Tell us class, subjects, board & timing</p></div>
+        <div class="step"><div class="step-num">🔍</div><h3>Teacher Matching</h3><p>We shortlist 5–10 verified profiles for you</p></div>
+        <div class="step"><div class="step-num">🎯</div><h3>Free Demo Class</h3><p>Trial session — no commitment needed</p></div>
+        <div class="step"><div class="step-num">📚</div><h3>Learning Begins</h3><p>Personalised plan, flexible schedule</p></div>
+        <div class="step"><div class="step-num">📈</div><h3>Track Progress</h3><p>Monthly reports & parent updates</p></div>
+      </div>
+      <div style="text-align:center;margin-top:40px">
+        <button class="btn btn-orange btn-lg" onclick="go('tutor-form')">Get Started — It's Free</button>
       </div>
     </div>
   </section>
 
   <!-- FEATURED TEACHERS -->
-  <section class="section-pad" style="background:var(--bg)">
+  <section class="sec" style="background:var(--bg2)">
     <div class="container">
-      <div class="section-eyebrow gold" style="display:flex">Our Educators</div>
-      <h2 class="section-title">Meet Our <span>Verified Teachers</span></h2>
-      <p class="section-sub">Hand-picked, qualification-verified, and background-checked educators who are passionate about each child's growth.</p>
+      <div class="sec-tag gold">Our Educators</div>
+      <h2 class="sec-title">Meet Our <span>Verified Teachers</span></h2>
+      <p class="sec-sub">Background-checked, qualification-verified educators who care about every child's growth.</p>
       <div class="teachers-grid">
-        <div class="teacher-card">
-          <div class="teacher-card-top">
-            <div class="tc-avatar" style="background:#FFF0EA;color:#E85D26;border-color:#FFCBA4">PK</div>
-            <div class="tc-name">Priya Kumari</div>
-            <div class="tc-qual">B.Sc. Mathematics, B.Ed · 5 Years Exp.</div>
-            <div class="tc-verified">✓ Qualification + Police Verified</div>
+        <div class="t-card">
+          <div class="t-card-top">
+            <div class="t-ava-wrap"><div class="t-ava-svg" style="background:#FFF1EA;color:#E8601A;border-color:#FFCBA4">PK</div><div class="t-vbadge">✓ Verified</div></div>
+            <div class="t-name">Priya Kumari</div><div class="t-qual">B.Sc. Maths, B.Ed · 5 Years Exp.</div>
+            <div class="t-stars">★★★★★ 4.9</div>
           </div>
-          <div class="teacher-card-bottom">
-            <div class="tc-row"><span class="tc-row-label">Subjects</span><span class="tc-row-val">Maths, Science</span></div>
-            <div class="tc-row"><span class="tc-row-label">Classes</span><span class="tc-row-val">Class 6–10 (CBSE/BSEB)</span></div>
-            <div class="tc-row"><span class="tc-row-label">Medium</span><span class="tc-row-val">Hindi & English</span></div>
-            <div class="tc-row"><span class="tc-row-label">Rating</span><span class="tc-stars">★★★★★ 4.9</span></div>
-            <button class="btn btn-primary btn-sm" onclick="showPage('tutor-form')">Book Free Demo</button>
-          </div>
-        </div>
-        <div class="teacher-card">
-          <div class="teacher-card-top">
-            <div class="tc-avatar" style="background:#E8F7F5;color:#1D7A6B;border-color:#9FE1CB">RS</div>
-            <div class="tc-name">Rahul Sharma</div>
-            <div class="tc-qual">M.A. English, B.Ed · 7 Years Exp.</div>
-            <div class="tc-verified">✓ Qualification + Police Verified</div>
-          </div>
-          <div class="teacher-card-bottom">
-            <div class="tc-row"><span class="tc-row-label">Subjects</span><span class="tc-row-val">English, Social Studies</span></div>
-            <div class="tc-row"><span class="tc-row-label">Classes</span><span class="tc-row-val">Class 1–8 (CBSE/ICSE)</span></div>
-            <div class="tc-row"><span class="tc-row-label">Medium</span><span class="tc-row-val">English Medium</span></div>
-            <div class="tc-row"><span class="tc-row-label">Rating</span><span class="tc-stars">★★★★★ 4.8</span></div>
-            <button class="btn btn-primary btn-sm" onclick="showPage('tutor-form')">Book Free Demo</button>
+          <div class="t-card-bottom">
+            <div class="t-row"><span class="t-row-label">Subjects</span><span class="t-row-val">Maths, Science</span></div>
+            <div class="t-row"><span class="t-row-label">Classes</span><span class="t-row-val">Class 6–10</span></div>
+            <div class="t-row"><span class="t-row-label">Board</span><span class="t-row-val">CBSE / BSEB</span></div>
+            <div class="t-row"><span class="t-row-label">Medium</span><span class="t-row-val">Hindi & English</span></div>
+            <button class="btn btn-orange btn-sm" onclick="go('tutor-form')">Book Free Demo</button>
           </div>
         </div>
-        <div class="teacher-card">
-          <div class="teacher-card-top">
-            <div class="tc-avatar" style="background:#FFF8E8;color:#C9992A;border-color:#FAC775">SK</div>
-            <div class="tc-name">Suman Kumari</div>
-            <div class="tc-qual">B.A. Hindi, B.Ed · 4 Years Exp.</div>
-            <div class="tc-verified">✓ Qualification + Police Verified</div>
+        <div class="t-card">
+          <div class="t-card-top">
+            <div class="t-ava-wrap"><div class="t-ava-svg" style="background:#E6F4F1;color:#1D7A6B;border-color:#9FE1CB">RS</div><div class="t-vbadge">✓ Verified</div></div>
+            <div class="t-name">Rahul Sharma</div><div class="t-qual">M.A. English, B.Ed · 7 Years Exp.</div>
+            <div class="t-stars">★★★★★ 4.8</div>
           </div>
-          <div class="teacher-card-bottom">
-            <div class="tc-row"><span class="tc-row-label">Subjects</span><span class="tc-row-val">Hindi, EVS, GK</span></div>
-            <div class="tc-row"><span class="tc-row-label">Classes</span><span class="tc-row-val">Class 1–5 (Bihar Board)</span></div>
-            <div class="tc-row"><span class="tc-row-label">Medium</span><span class="tc-row-val">Hindi Medium</span></div>
-            <div class="tc-row"><span class="tc-row-label">Rating</span><span class="tc-stars">★★★★★ 5.0</span></div>
-            <button class="btn btn-primary btn-sm" onclick="showPage('tutor-form')">Book Free Demo</button>
+          <div class="t-card-bottom">
+            <div class="t-row"><span class="t-row-label">Subjects</span><span class="t-row-val">English, Social Studies</span></div>
+            <div class="t-row"><span class="t-row-label">Classes</span><span class="t-row-val">Class 1–8</span></div>
+            <div class="t-row"><span class="t-row-label">Board</span><span class="t-row-val">CBSE / ICSE</span></div>
+            <div class="t-row"><span class="t-row-label">Medium</span><span class="t-row-val">English</span></div>
+            <button class="btn btn-orange btn-sm" onclick="go('tutor-form')">Book Free Demo</button>
+          </div>
+        </div>
+        <div class="t-card">
+          <div class="t-card-top">
+            <div class="t-ava-wrap"><div class="t-ava-svg" style="background:#FFF8E6;color:#C9992A;border-color:#FAC775">SK</div><div class="t-vbadge">✓ Verified</div></div>
+            <div class="t-name">Suman Kumari</div><div class="t-qual">B.A. Hindi, B.Ed · 4 Years Exp.</div>
+            <div class="t-stars">★★★★★ 5.0</div>
+          </div>
+          <div class="t-card-bottom">
+            <div class="t-row"><span class="t-row-label">Subjects</span><span class="t-row-val">Hindi, EVS, GK</span></div>
+            <div class="t-row"><span class="t-row-label">Classes</span><span class="t-row-val">Class 1–5</span></div>
+            <div class="t-row"><span class="t-row-label">Board</span><span class="t-row-val">BSEB / CBSE</span></div>
+            <div class="t-row"><span class="t-row-label">Medium</span><span class="t-row-val">Hindi</span></div>
+            <button class="btn btn-orange btn-sm" onclick="go('tutor-form')">Book Free Demo</button>
           </div>
         </div>
       </div>
-      <div style="text-align:center;margin-top:36px">
-        <button class="btn btn-outline" onclick="showPage('teachers')" style="font-size:15px;padding:13px 32px">View All 150+ Verified Teachers →</button>
+      <div style="text-align:center;margin-top:32px">
+        <button class="btn btn-outline" onclick="go('teachers')" style="font-size:15px;padding:12px 30px">View All 150+ Teachers →</button>
       </div>
     </div>
   </section>
 
-  <!-- TESTIMONIALS -->
-  <section class="section-pad" style="background:var(--bg2)">
+  <!-- REVIEWS -->
+  <section class="sec">
     <div class="container">
-      <div class="section-header-center">
-        <div class="section-eyebrow orange" style="justify-content:center">Parent Stories</div>
-        <h2 class="section-title" style="text-align:center">What Bihar Families Are <span>Saying</span></h2>
-        <p class="section-sub">Real feedback from real parents across Muzaffarpur, Patna, Darbhanga, and beyond.</p>
+      <div class="center">
+        <div class="sec-tag orange" style="justify-content:center">Parent Reviews</div>
+        <h2 class="sec-title" style="text-align:center">What Bihar Families <span>Say About Us</span></h2>
+        <p class="sec-sub center">Real reviews from verified parents across Muzaffarpur, Patna, Darbhanga & more.</p>
       </div>
-      <div class="testi-grid">
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">Mere bete ke Maths mein marks 52 se 87 ho gaye sirf teen mahine mein. Teacher bahut patient hain aur concepts clearly samjhate hain. MentorBridge ka matching process bahut accurate hai.</p>
-          <div class="testi-author">
-            <div class="testi-ava" style="background:#FFF0EA;color:#E85D26">SC</div>
-            <div>
-              <div class="testi-name">Sunita Chaudhary</div>
-              <div class="testi-role">Parent · Class 8 Student · Muzaffarpur</div>
-            </div>
+      <div class="reviews-grid">
+        <div class="rv-card">
+          <div class="rv-quote">"</div>
+          <div class="rv-stars">★★★★★</div>
+          <p class="rv-text">Mere bete ke Maths marks 52 se 87 ho gaye sirf 3 mahine mein. Teacher bahut patient aur dedicated hain.</p>
+          <div class="rv-author">
+            <div class="rv-ava" style="background:#FFF1EA;color:#E8601A">SC</div>
+            <div><div class="rv-name">Sunita Chaudhary</div><div class="rv-role">Parent · Class 8 Student · Muzaffarpur</div><div class="rv-verified">✓ Verified Parent</div></div>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">Jo cheez mujhe sabse achi lagi woh tha monthly progress report. Mujhe pata rehta hai ki teacher ne kya padhaya, homework kya mila, aur meri beti ka performance kaisa hai. Poori transparency hai.</p>
-          <div class="testi-author">
-            <div class="testi-ava" style="background:#E8F7F5;color:#1D7A6B">AV</div>
-            <div>
-              <div class="testi-name">Amit Verma</div>
-              <div class="testi-role">Parent · Class 5 Student · Sitamarhi</div>
-            </div>
+        <div class="rv-card">
+          <div class="rv-quote">"</div>
+          <div class="rv-stars">★★★★★</div>
+          <p class="rv-text">Monthly progress report se mujhe pata rehta hai kya padhaya gaya, homework kya mila. Poori transparency hai!</p>
+          <div class="rv-author">
+            <div class="rv-ava" style="background:#E6F4F1;color:#1D7A6B">AV</div>
+            <div><div class="rv-name">Amit Verma</div><div class="rv-role">Parent · Class 5 Student · Sitamarhi</div><div class="rv-verified">✓ Verified Parent</div></div>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-quote">"</div>
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-text">Humne ek baar teacher change karne ki request ki aur MentorBridge ne 2 din mein naya qualified teacher arrange kar diya. Kisi bhi tutoring service se itna responsive support pehle nahi mila.</p>
-          <div class="testi-author">
-            <div class="testi-ava" style="background:#FFF8E8;color:#C9992A">RD</div>
-            <div>
-              <div class="testi-name">Rekha Devi</div>
-              <div class="testi-role">Parent · Class 10 Student · Darbhanga</div>
-            </div>
+        <div class="rv-card">
+          <div class="rv-quote">"</div>
+          <div class="rv-stars">★★★★★</div>
+          <p class="rv-text">Teacher replacement request ki aur MentorBridge ne 2 din mein naya teacher arrange kar diya. Bahut responsive team hai!</p>
+          <div class="rv-author">
+            <div class="rv-ava" style="background:#FFF8E6;color:#C9992A">RD</div>
+            <div><div class="rv-name">Rekha Devi</div><div class="rv-role">Parent · Class 10 Student · Darbhanga</div><div class="rv-verified">✓ Verified Parent</div></div>
           </div>
         </div>
+        <div class="rv-card">
+          <div class="rv-quote">"</div>
+          <div class="rv-stars">★★★★☆</div>
+          <p class="rv-text">Meri beti pehle English mein bahut weak thi. Ab uska confidence kaafi badh gaya hai. Spoken English program bhi bahut acha hai.</p>
+          <div class="rv-author">
+            <div class="rv-ava" style="background:#E8F5E9;color:#2E7D32">NP</div>
+            <div><div class="rv-name">Neha Prasad</div><div class="rv-role">Parent · Class 6 Student · Muzaffarpur</div><div class="rv-verified">✓ Verified Parent</div></div>
+          </div>
+        </div>
+        <div class="rv-card">
+          <div class="rv-quote">"</div>
+          <div class="rv-stars">★★★★★</div>
+          <p class="rv-text">Police verified teachers — yahi cheez mujhe sabse zyada pasand ayi. Ghar mein bachche ke saath koi bhi aaye, safety pehle.</p>
+          <div class="rv-author">
+            <div class="rv-ava" style="background:#F3E8FF;color:#7B2D8B">RK</div>
+            <div><div class="rv-name">Rajesh Kumar</div><div class="rv-role">Parent · Class 3 Student · Patna</div><div class="rv-verified">✓ Verified Parent</div></div>
+          </div>
+        </div>
+        <div class="rv-card">
+          <div class="rv-quote">"</div>
+          <div class="rv-stars">★★★★★</div>
+          <p class="rv-text">Demo class bilkul free thi aur teacher ne pehle hi session mein mera beta engage kar liya. Abhi 4 mahine ho gaye, bahut khush hain.</p>
+          <div class="rv-author">
+            <div class="rv-ava" style="background:#FFF1EA;color:#E8601A">PS</div>
+            <div><div class="rv-name">Pooja Singh</div><div class="rv-role">Parent · Class 4 Student · Muzaffarpur</div><div class="rv-verified">✓ Verified Parent</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Overall Rating Bar -->
+      <div class="overall-rating">
+        <div class="or-big">
+          <div class="or-num">4.9</div>
+          <div class="or-stars">★★★★★</div>
+          <div class="or-count">Based on 200+ reviews</div>
+        </div>
+        <div class="or-bars">
+          <div class="or-bar-row"><span class="or-bar-label">5 ★</span><div class="or-bar-track"><div class="or-bar-fill" style="width:88%"></div></div><span class="or-bar-pct">88%</span></div>
+          <div class="or-bar-row"><span class="or-bar-label">4 ★</span><div class="or-bar-track"><div class="or-bar-fill" style="width:9%"></div></div><span class="or-bar-pct">9%</span></div>
+          <div class="or-bar-row"><span class="or-bar-label">3 ★</span><div class="or-bar-track"><div class="or-bar-fill" style="width:2%"></div></div><span class="or-bar-pct">2%</span></div>
+          <div class="or-bar-row"><span class="or-bar-label">2 ★</span><div class="or-bar-track"><div class="or-bar-fill" style="width:1%"></div></div><span class="or-bar-pct">1%</span></div>
+          <div class="or-bar-row"><span class="or-bar-label">1 ★</span><div class="or-bar-track"><div class="or-bar-fill" style="width:0%"></div></div><span class="or-bar-pct">0%</span></div>
+        </div>
+        <div style="color:rgba(255,255,255,.6);font-size:14px;max-width:200px;line-height:1.7">98% of parents say they would <strong style="color:#fff">recommend MentorBridge</strong> to other families.</div>
       </div>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="section-pad faq-section">
+  <section class="sec" style="background:var(--bg2)">
     <div class="container">
-      <div class="section-header-center">
-        <div class="section-eyebrow teal" style="justify-content:center">FAQ</div>
-        <h2 class="section-title" style="text-align:center">Questions <span>Parents Ask</span></h2>
+      <div class="center">
+        <div class="sec-tag teal" style="justify-content:center">FAQ</div>
+        <h2 class="sec-title" style="text-align:center">Common <span>Questions</span></h2>
       </div>
       <div class="faq-wrap">
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">How does MentorBridge verify teachers?<div class="faq-icon">+</div></div>
-          <div class="faq-a">Every teacher on MentorBridge undergoes three levels of verification: (1) Identity Verification via government ID, (2) Educational Qualification Verification where we check degree certificates and transcripts, and (3) Police Background Verification. Only after clearing all three stages does a teacher appear on our platform.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Is the demo class really free?<div class="faq-icon">+</div></div>
-          <div class="faq-a">Yes, the first demo class is completely free — no hidden charges, no commitment required. Your child attends the class, you observe the teacher's style and communication, and only if you're satisfied do we proceed further.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">What if we're not satisfied with the assigned teacher?<div class="faq-icon">+</div></div>
-          <div class="faq-a">We have a zero-hassle Teacher Replacement Policy. Simply inform us and we'll find a replacement teacher within 48 hours at no extra cost. Your child's learning never gets disrupted, and you don't need to go through the search process again.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Which boards and classes do you support?<div class="faq-icon">+</div></div>
-          <div class="faq-a">We cover Nursery to Class 10 across CBSE, ICSE, and Bihar State Board (BSEB). We have subject-expert teachers for all major subjects across all boards.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">Do you offer online tuition as well?<div class="faq-icon">+</div></div>
-          <div class="faq-a">Yes! MentorBridge offers both Home Tuition (teacher visits your home) and Online Tuition (live interactive video classes). You can choose the mode that works best for your child, or even combine both for maximum flexibility.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">What subjects do you cover?<div class="faq-icon">+</div></div>
-          <div class="faq-a">We cover all major subjects including Mathematics, Science, Physics, Chemistry, Biology, English, Hindi, Social Science, Computer Science, EVS, and more. We also offer skill programs like Spoken English, Coding, AI Basics, and Personality Development as add-ons.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">How do I track my child's progress?<div class="faq-icon">+</div></div>
-          <div class="faq-a">Every month you receive a Detailed Progress Report covering subject-wise performance, homework completion rate, attendance, monthly test results, and teacher observations. Every 3–4 months you also receive an Interest Development Report highlighting your child's emerging strengths and suggested activities.</div>
-        </div>
+        <div class="faq-item"><div class="faq-q" onclick="faq(this)">How do I register / find a tutor?<div class="faq-icon">+</div></div><div class="faq-a">Simple! Fill out our "Find a Tutor" form with your child's class, subjects, board, and preferred timing. Our team will call you within a few hours and share 5–10 matching verified teacher profiles. You pick the one you like — completely free.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="faq(this)">How are tutors selected and verified?<div class="faq-icon">+</div></div><div class="faq-a">Every teacher goes through three checks: (1) Government ID verification, (2) Educational qualification check — degrees & certificates, and (3) Police background verification. We also conduct a demo evaluation before approving any teacher. Only verified teachers appear on MentorBridge.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="faq(this)">Can I take a demo class before committing?<div class="faq-icon">+</div></div><div class="faq-a">Yes — the first demo class is completely FREE. No commitment, no payment required. Your child attends the session, you observe the teacher's style and communication, and only if you're fully satisfied do we proceed. No pressure at all.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="faq(this)">How do I pay? What are the fees?<div class="faq-icon">+</div></div><div class="faq-a">Fees vary based on class, subjects, and mode (home/online). After the demo class, our team shares a transparent fee structure with no hidden charges. You can pay monthly via UPI, bank transfer, or cash. No upfront deposit required.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="faq(this)">What if I'm not satisfied with the teacher?<div class="faq-icon">+</div></div><div class="faq-a">We have a free Teacher Replacement Policy. Just inform us and we'll arrange a new verified teacher within 48 hours — at no extra cost, no questions asked. Your child's learning never gets disrupted.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="faq(this)">Which boards and classes do you cover?<div class="faq-icon">+</div></div><div class="faq-a">We cover Nursery to Class 10 across CBSE, ICSE, and Bihar State Board (BSEB). We have subject experts for Maths, Science, English, Hindi, Social Studies, Computer Science, and more.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="faq(this)">How do teachers apply to join MentorBridge?<div class="faq-icon">+</div></div><div class="faq-a">Teachers can apply through our "Apply as Tutor" form. Submit your qualifications, experience, subjects, and documents. Our team reviews within 48 hours and contacts you for the verification and demo evaluation process.</div></div>
       </div>
     </div>
   </section>
 
-  <!-- CTA BANNER -->
+  <!-- CTA -->
   <section class="cta-banner">
     <div class="container">
       <h2>Start Your Child's Learning Journey Today</h2>
-      <p>Book a free consultation — tell us your requirement and we'll match you with the perfect verified tutor within 24 hours.</p>
+      <p>Free consultation. Verified teachers. First demo class free. No commitment needed.</p>
       <div class="cta-btns">
-        <button class="btn btn-outline-white btn-lg" onclick="showPage('tutor-form')">🔍 Find a Tutor — Free</button>
-        <button class="btn btn-lg" style="background:#fff;color:var(--orange)" onclick="showPage('teacher-form')">Join as Teacher →</button>
+        <button class="btn btn-white btn-lg" onclick="go('tutor-form')">🔍 Find a Tutor — Free</button>
+        <button class="btn btn-outline-white btn-lg" onclick="go('teacher-form')">Apply as Tutor →</button>
       </div>
     </div>
   </section>
+</div>
 
-</div><!-- /page-home -->
-
-<!-- ============================================================ -->
-<!-- PAGE: ABOUT -->
-<!-- ============================================================ -->
-<div id="page-about" class="page">
+<!-- ==================== ABOUT ==================== -->
+<div id="p-about" class="page">
   <div class="about-hero">
     <div class="container">
-      <div class="section-eyebrow teal" style="justify-content:center;color:rgba(255,255,255,0.7);margin-bottom:16px">About MentorBridge</div>
-      <h1>Changing How Bihar Learns</h1>
-      <p>We started with one belief — every child in every corner of Bihar deserves a quality, verified, caring teacher. Not just a tutor.</p>
+      <h1>Changing How <span style="color:var(--orange)">Bihar Learns</span></h1>
+      <p>Started with one belief — every child in every corner of Bihar deserves a verified, caring, qualified teacher.</p>
     </div>
   </div>
-
-  <section class="section-pad">
+  <section class="sec">
     <div class="container">
       <div class="vm-grid">
-        <div class="vm-card vision">
-          <h3>🎯 Our Vision</h3>
-          <p>To become Bihar's most trusted, technology-driven home learning platform — where every parent knows their child's education is in safe, verified, caring hands. We envision a future where quality education is not a privilege of Tier-1 cities but the right of every child in every district of Bihar.</p>
-        </div>
-        <div class="vm-card mission">
-          <h3>🚀 Our Mission</h3>
-          <p>To connect students with the right verified teachers through a structured, transparent process — and ensure continuous progress monitoring, personalised learning, and holistic skill development so every child reaches their true potential. Not just in exams, but in life.</p>
-        </div>
+        <div class="vm-card v"><h3>🎯 Our Vision</h3><p>To make quality, verified home education accessible to every student in Bihar — not just Tier-1 cities. A future where every parent knows their child's education is in trusted, qualified hands.</p></div>
+        <div class="vm-card m"><h3>🚀 Our Mission</h3><p>Connect students with the right verified teachers through a structured, transparent process — with continuous progress monitoring, personalised learning, and holistic skill development.</p></div>
       </div>
-
-      <div style="margin-top:64px">
-        <div class="section-eyebrow orange">The Problem We Solve</div>
-        <h2 class="section-title">Why MentorBridge <span>Exists</span></h2>
-        <p class="section-sub">In Muzaffarpur and across Bihar, finding a trustworthy home tutor has always been a painful process for parents.</p>
+      <div style="margin-top:60px">
+        <div class="sec-tag orange">The Problem We Solve</div>
+        <h2 class="sec-title">Why MentorBridge <span>Exists</span></h2>
         <div class="ps-grid">
-          <div class="ps-card problem">
-            <h3>⚠️ The Real Problem</h3>
+          <div class="ps-card prob">
+            <h3>⚠️ The Problem</h3>
             <ul class="ps-list">
-              <li>Parents hire tutors without any background verification or qualification checks</li>
-              <li>Local tutor consultancies only focus on commission — no accountability after placement</li>
+              <li>Parents hire tutors without any background or qualification check</li>
+              <li>Local consultancies only care about commission — no accountability after placement</li>
               <li>No tracking of whether the teacher is actually teaching effectively</li>
-              <li>Children stuck in endless trial-and-error cycles for months</li>
-              <li>No progress reports, no parent updates, no monitoring of learning quality</li>
-              <li>Traditional methods create academic pressure without improving understanding</li>
-              <li>Child's confidence and interest in learning gradually decreases</li>
+              <li>Children stuck in months-long trial-and-error cycles</li>
+              <li>No progress reports or parent updates at all</li>
+              <li>Traditional teaching creates pressure without real understanding</li>
             </ul>
           </div>
-          <div class="ps-card solution">
-            <h3>✅ The MentorBridge Solution</h3>
+          <div class="ps-card sol">
+            <h3>✅ Our Solution</h3>
             <ul class="ps-list">
-              <li>Triple-verified teachers — ID, educational qualification, and police background</li>
-              <li>5–10 curated teacher profiles so parents choose the best fit for their child</li>
-              <li>Personalised Learning Plan based on each child's unique learning style</li>
-              <li>Monthly Academic Progress Reports with subject-wise performance data</li>
-              <li>Quarterly Interest Development Report to identify hidden talents</li>
-              <li>Free teacher replacement within 48 hours — no questions asked</li>
-              <li>Future-ready skills: Spoken English, AI, Coding, Personality Development</li>
+              <li>Triple verification — ID, qualification, and police background</li>
+              <li>5–10 curated teacher profiles so parents make an informed choice</li>
+              <li>Personalised Learning Plan for every child's unique learning style</li>
+              <li>Monthly Academic Progress Reports with real data</li>
+              <li>Quarterly Interest Development Report — hidden talents identified</li>
+              <li>Free teacher replacement within 48 hours if needed</li>
             </ul>
           </div>
         </div>
       </div>
-
       <div class="founder-box">
-        <div class="founder-ava">S</div>
+        <div class="f-ava">S</div>
         <div>
-          <div class="founder-name">Siddharth</div>
-          <div class="founder-role">Founder, MentorBridge</div>
-          <p class="founder-bio">MentorBridge was born out of a simple frustration — watching families around me in Muzaffarpur struggle to find a trustworthy, qualified teacher for their children. Local consultancies took their commission and disappeared. Parents had no visibility into what was actually being taught. Children fell behind.<br><br>I started MentorBridge with a clear mission: bring structure, accountability, and transparency to home tutoring in Bihar. We're building the system that parents deserved all along — one where you know exactly who is teaching your child, what they're teaching, and how your child is growing. Every single month.</p>
+          <div class="f-name">Siddharth</div>
+          <div class="f-role">Founder, MentorBridge</div>
+          <p class="f-bio">I grew up watching families in Muzaffarpur struggle to find a trustworthy tutor. Local consultancies took commission and disappeared. Parents had zero visibility into what was being taught. Children fell behind.<br><br>MentorBridge was built to fix exactly this — bringing structure, accountability, and transparency to home tutoring in Bihar. Every parent deserves to know exactly who is teaching their child, what is being taught, and how their child is growing. Every single month.</p>
         </div>
       </div>
     </div>
   </section>
-
   <section class="cta-banner">
     <div class="container">
-      <h2>Join 500+ Bihar Families Who Trust MentorBridge</h2>
-      <p>Book your child's first free demo class today.</p>
+      <h2>Join 500+ Bihar Families</h2>
+      <p>Book your child's first free demo class today — no commitment needed.</p>
       <div class="cta-btns">
-        <button class="btn btn-outline-white btn-lg" onclick="showPage('tutor-form')">Find a Tutor — Free</button>
-        <button class="btn btn-lg" style="background:#fff;color:var(--orange)" onclick="showPage('contact')">Contact Us</button>
+        <button class="btn btn-white btn-lg" onclick="go('tutor-form')">Find a Tutor — Free</button>
+        <button class="btn btn-outline-white btn-lg" onclick="go('contact')">Contact Us</button>
       </div>
     </div>
   </section>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE: SERVICES -->
-<!-- ============================================================ -->
-<div id="page-services" class="page">
+<!-- ==================== SERVICES ==================== -->
+<div id="p-services" class="page">
   <div class="about-hero">
     <div class="container">
-      <div class="section-eyebrow" style="color:rgba(255,255,255,0.7);justify-content:center;margin-bottom:16px">Our Programs</div>
-      <h1>Everything Your Child Needs to <span style="color:var(--orange)">Thrive</span></h1>
-      <p>From core academics to future skills — a complete learning ecosystem designed for Nursery to Class 10.</p>
+      <h1>All Programs &<br><span style="color:var(--orange)">Services</span></h1>
+      <p>Academic support + future-ready skills — everything your child needs, Nursery to Class 10.</p>
     </div>
   </div>
-
-  <section class="section-pad">
+  <section class="sec">
     <div class="container">
-      <div class="section-eyebrow orange">Academic Programs</div>
-      <h2 class="section-title">Core <span>Learning Services</span></h2>
+      <div class="sec-tag orange">Academic Programs</div>
+      <h2 class="sec-title">Our Core <span>Services</span></h2>
       <div class="services-grid">
-        <div class="service-card">
-          <div class="service-card-top">
-            <div class="service-icon">🏠</div>
-            <h3>Home Tuition</h3>
-            <p>Verified, qualified teachers come to your home at your preferred time. One-on-one sessions with full parent visibility and monthly progress reporting.</p>
-          </div>
-          <div class="service-card-bottom">
-            <ul class="service-features">
-              <li>Teacher visits your home</li>
-              <li>Class 1 to Class 10</li>
-              <li>CBSE, ICSE, Bihar Board</li>
-              <li>All major subjects covered</li>
-              <li>Free demo class included</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-card">
-          <div class="service-card-top">
-            <div class="service-icon">💻</div>
-            <h3>Online Tuition</h3>
-            <p>Live interactive sessions from the comfort of home. Same verified teachers, same quality, same monthly progress tracking — just online.</p>
-          </div>
-          <div class="service-card-bottom">
-            <ul class="service-features">
-              <li>Live video sessions</li>
-              <li>Flexible scheduling</li>
-              <li>All subjects & classes</li>
-              <li>Recording available on request</li>
-              <li>Free demo class included</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-card">
-          <div class="service-card-top">
-            <div class="service-icon">📖</div>
-            <h3>Personalised Learning Program</h3>
-            <p>A fully structured program based on your child's learning style. We don't just teach — we understand how your child learns and adapt accordingly.</p>
-          </div>
-          <div class="service-card-bottom">
-            <ul class="service-features">
-              <li>Learning style assessment</li>
-              <li>Custom study plan creation</li>
-              <li>Chapter-wise NCERT coverage</li>
-              <li>Doubt solving sessions</li>
-              <li>Quarterly interest reports</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-card">
-          <div class="service-card-top">
-            <div class="service-icon">🏆</div>
-            <h3>Exam Preparation</h3>
-            <p>Targeted preparation for school exams, boards, and competitive entrance tests with previous year papers, mock tests, and revision sessions.</p>
-          </div>
-          <div class="service-card-bottom">
-            <ul class="service-features">
-              <li>Sample paper practice</li>
-              <li>Previous year questions</li>
-              <li>Navodaya & Sainik School prep</li>
-              <li>Olympiad coaching</li>
-              <li>Scholarship exam preparation</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-card">
-          <div class="service-card-top">
-            <div class="service-icon">🌐</div>
-            <h3>Spoken English Program</h3>
-            <p>Build confidence in speaking English through structured daily practice, vocabulary building, and real-life conversation scenarios.</p>
-          </div>
-          <div class="service-card-bottom">
-            <ul class="service-features">
-              <li>Daily spoken practice</li>
-              <li>Grammar foundation</li>
-              <li>Vocabulary building</li>
-              <li>Pronunciation correction</li>
-              <li>Confidence in public speaking</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-card">
-          <div class="service-card-top">
-            <div class="service-icon">🌟</div>
-            <h3>Personality Development</h3>
-            <p>Help your child become confident, communicative, and emotionally intelligent — skills that matter far beyond the classroom.</p>
-          </div>
-          <div class="service-card-bottom">
-            <ul class="service-features">
-              <li>Communication skills</li>
-              <li>Confidence building</li>
-              <li>Presentation skills</li>
-              <li>Leadership development</li>
-              <li>Emotional intelligence</li>
-            </ul>
-          </div>
+        <div class="srv-card"><div class="srv-top"><div class="srv-icon">🏠</div><h3>Home Tuition</h3><p>Verified teacher visits your home at your preferred time. One-on-one attention with complete parent visibility.</p></div><div class="srv-bottom"><ul class="srv-features"><li>Teacher comes to your home</li><li>Class 1 to Class 10</li><li>CBSE, ICSE, Bihar Board</li><li>Free demo class</li></ul></div></div>
+        <div class="srv-card"><div class="srv-top"><div class="srv-icon">💻</div><h3>Online Tuition</h3><p>Live interactive video classes from home. Same verified teachers, same quality — fully online.</p></div><div class="srv-bottom"><ul class="srv-features"><li>Live video sessions</li><li>Flexible timing</li><li>All subjects & classes</li><li>Free demo class</li></ul></div></div>
+        <div class="srv-card"><div class="srv-top"><div class="srv-icon">📖</div><h3>Personalised Learning</h3><p>Study plan built around your child's unique learning style — not a one-size-fits-all approach.</p></div><div class="srv-bottom"><ul class="srv-features"><li>Learning style assessment</li><li>Custom study plan</li><li>Chapter-wise NCERT coverage</li><li>Quarterly interest reports</li></ul></div></div>
+        <div class="srv-card"><div class="srv-top"><div class="srv-icon">🏆</div><h3>Exam Preparation</h3><p>Targeted prep for school boards, Navodaya, Sainik School, Olympiads and scholarship exams.</p></div><div class="srv-bottom"><ul class="srv-features"><li>Sample paper practice</li><li>Previous year questions</li><li>Navodaya & Sainik prep</li><li>Olympiad coaching</li></ul></div></div>
+        <div class="srv-card"><div class="srv-top"><div class="srv-icon">🗣️</div><h3>Spoken English</h3><p>Build real confidence in spoken English through daily practice, grammar, and real conversations.</p></div><div class="srv-bottom"><ul class="srv-features"><li>Daily spoken practice</li><li>Grammar foundation</li><li>Vocabulary building</li><li>Public speaking confidence</li></ul></div></div>
+        <div class="srv-card"><div class="srv-top"><div class="srv-icon">🌟</div><h3>Personality Development</h3><p>Communication skills, leadership, confidence, and emotional intelligence — for life beyond exams.</p></div><div class="srv-bottom"><ul class="srv-features"><li>Communication skills</li><li>Confidence building</li><li>Presentation skills</li><li>Leadership development</li></ul></div></div>
+      </div>
+      <div style="margin-top:56px">
+        <div class="sec-tag teal">Future Skills</div>
+        <h2 class="sec-title">Skill Add-On <span>Programs</span></h2>
+        <p class="sec-sub">Request any of these specialized programs as add-ons to your child's regular tuition.</p>
+        <div class="chips-row">
+          <div class="chip">🤖 AI Basics</div><div class="chip">💻 Computer Literacy</div><div class="chip">🖥️ Basic Coding</div><div class="chip">🔬 Science Projects</div><div class="chip">🎨 Art & Craft</div><div class="chip">🤖 Robotics</div><div class="chip">📊 Digital Literacy</div><div class="chip">🖼️ Canva / Graphics</div><div class="chip">📑 MS Office Tools</div><div class="chip">🧮 Tally Prime</div><div class="chip">🧘 Yoga</div><div class="chip">🌐 Internet Safety</div><div class="chip">🧠 Logical Reasoning</div><div class="chip">✏️ Drawing</div><div class="chip">🎤 Public Speaking</div>
         </div>
       </div>
     </div>
   </section>
-
-  <section class="section-pad" style="background:var(--bg2);padding-top:0">
-    <div class="container">
-      <div class="section-eyebrow teal">Future Ready Skills</div>
-      <h2 class="section-title">Skill Programs for <span>Tomorrow's World</span></h2>
-      <p class="section-sub">Beyond school subjects, we offer specialized programs taught by expert trainers. Add-on programs available on request.</p>
-      <div class="skills-row">
-        <div class="skill-chip">🤖 Artificial Intelligence Basics</div>
-        <div class="skill-chip">💻 Computer Literacy</div>
-        <div class="skill-chip">🖥️ Basic Coding</div>
-        <div class="skill-chip">🔬 Science Projects</div>
-        <div class="skill-chip">🎨 Art & Craft</div>
-        <div class="skill-chip">🎭 Robotics</div>
-        <div class="skill-chip">📊 Digital Literacy</div>
-        <div class="skill-chip">🖼️ Graphics Design (Canva)</div>
-        <div class="skill-chip">📑 Microsoft Office Tools</div>
-        <div class="skill-chip">🧮 Tally Prime</div>
-        <div class="skill-chip">🧘 Yoga & Mindfulness</div>
-        <div class="skill-chip">🌐 Internet Safety</div>
-        <div class="skill-chip">🧠 Logical Reasoning</div>
-        <div class="skill-chip">✏️ Drawing & Sketching</div>
-        <div class="skill-chip">🎤 Public Speaking</div>
-      </div>
-    </div>
-  </section>
-
   <section class="cta-banner">
     <div class="container">
-      <h2>Find the Right Program for Your Child</h2>
-      <p>Our team will help you choose the best combination of academic support and skill programs.</p>
+      <h2>Find the Right Program</h2>
+      <p>Talk to us and we'll recommend the best combination for your child.</p>
       <div class="cta-btns">
-        <button class="btn btn-outline-white btn-lg" onclick="showPage('tutor-form')">Book Free Consultation</button>
-        <button class="btn btn-lg" style="background:#fff;color:var(--orange)" onclick="showPage('contact')">Talk to Us</button>
+        <button class="btn btn-white btn-lg" onclick="go('tutor-form')">Book Free Consultation</button>
+        <button class="btn btn-outline-white btn-lg" onclick="go('contact')">Talk to Us</button>
       </div>
     </div>
   </section>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE: TEACHERS -->
-<!-- ============================================================ -->
-<div id="page-teachers" class="page">
+<!-- ==================== TEACHERS PAGE ==================== -->
+<div id="p-teachers" class="page">
   <div class="about-hero">
     <div class="container">
-      <h1>Our Verified <span style="color:var(--orange)">Teachers</span></h1>
-      <p>150+ qualified, background-checked educators across subjects, classes, and boards.</p>
+      <h1>Our <span style="color:var(--orange)">Verified Teachers</span></h1>
+      <p>150+ qualified, triple-verified educators — ready to teach your child.</p>
     </div>
   </div>
-
-  <section class="section-pad">
+  <section class="sec">
     <div class="container">
-      <div class="teachers-grid" id="teachers-grid">
-        <!-- JS generated -->
-      </div>
-      <div style="text-align:center;margin-top:40px">
-        <button class="btn btn-primary btn-lg" onclick="showPage('tutor-form')">Find Your Child's Perfect Teacher →</button>
+      <div class="teachers-grid" id="all-teachers"></div>
+      <div style="text-align:center;margin-top:36px">
+        <button class="btn btn-orange btn-lg" onclick="go('tutor-form')">Find Your Child's Perfect Teacher →</button>
       </div>
     </div>
   </section>
-
-  <!-- Verification Process -->
-  <section class="section-pad" style="background:var(--bg2)">
+  <!-- Verification Section -->
+  <section class="sec" style="background:var(--bg2)">
     <div class="container">
-      <div class="section-header-center">
-        <div class="section-eyebrow teal" style="justify-content:center">Our Process</div>
-        <h2 class="section-title" style="text-align:center">How We <span>Verify</span> Every Teacher</h2>
+      <div class="center">
+        <div class="sec-tag teal" style="justify-content:center">Our Process</div>
+        <h2 class="sec-title" style="text-align:center">How We <span>Verify</span> Every Teacher</h2>
       </div>
       <div class="why-grid" style="margin-top:40px">
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#FFF0EA">🪪</div>
-          <h3>Identity Verification</h3>
-          <p>Government-issued ID proof (Aadhaar, PAN) collected and verified for every teacher before onboarding.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#E8F7F5">🎓</div>
-          <h3>Qualification Verification</h3>
-          <p>Degree certificates, mark sheets, and B.Ed / D.El.Ed credentials physically verified by our team.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#FFF8E8">🛡️</div>
-          <h3>Police Background Check</h3>
-          <p>Police verification certificate required for all teachers to ensure complete safety for children and families.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#FFF0EA">🎯</div>
-          <h3>Demo Evaluation</h3>
-          <p>Each teacher gives a sample teaching session evaluated by our academic team before final approval.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#E8F7F5">📞</div>
-          <h3>Reference Check</h3>
-          <p>Previous teaching references and parent feedback checked where available before approving the teacher.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon-box" style="background:#FFF8E8">📊</div>
-          <h3>Ongoing Performance Tracking</h3>
-          <p>Even after joining, teacher performance is tracked via parent feedback and monthly progress reports.</p>
-        </div>
+        <div class="why-card"><div class="why-icon">🪪</div><h3>Identity Verification</h3><p>Aadhaar / PAN card collected and verified for every teacher before onboarding.</p></div>
+        <div class="why-card"><div class="why-icon">🎓</div><h3>Qualification Check</h3><p>Degree certificates, mark sheets, and B.Ed credentials physically verified by our team.</p></div>
+        <div class="why-card"><div class="why-icon">🛡️</div><h3>Police Background Check</h3><p>Police verification certificate required — complete safety for your home and children.</p></div>
+        <div class="why-card"><div class="why-icon">🎯</div><h3>Demo Evaluation</h3><p>Sample teaching session evaluated by our academic team before final approval.</p></div>
+        <div class="why-card"><div class="why-icon">📞</div><h3>Reference Check</h3><p>Previous student/parent references verified where available before approval.</p></div>
+        <div class="why-card"><div class="why-icon">📊</div><h3>Ongoing Monitoring</h3><p>Teacher performance tracked every month via parent feedback and progress reports.</p></div>
       </div>
     </div>
   </section>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE: FIND A TUTOR FORM -->
-<!-- ============================================================ -->
-<div id="page-tutor-form" class="page">
-  <div class="form-page-hero">
+<!-- ==================== FIND A TUTOR FORM ==================== -->
+<div id="p-tutor-form" class="page">
+  <div class="form-hero orange-bg">
     <div class="container">
-      <h1>Find Your Child's Perfect Teacher</h1>
-      <p>Fill in the details below and we'll match you with 5–10 verified teachers within 24 hours. First demo class is free!</p>
+      <h1>🔍 Find a Verified Tutor</h1>
+      <p>Fill this form — we'll match you with 5–10 verified teachers within 24 hours. First demo class is FREE!</p>
     </div>
   </div>
-  <div class="container form-wrap">
+  <div class="container form-outer">
     <div class="form-card">
-      <div class="success-msg" id="tutor-success">✅ Your enquiry has been submitted! Our team will contact you within 24 hours with matching teacher profiles.</div>
-      <form onsubmit="submitForm(event,'tutor-success')">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Student Name <span class="req">*</span></label>
-            <input type="text" placeholder="Enter student's full name" required>
-          </div>
-          <div class="form-group">
-            <label>Parent / Guardian Name <span class="req">*</span></label>
-            <input type="text" placeholder="Enter parent's name" required>
-          </div>
+      <div class="success-box" id="s-tutor">✅ Enquiry submitted! We'll call you within 24 hours with matching teacher profiles.</div>
+      <form onsubmit="submitForm(event,'s-tutor')">
+        <div class="f-row">
+          <div class="f-group"><label>Student Name <span class="req">*</span></label><input type="text" placeholder="Student's full name" required></div>
+          <div class="f-group"><label>Parent / Guardian Name <span class="req">*</span></label><input type="text" placeholder="Parent's name" required></div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>WhatsApp / Mobile Number <span class="req">*</span></label>
-            <input type="tel" placeholder="+91 XXXXX XXXXX" required>
-          </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" placeholder="your@email.com">
-          </div>
+        <div class="f-row">
+          <div class="f-group"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" required></div>
+          <div class="f-group"><label>Email Address</label><input type="email" placeholder="your@email.com"></div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Class / Grade <span class="req">*</span></label>
-            <select required>
-              <option value="">Select class</option>
-              <option>Nursery / KG</option>
-              <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-              <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-              <option>Class 7</option><option>Class 8</option><option>Class 9</option>
-              <option>Class 10</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Board <span class="req">*</span></label>
-            <select required>
-              <option value="">Select board</option>
-              <option>CBSE</option>
-              <option>ICSE</option>
-              <option>Bihar State Board (BSEB)</option>
-              <option>Other / Not sure</option>
-            </select>
-          </div>
+        <div class="f-row">
+          <div class="f-group"><label>Class / Grade <span class="req">*</span></label><select required><option value="">Select class</option><option>Nursery / KG</option><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option></select></div>
+          <div class="f-group"><label>Board <span class="req">*</span></label><select required><option value="">Select board</option><option>CBSE</option><option>ICSE</option><option>Bihar State Board (BSEB)</option><option>Not sure</option></select></div>
         </div>
-        <div class="form-group">
-          <label>Subjects Required <span class="req">*</span></label>
-          <input type="text" placeholder="e.g. Maths, Science, English (separate with commas)" required>
+        <div class="f-group"><label>Subjects Required <span class="req">*</span></label><input type="text" placeholder="e.g. Maths, Science, English" required></div>
+        <div class="f-row">
+          <div class="f-group"><label>Teaching Mode <span class="req">*</span></label><select required><option value="">Select mode</option><option>Home Tuition (Teacher Visits)</option><option>Online Tuition</option><option>Both / Flexible</option></select></div>
+          <div class="f-group"><label>Preferred Timing</label><select><option value="">Select timing</option><option>Morning (6–9 AM)</option><option>Afternoon (12–4 PM)</option><option>Evening (4–8 PM)</option><option>Flexible</option></select></div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Preferred Teaching Mode <span class="req">*</span></label>
-            <select required>
-              <option value="">Select mode</option>
-              <option>Home Tuition (Teacher Visits Home)</option>
-              <option>Online Tuition (Video Classes)</option>
-              <option>Both (Flexible)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Preferred Timing</label>
-            <select>
-              <option value="">Select timing</option>
-              <option>Morning (6 AM – 9 AM)</option>
-              <option>Afternoon (12 PM – 4 PM)</option>
-              <option>Evening (4 PM – 8 PM)</option>
-              <option>Flexible</option>
-            </select>
-          </div>
+        <div class="f-row">
+          <div class="f-group"><label>Medium of Instruction</label><select><option value="">Select medium</option><option>Hindi Medium</option><option>English Medium</option><option>Bilingual</option></select></div>
+          <div class="f-group"><label>Teacher Gender Preference</label><select><option value="">No preference</option><option>Male Teacher</option><option>Female Teacher</option></select></div>
         </div>
-        <div class="form-group">
-          <label>Home Address / Area</label>
-          <input type="text" placeholder="Your area/locality in Muzaffarpur or Bihar">
-        </div>
-        <div class="form-group">
-          <label>Medium of Instruction Preferred</label>
-          <select>
-            <option value="">Select medium</option>
-            <option>Hindi Medium</option>
-            <option>English Medium</option>
-            <option>Both / Bilingual</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Any Additional Requirements or Special Instructions</label>
-          <textarea placeholder="E.g. child needs extra attention in fractions, prefers female teacher, has exams in 2 months..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary btn-lg form-submit">Submit Enquiry — Find My Tutor 🎯</button>
-        <p class="form-note">🔒 Your information is completely confidential. Our team will contact you within 24 hours.</p>
+        <div class="f-group"><label>Home Address / Area <span class="req">*</span></label><input type="text" placeholder="Your area/locality in Muzaffarpur or Bihar" required></div>
+        <div class="f-group"><label>Additional Requirements</label><textarea placeholder="Any special instructions — e.g. child needs extra attention in fractions, has exams in 2 months, prefers patient teacher..."></textarea></div>
+        <button type="submit" class="btn btn-orange btn-lg form-submit">Submit Enquiry — Find My Tutor 🎯</button>
+        <p class="form-note">🔒 Your info is 100% confidential. Our team will call you within 24 hours.</p>
       </form>
     </div>
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE: BECOME A TUTOR FORM -->
-<!-- ============================================================ -->
-<div id="page-teacher-form" class="page">
-  <div class="form-page-hero" style="background:linear-gradient(135deg,var(--navy) 0%,#0D3A30 100%)">
+<!-- ==================== APPLY AS TUTOR FORM ==================== -->
+<div id="p-teacher-form" class="page">
+  <div class="form-hero teal-bg">
     <div class="container">
-      <h1>Join as a MentorBridge Teacher</h1>
-      <p>Apply to our verified teacher network. Teach from home or visit students — flexible hours, guaranteed students, and professional growth.</p>
+      <h1>✏️ Apply as a Tutor</h1>
+      <p>Join our verified teacher network — flexible hours, guaranteed students, and professional growth.</p>
     </div>
   </div>
-  <div class="container form-wrap">
+  <div class="container form-outer">
     <div class="form-card">
-      <div class="success-msg" id="teacher-success">✅ Your application has been received! Our team will review your details and contact you within 48 hours for the next steps.</div>
-      <form onsubmit="submitForm(event,'teacher-success')">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Full Name <span class="req">*</span></label>
-            <input type="text" placeholder="Your full name" required>
-          </div>
-          <div class="form-group">
-            <label>Mobile / WhatsApp Number <span class="req">*</span></label>
-            <input type="tel" placeholder="+91 XXXXX XXXXX" required>
-          </div>
+      <div class="success-box" id="s-teacher">✅ Application received! Our team will review and contact you within 48 hours.</div>
+      <form onsubmit="submitForm(event,'s-teacher')">
+        <div class="f-row">
+          <div class="f-group"><label>Full Name <span class="req">*</span></label><input type="text" placeholder="Your full name" required></div>
+          <div class="f-group"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" required></div>
         </div>
-        <div class="form-group">
-          <label>Email Address <span class="req">*</span></label>
-          <input type="email" placeholder="your@email.com" required>
+        <div class="f-row">
+          <div class="f-group"><label>Email Address <span class="req">*</span></label><input type="email" placeholder="your@email.com" required></div>
+          <div class="f-group"><label>City / Area <span class="req">*</span></label><input type="text" placeholder="Your city or locality in Bihar" required></div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Highest Qualification <span class="req">*</span></label>
-            <select required>
-              <option value="">Select qualification</option>
-              <option>12th Pass</option>
-              <option>Pursuing Graduation</option>
-              <option>B.A. / B.Sc. / B.Com</option>
-              <option>B.Tech / B.E.</option>
-              <option>B.Ed / D.El.Ed</option>
-              <option>M.A. / M.Sc. / M.Com</option>
-              <option>M.Tech / M.E.</option>
-              <option>M.Ed</option>
-              <option>PhD / Research Scholar</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Teaching Experience <span class="req">*</span></label>
-            <select required>
-              <option value="">Select experience</option>
-              <option>Fresher (0 years)</option>
-              <option>Less than 1 year</option>
-              <option>1–2 years</option>
-              <option>3–5 years</option>
-              <option>5–10 years</option>
-              <option>10+ years</option>
-            </select>
-          </div>
+        <div class="f-row">
+          <div class="f-group"><label>Highest Qualification <span class="req">*</span></label><select required><option value="">Select qualification</option><option>12th Pass</option><option>Pursuing Graduation</option><option>B.A. / B.Sc. / B.Com</option><option>B.Tech / B.E.</option><option>B.Ed / D.El.Ed</option><option>M.A. / M.Sc. / M.Com</option><option>M.Tech</option><option>M.Ed</option><option>PhD / Research Scholar</option></select></div>
+          <div class="f-group"><label>Teaching Experience <span class="req">*</span></label><select required><option value="">Select experience</option><option>Fresher (0 years)</option><option>Less than 1 year</option><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
         </div>
-        <div class="form-group">
-          <label>Subjects You Can Teach <span class="req">*</span></label>
-          <input type="text" placeholder="e.g. Maths, Science, English, Hindi, Physics (separate with commas)" required>
+        <div class="f-group"><label>Subjects You Can Teach <span class="req">*</span></label><input type="text" placeholder="e.g. Maths, Science, English, Hindi, Physics" required></div>
+        <div class="f-row">
+          <div class="f-group"><label>Classes You Can Teach <span class="req">*</span></label><input type="text" placeholder="e.g. Class 6 to Class 10" required></div>
+          <div class="f-group"><label>Board Expertise</label><select><option value="">Select board</option><option>CBSE</option><option>ICSE</option><option>Bihar Board (BSEB)</option><option>All Boards</option></select></div>
         </div>
-        <div class="form-group">
-          <label>Classes You Can Teach <span class="req">*</span></label>
-          <input type="text" placeholder="e.g. Class 6 to Class 10, or Nursery to Class 5" required>
+        <div class="f-row">
+          <div class="f-group"><label>Teaching Mode Preferred</label><select><option value="">Select mode</option><option>Home Tuition (Visit Students)</option><option>Online Tuition</option><option>Both</option></select></div>
+          <div class="f-group"><label>Medium of Instruction</label><select><option value="">Select medium</option><option>Hindi Medium</option><option>English Medium</option><option>Bilingual</option></select></div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Preferred Teaching Mode</label>
-            <select>
-              <option value="">Select preference</option>
-              <option>Home Tuition (Visit Students)</option>
-              <option>Online Tuition</option>
-              <option>Both</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>City / Area <span class="req">*</span></label>
-            <input type="text" placeholder="Your city or locality" required>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Medium of Instruction</label>
-          <select>
-            <option value="">Select medium</option>
-            <option>Hindi Medium</option>
-            <option>English Medium</option>
-            <option>Both / Bilingual</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Current Occupation</label>
-          <select>
-            <option value="">Select</option>
-            <option>Student (Pursuing College/University)</option>
-            <option>Housewife / Homemaker</option>
-            <option>Working Professional (Part-time teaching)</option>
-            <option>Full-time Private Teacher</option>
-            <option>Retired Teacher</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Brief Introduction / About You</label>
-          <textarea placeholder="Tell us about your teaching experience, approach, achievements, and why you want to join MentorBridge..."></textarea>
-        </div>
+        <div class="f-group"><label>Upload Resume / CV <span class="req">*</span></label><input type="file" accept=".pdf,.doc,.docx" class="file-input" required></div>
+        <div class="f-group"><label>Upload Qualification Certificate</label><input type="file" accept=".pdf,.jpg,.jpeg,.png" class="file-input"></div>
+        <div class="f-group"><label>Brief Introduction</label><textarea placeholder="Tell us about your teaching experience, approach, and why you want to join MentorBridge..."></textarea></div>
         <button type="submit" class="btn btn-teal btn-lg form-submit">Submit Application — Join MentorBridge 🎓</button>
-        <p class="form-note">🔒 Your information is secure. We'll review your application and contact you within 48 hours.</p>
+        <p class="form-note">🔒 Your information is secure. We'll review and contact you within 48 hours.</p>
       </form>
     </div>
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE: CONTACT -->
-<!-- ============================================================ -->
-<div id="page-contact" class="page">
+<!-- ==================== CONTACT ==================== -->
+<div id="p-contact" class="page">
   <div class="about-hero">
     <div class="container">
       <h1>Get in <span style="color:var(--orange)">Touch</span></h1>
-      <p>Have a question? Want to discuss your child's needs? We're here to help — reach out through any channel.</p>
+      <p>Have a question? We're here — reach us through WhatsApp, email, or the form below.</p>
     </div>
   </div>
-  <section class="section-pad">
-    <div class="container">
-      <div class="contact-grid">
-        <div class="contact-info-card">
-          <h3>Contact Information</h3>
-          <div class="contact-item">
-            <div class="contact-icon">📞</div>
-            <div>
-              <div class="contact-label">Phone & WhatsApp</div>
-              <div class="contact-val"><a href="tel:+919XXXXXXXXX">+91 9XXXXXXXXX</a></div>
-            </div>
+  <section class="sec">
+    <div class="container contact-grid">
+      <div class="c-info">
+        <h3>Contact Information</h3>
+        <div class="c-item"><div class="c-icon">📞</div><div><div class="c-label">Phone & WhatsApp</div><div class="c-val"><a href="tel:+919876543210">+91 98765 43210</a></div></div></div>
+        <div class="c-item"><div class="c-icon">📧</div><div><div class="c-label">Email</div><div class="c-val"><a href="mailto:hello@mentorbridge.in">hello@mentorbridge.in</a></div></div></div>
+        <div class="c-item"><div class="c-icon">📍</div><div><div class="c-label">Location</div><div class="c-val" style="color:rgba(255,255,255,.8)">Muzaffarpur, Bihar — 842001<br>Serving across Bihar</div></div></div>
+        <div class="c-item"><div class="c-icon">⏰</div><div><div class="c-label">Support Hours</div><div class="c-val" style="color:rgba(255,255,255,.8)">Mon–Sat: 8 AM – 8 PM<br>Sunday: 10 AM – 4 PM</div></div></div>
+        <button class="wa-big" onclick="window.open('https://wa.me/919876543210','_blank')">💬 Chat on WhatsApp — Quick Response</button>
+      </div>
+      <div class="c-form-card">
+        <div class="sec-tag teal" style="margin-bottom:14px">Send a Message</div>
+        <h2 class="sec-title" style="font-size:26px;margin-bottom:20px">We'll Reply <span>Within Hours</span></h2>
+        <div class="success-box" id="s-contact">✅ Message sent! We'll contact you shortly.</div>
+        <form onsubmit="submitForm(event,'s-contact')">
+          <div class="f-row">
+            <div class="f-group"><label>Your Name <span class="req">*</span></label><input type="text" placeholder="Full name" required></div>
+            <div class="f-group"><label>Phone / WhatsApp <span class="req">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" required></div>
           </div>
-          <div class="contact-item">
-            <div class="contact-icon">📧</div>
-            <div>
-              <div class="contact-label">Email</div>
-              <div class="contact-val"><a href="mailto:hello@mentorbridge.in">hello@mentorbridge.in</a></div>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">📍</div>
-            <div>
-              <div class="contact-label">Location</div>
-              <div class="contact-val" style="color:rgba(255,255,255,0.8)">Muzaffarpur, Bihar — 842001<br>Serving across Bihar</div>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">⏰</div>
-            <div>
-              <div class="contact-label">Support Hours</div>
-              <div class="contact-val" style="color:rgba(255,255,255,0.8)">Mon–Sat: 8 AM – 8 PM<br>Sunday: 10 AM – 4 PM</div>
-            </div>
-          </div>
-          <button class="wa-btn-big" onclick="window.open('https://wa.me/919XXXXXXXXX','_blank')">
-            💬 Chat on WhatsApp — Quick Response
-          </button>
-        </div>
-        <div class="contact-form-card">
-          <div class="section-eyebrow teal" style="margin-bottom:16px">Send a Message</div>
-          <h2 class="section-title" style="font-size:28px;margin-bottom:20px">We'll Get Back to You<br>Within <span>a Few Hours</span></h2>
-          <div class="success-msg" id="contact-success">✅ Message sent! Our team will contact you within a few hours.</div>
-          <form onsubmit="submitForm(event,'contact-success')">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Your Name <span class="req">*</span></label>
-                <input type="text" placeholder="Full name" required>
-              </div>
-              <div class="form-group">
-                <label>Phone / WhatsApp <span class="req">*</span></label>
-                <input type="tel" placeholder="+91 XXXXX XXXXX" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Email Address</label>
-              <input type="email" placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-              <label>I am a <span class="req">*</span></label>
-              <select required>
-                <option value="">Select</option>
-                <option>Parent looking for a Tutor</option>
-                <option>Teacher wanting to join</option>
-                <option>Student</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Your Message <span class="req">*</span></label>
-              <textarea placeholder="How can we help you? Tell us about your requirement..." required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg form-submit">Send Message →</button>
-          </form>
-        </div>
+          <div class="f-group"><label>I am a <span class="req">*</span></label><select required><option value="">Select</option><option>Parent looking for a Tutor</option><option>Teacher wanting to join</option><option>Student</option><option>Other</option></select></div>
+          <div class="f-group"><label>Your Message <span class="req">*</span></label><textarea placeholder="How can we help you?" required></textarea></div>
+          <button type="submit" class="btn btn-orange btn-lg form-submit">Send Message →</button>
+        </form>
       </div>
     </div>
   </section>
 </div>
 
-<!-- ============================================================ -->
-<!-- FOOTER (shared across all pages) -->
-<!-- ============================================================ -->
+<!-- FOOTER -->
 <footer>
   <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="footer-logo-text"><span class="mentor">Mentor</span><span class="bridge">Bridge</span></div>
-        <p class="footer-desc">Bihar's most trusted home tutoring platform. Verified teachers, personalised learning plans, monthly progress reports, and complete parent transparency — for Nursery to Class 10.</p>
-        <div class="footer-contacts">
-          <a href="tel:+919XXXXXXXXX">📞 +91 9XXXXXXXXX</a>
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo"><span class="o">Mentor</span><span class="t">Bridge</span></div>
+        <p class="foot-desc">Bihar's most trusted home tutoring platform. Verified teachers, personalised learning, monthly reports — Nursery to Class 10.</p>
+        <div class="foot-contacts">
+          <a href="tel:+919876543210">📞 +91 98765 43210</a>
           <a href="mailto:hello@mentorbridge.in">📧 hello@mentorbridge.in</a>
-          <a href="https://wa.me/919XXXXXXXXX" target="_blank">💬 WhatsApp Chat</a>
-          <a href="#">📍 Muzaffarpur, Bihar</a>
+          <a href="https://wa.me/919876543210" target="_blank">💬 WhatsApp Chat</a>
+          <a>📍 Muzaffarpur, Bihar</a>
         </div>
       </div>
-      <div class="footer-col">
+      <div class="foot-col">
         <h4>Services</h4>
-        <a href="#" onclick="showPage('services');return false">Home Tuition</a>
-        <a href="#" onclick="showPage('services');return false">Online Tuition</a>
-        <a href="#" onclick="showPage('services');return false">Personalised Learning</a>
-        <a href="#" onclick="showPage('services');return false">Spoken English</a>
-        <a href="#" onclick="showPage('services');return false">Personality Development</a>
-        <a href="#" onclick="showPage('services');return false">Exam Preparation</a>
+        <a onclick="go('services')">Home Tuition</a>
+        <a onclick="go('services')">Online Tuition</a>
+        <a onclick="go('services')">Spoken English</a>
+        <a onclick="go('services')">Exam Preparation</a>
+        <a onclick="go('services')">Personality Dev.</a>
       </div>
-      <div class="footer-col">
+      <div class="foot-col">
         <h4>Quick Links</h4>
-        <a href="#" onclick="showPage('home');return false">Home</a>
-        <a href="#" onclick="showPage('about');return false">About Us</a>
-        <a href="#" onclick="showPage('teachers');return false">Our Teachers</a>
-        <a href="#" onclick="showPage('tutor-form');return false">Find a Tutor</a>
-        <a href="#" onclick="showPage('teacher-form');return false">Become a Teacher</a>
-        <a href="#" onclick="showPage('contact');return false">Contact Us</a>
+        <a onclick="go('home')">Home</a>
+        <a onclick="go('about')">About Us</a>
+        <a onclick="go('teachers')">Our Teachers</a>
+        <a onclick="go('tutor-form')">Find a Tutor</a>
+        <a onclick="go('teacher-form')">Apply as Tutor</a>
+        <a onclick="go('contact')">Contact</a>
       </div>
-      <div class="footer-col">
-        <h4>Trust & Policy</h4>
-        <a href="#">Verification Process</a>
-        <a href="#">Teacher Replacement Policy</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Refund Policy</a>
-        <a href="#">Parent FAQ</a>
+      <div class="foot-col">
+        <h4>Policies</h4>
+        <a>Verification Process</a>
+        <a>Replacement Policy</a>
+        <a>Privacy Policy</a>
+        <a>Terms of Service</a>
+        <a>Refund Policy</a>
       </div>
     </div>
-    <div class="footer-bottom">
+    <div class="foot-bottom">
       <span>© 2025 MentorBridge. All rights reserved. | Muzaffarpur, Bihar</span>
-      <span class="footer-love">Made with <span>❤️</span> for students of Bihar</span>
+      <span class="foot-heart">Made with <span>❤️</span> for students of Bihar</span>
     </div>
   </div>
 </footer>
 
 <script>
-// ===== ROUTING =====
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const page = document.getElementById('page-'+id);
-  if(page) {
-    page.classList.add('active');
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-  // Update nav active state
-  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-  const navMap = {home:'nav-home',about:'nav-about',services:'nav-services',teachers:'nav-teachers',contact:'nav-contact'};
-  if(navMap[id]) document.getElementById(navMap[id]).classList.add('active');
+// ROUTING
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const p=document.getElementById('p-'+id);
+  if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const map={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',contact:'n-contact'};
+  if(map[id]){const el=document.getElementById(map[id]);if(el)el.classList.add('active');}
 }
-
-// ===== MOBILE MENU =====
-function toggleMenu(){
-  document.getElementById('mobileMenu').classList.toggle('open');
+function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
+function faq(el){
+  const item=el.parentElement,ans=el.nextElementSibling,icon=el.querySelector('.faq-icon'),open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-a').classList.remove('show');});
+  if(!open){item.classList.add('open');ans.classList.add('show');}
 }
-
-// ===== FAQ =====
-function toggleFaq(el){
-  const item = el.parentElement;
-  const ans = el.nextElementSibling;
-  const icon = el.querySelector('.faq-icon');
-  const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i=>{
-    i.classList.remove('open');
-    i.querySelector('.faq-a').classList.remove('show');
-  });
-  if(!isOpen){
-    item.classList.add('open');
-    ans.classList.add('show');
-  }
-}
-
-// ===== FORM SUBMIT =====
-function submitForm(e, successId){
+function submitForm(e,sid){
   e.preventDefault();
-  const msg = document.getElementById(successId);
-  msg.classList.add('show');
-  e.target.style.display='none';
-  msg.scrollIntoView({behavior:'smooth',block:'center'});
+  const box=document.getElementById(sid);box.classList.add('show');
+  e.target.style.display='none';box.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-// ===== GENERATE TEACHERS PAGE =====
-const teachersData = [
-  {init:'PK',name:'Priya Kumari',qual:'B.Sc. Mathematics, B.Ed',exp:'5 Years',subj:'Maths, Science',cls:'Class 6–10',board:'CBSE / BSEB',medium:'Hindi & English',rating:'4.9',bg:'#FFF0EA',col:'#E85D26',bc:'#FFCBA4'},
-  {init:'RS',name:'Rahul Sharma',qual:'M.A. English, B.Ed',exp:'7 Years',subj:'English, Social Studies',cls:'Class 1–8',board:'CBSE / ICSE',medium:'English',rating:'4.8',bg:'#E8F7F5',col:'#1D7A6B',bc:'#9FE1CB'},
-  {init:'SK',name:'Suman Kumari',qual:'B.A. Hindi, B.Ed',exp:'4 Years',subj:'Hindi, EVS, GK',cls:'Class 1–5',board:'BSEB / CBSE',medium:'Hindi',rating:'5.0',bg:'#FFF8E8',col:'#C9992A',bc:'#FAC775'},
-  {init:'MV',name:'Mohit Verma',qual:'B.Sc. Physics, B.Ed',exp:'6 Years',subj:'Physics, Maths, Science',cls:'Class 8–10',board:'CBSE / BSEB',medium:'Hindi & English',rating:'4.9',bg:'#F3E8FF',col:'#7B2D8B',bc:'#CE93D8'},
-  {init:'NJ',name:'Neha Jha',qual:'B.Com, B.Ed',exp:'3 Years',subj:'Social Studies, Economics',cls:'Class 6–10',board:'CBSE',medium:'English',rating:'4.7',bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},
-  {init:'AK',name:'Arun Kumar',qual:'M.Sc. Chemistry, B.Ed',exp:'8 Years',subj:'Chemistry, Science',cls:'Class 7–10',board:'CBSE / BSEB',medium:'Hindi & English',rating:'4.8',bg:'#FFF0EA',col:'#E85D26',bc:'#FFCBA4'},
-  {init:'SP',name:'Smita Pandey',qual:'B.A. (Hons) English',exp:'2 Years',subj:'English, Spoken English',cls:'Class 1–8',board:'All Boards',medium:'English',rating:'4.9',bg:'#E8F7F5',col:'#1D7A6B',bc:'#9FE1CB'},
-  {init:'RK',name:'Ravi Kumar',qual:'B.Tech CSE',exp:'3 Years',subj:'Computer Science, Coding',cls:'Class 5–10',board:'CBSE / ICSE',medium:'English & Hindi',rating:'4.8',bg:'#FFF8E8',col:'#C9992A',bc:'#FAC775'},
-  {init:'DY',name:'Divya Yadav',qual:'B.Sc. Biology, B.Ed',exp:'5 Years',subj:'Biology, Science, EVS',cls:'Class 1–10',board:'CBSE / BSEB',medium:'Hindi & English',rating:'5.0',bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},
+// TEACHERS DATA
+const T=[
+  {i:'PK',n:'Priya Kumari',q:'B.Sc. Maths, B.Ed',e:'5 Yrs',s:'Maths, Science',c:'Class 6–10',b:'CBSE / BSEB',m:'Hindi & English',r:'4.9',bg:'#FFF1EA',col:'#E8601A',bc:'#FFCBA4'},
+  {i:'RS',n:'Rahul Sharma',q:'M.A. English, B.Ed',e:'7 Yrs',s:'English, Social Studies',c:'Class 1–8',b:'CBSE / ICSE',m:'English',r:'4.8',bg:'#E6F4F1',col:'#1D7A6B',bc:'#9FE1CB'},
+  {i:'SK',n:'Suman Kumari',q:'B.A. Hindi, B.Ed',e:'4 Yrs',s:'Hindi, EVS, GK',c:'Class 1–5',b:'BSEB / CBSE',m:'Hindi',r:'5.0',bg:'#FFF8E6',col:'#C9992A',bc:'#FAC775'},
+  {i:'MV',n:'Mohit Verma',q:'B.Sc. Physics, B.Ed',e:'6 Yrs',s:'Physics, Maths',c:'Class 8–10',b:'CBSE / BSEB',m:'Hindi & English',r:'4.9',bg:'#F3E8FF',col:'#7B2D8B',bc:'#CE93D8'},
+  {i:'NJ',n:'Neha Jha',q:'B.Com, B.Ed',e:'3 Yrs',s:'Social Studies, Economics',c:'Class 6–10',b:'CBSE',m:'English',r:'4.7',bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},
+  {i:'AK',n:'Arun Kumar',q:'M.Sc. Chemistry, B.Ed',e:'8 Yrs',s:'Chemistry, Science',c:'Class 7–10',b:'CBSE / BSEB',m:'Hindi & English',r:'4.8',bg:'#FFF1EA',col:'#E8601A',bc:'#FFCBA4'},
+  {i:'SP',n:'Smita Pandey',q:'B.A. (Hons) English',e:'2 Yrs',s:'English, Spoken English',c:'Class 1–8',b:'All Boards',m:'English',r:'4.9',bg:'#E6F4F1',col:'#1D7A6B',bc:'#9FE1CB'},
+  {i:'RK',n:'Ravi Kumar',q:'B.Tech CSE',e:'3 Yrs',s:'Computer Science, Coding',c:'Class 5–10',b:'CBSE / ICSE',m:'English & Hindi',r:'4.8',bg:'#FFF8E6',col:'#C9992A',bc:'#FAC775'},
+  {i:'DY',n:'Divya Yadav',q:'B.Sc. Biology, B.Ed',e:'5 Yrs',s:'Biology, Science, EVS',c:'Class 1–10',b:'CBSE / BSEB',m:'Hindi & English',r:'5.0',bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},
 ];
-
-function buildTeachersGrid(){
-  const grid = document.getElementById('teachers-grid');
-  if(!grid) return;
-  grid.innerHTML = teachersData.map(t => `
-    <div class="teacher-card">
-      <div class="teacher-card-top">
-        <div class="tc-avatar" style="background:${t.bg};color:${t.col};border-color:${t.bc}">${t.init}</div>
-        <div class="tc-name">${t.name}</div>
-        <div class="tc-qual">${t.qual} · ${t.exp} Exp.</div>
-        <div class="tc-verified">✓ Qualification + Police Verified</div>
-      </div>
-      <div class="teacher-card-bottom">
-        <div class="tc-row"><span class="tc-row-label">Subjects</span><span class="tc-row-val">${t.subj}</span></div>
-        <div class="tc-row"><span class="tc-row-label">Classes</span><span class="tc-row-val">${t.cls}</span></div>
-        <div class="tc-row"><span class="tc-row-label">Board</span><span class="tc-row-val">${t.board}</span></div>
-        <div class="tc-row"><span class="tc-row-label">Medium</span><span class="tc-row-val">${t.medium}</span></div>
-        <div class="tc-row"><span class="tc-row-label">Rating</span><span class="tc-stars">★ ${t.rating}</span></div>
-        <button class="btn btn-primary btn-sm" onclick="showPage('tutor-form')">Book Free Demo</button>
-      </div>
+const grid=document.getElementById('all-teachers');
+if(grid)grid.innerHTML=T.map(t=>`
+<div class="t-card">
+  <div class="t-card-top">
+    <div class="t-ava-wrap">
+      <div class="t-ava-svg" style="background:${t.bg};color:${t.col};border-color:${t.bc}">${t.i}</div>
+      <div class="t-vbadge">✓ Verified</div>
     </div>
-  `).join('');
-}
-
-// Init
-buildTeachersGrid();
+    <div class="t-name">${t.n}</div>
+    <div class="t-qual">${t.q} · ${t.e} Exp.</div>
+    <div class="t-stars">★ ${t.r}</div>
+  </div>
+  <div class="t-card-bottom">
+    <div class="t-row"><span class="t-row-label">Subjects</span><span class="t-row-val">${t.s}</span></div>
+    <div class="t-row"><span class="t-row-label">Classes</span><span class="t-row-val">${t.c}</span></div>
+    <div class="t-row"><span class="t-row-label">Board</span><span class="t-row-val">${t.b}</span></div>
+    <div class="t-row"><span class="t-row-label">Medium</span><span class="t-row-val">${t.m}</span></div>
+    <button class="btn btn-orange btn-sm" onclick="go('tutor-form')">Book Free Demo</button>
+  </div>
+</div>`).join('');
 </script>
 </body>
 </html>
