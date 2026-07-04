@@ -44,7 +44,7 @@
     "logo": "https://siddharthsinha670.github.io/mentorbridge-website/logo.png",
     "image": "https://siddharthsinha670.github.io/mentorbridge-website/og-image.jpg",
     "telephone": "+91-9876543210",
-    "email": "hello@mentorbridge.in",
+    "email": "mentorbridge@gmail.com",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Muzaffarpur",
@@ -91,7 +91,44 @@
       ]
     }
   }
-  </script>
+  
+// Scroll Reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); }});
+}, {threshold: 0.12});
+document.querySelectorAll('.why-card,.srv-card,.tc-card,.rv-card,.step-item,.stat').forEach(el => {
+  el.classList.add('reveal');
+  observer.observe(el);
+});
+
+// Counter Animation for stats
+function animateCounter(el, target, suffix='') {
+  let start = 0;
+  const duration = 1800;
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(eased * target) + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting && !e.target.dataset.counted) {
+      e.target.dataset.counted = true;
+      const nums = e.target.querySelectorAll('.stat-num');
+      const targets = [150, 500, 98, 5];
+      const suffixes = ['+', '+', '%', '+'];
+      nums.forEach((n, i) => animateCounter(n, targets[i], suffixes[i]));
+    }
+  });
+}, {threshold: 0.3});
+const statsBand = document.querySelector('.stats-band');
+if(statsBand) statsObserver.observe(statsBand);
+
+</script>
 
   <!-- FAQ Schema -->
   <script type="application/ld+json">
@@ -496,6 +533,68 @@ footer{background:#060D18;padding:64px 0 28px}
   .sec-title{font-size:26px}
   .hero-trust{gap:8px}
 }
+
+  /* SOCIAL BUTTONS */
+  .foot-social{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+  .social-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;transition:all .22s;text-decoration:none}
+  .social-btn.insta{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff}
+  .social-btn.insta:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(253,29,29,.4)}
+  .social-btn.fb{background:#1877F2;color:#fff}
+  .social-btn.fb:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(24,119,242,.4)}
+  .social-btn.wa{background:#25D366;color:#fff}
+  .social-btn.wa:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(37,211,102,.4)}
+
+  /* HERO ANIMATIONS */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .hero-left{animation:fadeUp .8s ease forwards}
+  .hero-eyebrow{animation:fadeUp .6s ease forwards}
+  .hero h1{animation:fadeUp .8s .1s ease both}
+  .hero-desc{animation:fadeUp .8s .2s ease both}
+  .hero-btns{animation:fadeUp .8s .3s ease both}
+  .hero-trust{animation:fadeUp .8s .4s ease both}
+  .hero-card{animation:fadeRight .8s .2s ease both,floatCard 4s 1s ease-in-out infinite}
+
+  /* COUNTER ANIMATION */
+  .stat-num{transition:all .5s}
+
+  /* MOBILE FIXES */
+  @media(max-width:768px){
+    .hero h1{font-size:32px!important;letter-spacing:-1px!important}
+    .hero-desc{font-size:15px!important}
+    .hero-btns .btn{width:100%;justify-content:center}
+    .hero-trust{gap:8px}
+    .trust-pill{font-size:12px;padding:6px 12px}
+    .nav-wrap{height:60px}
+    .logo-link img{height:44px!important}
+    .stats-band{padding:28px 0}
+    .stat-num{font-size:36px!important}
+    .sec{padding:60px 0}
+    .sec-title{font-size:26px!important}
+    .cta-sec h2{font-size:28px!important}
+    .cta-btns{flex-direction:column;align-items:center}
+    .cta-btns .btn{width:100%;max-width:320px;justify-content:center}
+    .foot-social{justify-content:center}
+    .foot-line{text-align:center;flex-direction:column;gap:6px}
+  }
+  @media(max-width:480px){
+    .hero h1{font-size:28px!important}
+    .hero-btns{flex-direction:column}
+    .hero-btns .btn{width:100%;justify-content:center}
+    .container{padding:0 16px}
+  }
+
+  /* SMOOTH SCROLL REVEAL */
+  .reveal{opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(.4,0,.2,1)}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* NAV SOCIAL ICONS */
+  .nav-social{display:flex;gap:8px;align-items:center}
+  .nav-social a{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;background:var(--bg2);color:var(--muted)}
+  .nav-social a:hover{transform:scale(1.15)}
+  .nav-social a.ig:hover{background:linear-gradient(135deg,#833ab4,#fd1d1d);color:#fff}
+  .nav-social a.fb:hover{background:#1877F2;color:#fff}
 </style>
 </head>
 <body>
@@ -515,6 +614,10 @@ footer{background:#060D18;padding:64px 0 28px}
       <li><a href="#" onclick="go('teachers');return false" id="n-teachers">Teachers</a></li>
       <li><a href="#" onclick="go('contact');return false" id="n-contact">Contact</a></li>
     </ul>
+    <div class="nav-social">
+      <a href="https://www.instagram.com/mentorbridgemuz/" target="_blank" class="ig" title="Instagram">📸</a>
+      <a href="https://www.facebook.com/profile.php?id=61591052849299" target="_blank" class="fb" title="Facebook">👍</a>
+    </div>
     <div class="nav-ctas">
       <button class="btn btn-outline btn-sm" onclick="go('tutor-form')">🔍 Find a Tutor</button>
       <button class="btn btn-orange btn-sm" onclick="go('teacher-form')">Apply as Tutor ✏️</button>
@@ -799,7 +902,7 @@ footer{background:#060D18;padding:64px 0 28px}
     <div class="ci-card">
       <h3>Contact Information</h3>
       <div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Phone & WhatsApp</div><div class="ci-val"><a href="tel:+919876543210">+91 98765 43210</a></div></div></div>
-      <div class="ci-item"><div class="ci-icon">📧</div><div><div class="ci-label">Email</div><div class="ci-val"><a href="mailto:hello@mentorbridge.in">hello@mentorbridge.in</a></div></div></div>
+      <div class="ci-item"><div class="ci-icon">📧</div><div><div class="ci-label">Email</div><div class="ci-val"><a href="mailto:mentorbridge@gmail.com">mentorbridge@gmail.com</a></div></div></div>
       <div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Location</div><div class="ci-val" style="color:rgba(255,255,255,.8)">Muzaffarpur, Bihar — 842001<br>Serving across Bihar</div></div></div>
       <div class="ci-item"><div class="ci-icon">⏰</div><div><div class="ci-label">Support Hours</div><div class="ci-val" style="color:rgba(255,255,255,.8)">Mon–Sat: 8 AM – 8 PM<br>Sunday: 10 AM – 4 PM</div></div></div>
       <button class="wa-btn" onclick="window.open('https://wa.me/919876543210','_blank')">💬 Chat on WhatsApp — Quick Response</button>
@@ -828,14 +931,30 @@ footer{background:#060D18;padding:64px 0 28px}
         <p class="foot-desc">Bihar's most trusted home tutoring platform. Verified teachers, personalised learning, monthly reports — Nursery to Class 10.</p>
         <div class="foot-contacts">
           <a href="tel:+919876543210">📞 +91 98765 43210</a>
-          <a href="mailto:hello@mentorbridge.in">📧 hello@mentorbridge.in</a>
+          <a href="mailto:mentorbridge@gmail.com">📧 mentorbridge@gmail.com</a>
           <a href="https://wa.me/919876543210" target="_blank">💬 WhatsApp Chat</a>
+          <a href="https://www.instagram.com/mentorbridgemuz/" target="_blank">📸 Instagram @mentorbridgemuz</a>
+          <a href="https://www.facebook.com/profile.php?id=61591052849299" target="_blank">👍 Facebook Page</a>
           <a>📍 Muzaffarpur, Bihar</a>
         </div>
       </div>
       <div class="foot-col"><h4>Services</h4><a onclick="go('services')">Home Tuition</a><a onclick="go('services')">Online Tuition</a><a onclick="go('services')">Spoken English</a><a onclick="go('services')">Exam Preparation</a><a onclick="go('services')">Personality Dev.</a></div>
       <div class="foot-col"><h4>Quick Links</h4><a onclick="go('home')">Home</a><a onclick="go('about')">About Us</a><a onclick="go('teachers')">Our Teachers</a><a onclick="go('tutor-form')">Find a Tutor</a><a onclick="go('teacher-form')">Apply as Tutor</a><a onclick="go('contact')">Contact</a></div>
       <div class="foot-col"><h4>Policies</h4><a>Verification Process</a><a>Replacement Policy</a><a>Privacy Policy</a><a>Terms of Service</a><a>Refund Policy</a></div>
+    </div>
+    <div class="foot-social">
+      <a href="https://www.instagram.com/mentorbridgemuz/" target="_blank" class="social-btn insta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61591052849299" target="_blank" class="social-btn fb">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </a>
+      <a href="https://wa.me/919876543210" target="_blank" class="social-btn wa">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
     </div>
     <div class="foot-line">
       <span>© 2025 MentorBridge. All rights reserved. | Muzaffarpur, Bihar</span>
