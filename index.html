@@ -978,61 +978,69 @@ function faq(el){
   document.querySelectorAll('.faq-item').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-a').classList.remove('show');});
   if(!open){item.classList.add('open');ans.classList.add('show');}
 }
-function sub(e, sid) {
+async function sub(e, sid) {
   e.preventDefault();
   const form = e.target;
   const fields = form.querySelectorAll('input,select,textarea');
-  
-  // Collect form data
-  let data = {};
+
+  // Build WhatsApp message
   let waMsg = '';
-  
+  let formData = new FormData();
+  let jsonData = {};
+
   if(sid === 's-tutor') {
     waMsg += '🎓 *NEW STUDENT ENQUIRY - MentorBridge*%0A%0A';
+    formData.append('_subject', 'New Student Enquiry - MentorBridge');
   } else if(sid === 's-teacher') {
     waMsg += '✏️ *NEW TEACHER APPLICATION - MentorBridge*%0A%0A';
+    formData.append('_subject', 'New Teacher Application - MentorBridge');
   } else {
     waMsg += '📩 *NEW CONTACT MESSAGE - MentorBridge*%0A%0A';
+    formData.append('_subject', 'New Contact Message - MentorBridge');
   }
-  
+
   fields.forEach(f => {
     if(f.type === 'file') return;
     const label = f.closest('.fg') ? f.closest('.fg').querySelector('label') : null;
-    const labelText = label ? label.textContent.replace('*','').trim() : f.name;
+    const labelText = label ? label.textContent.replace('*','').trim() : (f.name || 'Field');
     if(f.value && f.value.trim()) {
-      waMsg += `*${labelText}:* ${f.value.trim()}%0A`;
+      waMsg += `*${labelText}:* ${encodeURIComponent(f.value.trim())}%0A`;
+      formData.append(labelText, f.value.trim());
+      jsonData[labelText] = f.value.trim();
     }
   });
-  
-  waMsg += '%0A----%0AMentorBridge Website';
-  
-  // Send to WhatsApp
-  const waURL = `https://wa.me/918540016415?text=${waMsg}`;
-  
-  // Show success message
+
+  waMsg += '%0A----%0A🌐 MentorBridge Website%0A📅 ' + encodeURIComponent(new Date().toLocaleString('en-IN'));
+
+  // SheetDB API endpoints
+  const endpoints = {
+    's-tutor':   'https://sheetdb.io/api/v1/qmklc1a104hli',
+    's-teacher': 'https://sheetdb.io/api/v1/m266lnrseyl2u',
+    's-contact': 'https://sheetdb.io/api/v1/qmklc1a104hli'
+  };
+
+  // Show success
   const b = document.getElementById(sid);
   b.classList.add('show');
   form.style.display = 'none';
   b.scrollIntoView({behavior:'smooth', block:'center'});
-  
-  // Open WhatsApp after short delay
-  setTimeout(() => {
-    window.open(waURL, '_blank');
-  }, 800);
-  
-  // Also send to Google Forms (background)
-  sendToGoogleForms(sid, fields);
-}
 
-function sendToGoogleForms(sid, fields) {
-  // Google Form URLs - one for each form type
-  const formUrls = {
-    's-tutor': 'https://docs.google.com/forms/d/e/1FAIpQLSf_TUTOR_FORM_ID/formResponse',
-    's-teacher': 'https://docs.google.com/forms/d/e/1FAIpQLSf_TEACHER_FORM_ID/formResponse',
-    's-contact': 'https://docs.google.com/forms/d/e/1FAIpQLSf_CONTACT_FORM_ID/formResponse'
-  };
-  // Note: Replace form IDs above with real Google Form IDs
-  // For now WhatsApp is the primary data capture
+  // Send to WhatsApp
+  setTimeout(() => {
+    window.open('https://wa.me/918540016415?text=' + waMsg, '_blank');
+  }, 600);
+
+  // Save to Google Sheets via SheetDB
+  try {
+    await fetch(endpoints[sid], {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify({data: [jsonData]})
+    });
+    console.log('Data saved to sheet!');
+  } catch(err) {
+    console.log('Sheet save error:', err);
+  }
 }
 // Navbar scroll effect
 window.addEventListener('scroll',()=>{
