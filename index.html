@@ -1018,6 +1018,9 @@ async function sub(e, sid) {
     's-teacher': 'https://sheetdb.io/api/v1/m266lnrseyl2u',
     's-contact': 'https://sheetdb.io/api/v1/qmklc1a104hli'
   };
+  
+  // Add Date to jsonData
+  jsonData['Date'] = new Date().toLocaleString('en-IN');
 
   // Show success
   const b = document.getElementById(sid);
@@ -1032,14 +1035,29 @@ async function sub(e, sid) {
 
   // Save to Google Sheets via SheetDB
   try {
-    await fetch(endpoints[sid], {
+    const response = await fetch(endpoints[sid], {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify({data: [jsonData]})
     });
-    console.log('Data saved to sheet!');
+    const result = await response.json();
+    console.log('Sheet saved:', result);
   } catch(err) {
-    console.log('Sheet save error:', err);
+    // Fallback: try with no-cors
+    try {
+      await fetch(endpoints[sid], {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({data: [jsonData]})
+      });
+      console.log('Sheet save attempted (no-cors)');
+    } catch(e) {
+      console.log('Sheet save error:', e);
+    }
   }
 }
 // Navbar scroll effect
