@@ -359,6 +359,7 @@ async function loadStudents() {
     console.log('Student data raw:', data);
     if(Array.isArray(data) && data.length > 0) {
       console.log('Student columns:', Object.keys(data[0]));
+      console.log('First record:', data[0]);
     }
     allStudents = Array.isArray(data) ? data : [];
     renderStudents();
@@ -427,16 +428,29 @@ function renderDashTeachers() {
 
 // ── FULL TABLES ──
 function getVal(r, ...keys) {
+  if(!r) return '—';
+  const rkeys = Object.keys(r);
   for(const k of keys) {
-    // Try exact match
-    if(r[k] !== undefined && r[k] !== '') return r[k];
-    // Try lowercase
-    if(r[k.toLowerCase()] !== undefined && r[k.toLowerCase()] !== '') return r[k.toLowerCase()];
-    // Try finding partial match
-    const found = Object.keys(r).find(rk => rk.toLowerCase().includes(k.toLowerCase().split(' ')[0]));
-    if(found && r[found] !== '') return r[found];
+    // Exact match
+    if(r[k] !== undefined && r[k] !== '' && r[k] !== null) return r[k];
+    // Case-insensitive exact
+    const exactCI = rkeys.find(rk => rk.toLowerCase() === k.toLowerCase());
+    if(exactCI && r[exactCI] !== '' && r[exactCI] !== null) return r[exactCI];
+    // Partial match - key contains search term
+    const partial = rkeys.find(rk => rk.toLowerCase().includes(k.toLowerCase()));
+    if(partial && r[partial] !== '' && r[partial] !== null) return r[partial];
   }
   return '—';
+}
+
+// Debug: log all keys of first student record
+function debugStudent() {
+  if(allStudents.length > 0) {
+    console.log('=== STUDENT RECORD KEYS ===');
+    console.log(Object.keys(allStudents[0]));
+    console.log('=== STUDENT RECORD VALUES ===');
+    console.log(allStudents[0]);
+  }
 }
 
 function renderStudents() {
@@ -450,8 +464,11 @@ function renderStudents() {
     const id = 'STU' + String(idx + 1).padStart(4,'0');
     const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/\D/g,'');
     const date = getVal(r,'Date','Submission Date','date');
-    const cls = getVal(r,'Class / Grade','Class','class','grade');
-    const board = getVal(r,'Board','board');
+    // Find class field by scanning all keys
+    const clsKey = Object.keys(r).find(k => k.toLowerCase().includes('class'));
+    const cls = clsKey ? r[clsKey] : '—';
+    const boardKey = Object.keys(r).find(k => k.toLowerCase().includes('board'));
+    const board = boardKey ? r[boardKey] : '—';
     const status = getVal(r,'Status','status') === '—' ? 'New Enquiry' : getVal(r,'Status','status');
     return `<tr id="srow-${idx}">
       <td><span class="id-badge">${id}</span></td>
@@ -559,7 +576,8 @@ function openEdit(type, idx) {
     const phone = esc(getVal(r,'WhatsApp Number','phone'));
     const email = esc(getVal(r,'Email Address','email'));
     const cls   = esc(getVal(r,'Class / Grade','Class','class'));
-    const board = getVal(r,'Board','board');
+    const boardKey = Object.keys(r).find(k => k.toLowerCase().includes('board'));
+    const board = boardKey ? r[boardKey] : '—';
     const subj  = esc(getVal(r,'Subjects Required','Subjects','subjects'));
     const mode  = esc(getVal(r,'Teaching Mode','mode'));
     const addr  = esc(getVal(r,'Home Address / Area','address'));
