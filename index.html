@@ -1002,7 +1002,7 @@ async function sub(e, sid) {
   fields.forEach(f => {
     if(f.type === 'file') return;
     const label = f.closest('.fg') ? f.closest('.fg').querySelector('label') : null;
-    const labelText = label ? label.textContent.replace('*','').trim() : (f.name || 'Field');
+    const labelText = label ? label.textContent.replace(/\*/g,'').trim() : (f.name || 'Field');
     if(f.value && f.value.trim()) {
       waMsg += `*${labelText}:* ${encodeURIComponent(f.value.trim())}%0A`;
       formData.append(labelText, f.value.trim());
