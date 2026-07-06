@@ -543,59 +543,80 @@ document.addEventListener('keydown', e => {
 let editType = '';
 let editIdx = 0;
 
+function esc(v){ return (v||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function sel(v,opt){ return v===opt?'selected':''; }
+
 function openEdit(type, idx) {
   editType = type;
   editIdx = idx;
   const r = type === 'student' ? allStudents[idx] : allTeachers[idx];
-  const title = type === 'student' ? '✏️ Edit Student Enquiry' : '✏️ Edit Teacher Application';
-  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalTitle').textContent = type==='student' ? '✏️ Edit Student Enquiry' : '✏️ Edit Teacher Application';
   
   let fields = '';
   if(type === 'student') {
-    fields = `
-      <div class="modal-grid">
-        <div class="modal-fg"><label>Student Name</label><input id="ef-sname" value="${r['Student Name']||''}"></div>
-        <div class="modal-fg"><label>Parent Name</label><input id="ef-pname" value="${r['Parent / Guardian Name']||''}"></div>
-        <div class="modal-fg"><label>WhatsApp Number</label><input id="ef-phone" value="${r['WhatsApp Number']||''}"></div>
-        <div class="modal-fg"><label>Email</label><input id="ef-email" value="${r['Email Address']||''}"></div>
-        <div class="modal-fg"><label>Class / Grade</label><input id="ef-class" value="${r['Class / Grade']||''}"></div>
-        <div class="modal-fg"><label>Board</label><select id="ef-board">
-          <option ${r['Board']==='CBSE'?'selected':''}>CBSE</option>
-          <option ${r['Board']==='ICSE'?'selected':''}>ICSE</option>
-          <option ${r['Board']==='Bihar State Board (BSEB)'?'selected':''}>Bihar State Board (BSEB)</option>
-        </select></div>
-        <div class="modal-fg full"><label>Subjects Required</label><input id="ef-subjects" value="${r['Subjects Required']||''}"></div>
-        <div class="modal-fg"><label>Teaching Mode</label><input id="ef-mode" value="${r['Teaching Mode']||''}"></div>
-        <div class="modal-fg"><label>Address</label><input id="ef-address" value="${r['Home Address / Area']||''}"></div>
-        <div class="modal-fg"><label>Status</label><select id="ef-status">
-          <option ${r['Status']==='New Enquiry'?'selected':''}>New Enquiry</option>
-          <option ${r['Status']==='Contacted'?'selected':''}>Contacted</option>
-          <option ${r['Status']==='Demo Scheduled'?'selected':''}>Demo Scheduled</option>
-          <option ${r['Status']==='Admitted'?'selected':''}>Admitted</option>
-          <option ${r['Status']==='Not Interested'?'selected':''}>Not Interested</option>
-        </select></div>
-        <div class="modal-fg full"><label>Additional Notes</label><textarea id="ef-notes">${r['Additional Requirements']||''}</textarea></div>
-      </div>`;
+    const sname = esc(getVal(r,'Student Name','student name','name'));
+    const pname = esc(getVal(r,'Parent / Guardian Name','parent name'));
+    const phone = esc(getVal(r,'WhatsApp Number','phone'));
+    const email = esc(getVal(r,'Email Address','email'));
+    const cls   = esc(getVal(r,'Class / Grade','Class','class'));
+    const board = getVal(r,'Board','board');
+    const subj  = esc(getVal(r,'Subjects Required','Subjects','subjects'));
+    const mode  = esc(getVal(r,'Teaching Mode','mode'));
+    const addr  = esc(getVal(r,'Home Address / Area','address'));
+    const notes = esc(getVal(r,'Additional Requirements','notes'));
+    const status= getVal(r,'Status','status')==='—'?'New Enquiry':getVal(r,'Status','status');
+    fields = '<div class="modal-grid">'
+      + '<div class="modal-fg"><label>Student Name</label><input id="ef-sname" value="'+sname+'"></div>'
+      + '<div class="modal-fg"><label>Parent Name</label><input id="ef-pname" value="'+pname+'"></div>'
+      + '<div class="modal-fg"><label>WhatsApp Number</label><input id="ef-phone" value="'+phone+'"></div>'
+      + '<div class="modal-fg"><label>Email</label><input id="ef-email" value="'+email+'"></div>'
+      + '<div class="modal-fg"><label>Class / Grade</label><input id="ef-class" value="'+cls+'"></div>'
+      + '<div class="modal-fg"><label>Board</label><select id="ef-board">'
+      + '<option '+sel(board,'CBSE')+'>CBSE</option>'
+      + '<option '+sel(board,'ICSE')+'>ICSE</option>'
+      + '<option '+sel(board,'Bihar State Board (BSEB)')+'>Bihar State Board (BSEB)</option>'
+      + '</select></div>'
+      + '<div class="modal-fg full"><label>Subjects Required</label><input id="ef-subjects" value="'+subj+'"></div>'
+      + '<div class="modal-fg"><label>Teaching Mode</label><input id="ef-mode" value="'+mode+'"></div>'
+      + '<div class="modal-fg"><label>Address</label><input id="ef-address" value="'+addr+'"></div>'
+      + '<div class="modal-fg"><label>Status</label><select id="ef-status">'
+      + '<option '+sel(status,'New Enquiry')+'>New Enquiry</option>'
+      + '<option '+sel(status,'Contacted')+'>Contacted</option>'
+      + '<option '+sel(status,'Demo Scheduled')+'>Demo Scheduled</option>'
+      + '<option '+sel(status,'Admitted')+'>Admitted</option>'
+      + '<option '+sel(status,'Not Interested')+'>Not Interested</option>'
+      + '</select></div>'
+      + '<div class="modal-fg full"><label>Additional Notes</label><textarea id="ef-notes">'+notes+'</textarea></div>'
+      + '</div>';
   } else {
-    fields = `
-      <div class="modal-grid">
-        <div class="modal-fg"><label>Full Name</label><input id="ef-name" value="${r['Full Name']||''}"></div>
-        <div class="modal-fg"><label>WhatsApp Number</label><input id="ef-phone" value="${r['WhatsApp Number']||''}"></div>
-        <div class="modal-fg"><label>Email</label><input id="ef-email" value="${r['Email Address']||''}"></div>
-        <div class="modal-fg"><label>City</label><input id="ef-city" value="${r['City / Area']||''}"></div>
-        <div class="modal-fg"><label>Qualification</label><input id="ef-qual" value="${r['Highest Qualification']||''}"></div>
-        <div class="modal-fg"><label>Experience</label><input id="ef-exp" value="${r['Teaching Experience']||''}"></div>
-        <div class="modal-fg full"><label>Subjects</label><input id="ef-subjects" value="${r['Subjects You Can Teach']||''}"></div>
-        <div class="modal-fg"><label>Classes</label><input id="ef-classes" value="${r['Classes You Can Teach']||''}"></div>
-        <div class="modal-fg"><label>Status</label><select id="ef-status">
-          <option ${r['Status']==='New Application'?'selected':''}>New Application</option>
-          <option ${r['Status']==='Reviewed'?'selected':''}>Reviewed</option>
-          <option ${r['Status']==='Interview Scheduled'?'selected':''}>Interview Scheduled</option>
-          <option ${r['Status']==='Approved'?'selected':''}>Approved</option>
-          <option ${r['Status']==='Rejected'?'selected':''}>Rejected</option>
-        </select></div>
-        <div class="modal-fg full"><label>Introduction / Notes</label><textarea id="ef-notes">${r['Brief Introduction']||''}</textarea></div>
-      </div>`;
+    const name  = esc(getVal(r,'Full Name','name'));
+    const phone = esc(getVal(r,'WhatsApp Number','phone'));
+    const email = esc(getVal(r,'Email Address','email'));
+    const city  = esc(getVal(r,'City / Area','city'));
+    const qual  = esc(getVal(r,'Highest Qualification','qualification'));
+    const exp   = esc(getVal(r,'Teaching Experience','experience'));
+    const subj  = esc(getVal(r,'Subjects You Can Teach','subjects'));
+    const cls   = esc(getVal(r,'Classes You Can Teach','classes'));
+    const intro = esc(getVal(r,'Brief Introduction','introduction','notes'));
+    const status= getVal(r,'Status','status')==='—'?'New Application':getVal(r,'Status','status');
+    fields = '<div class="modal-grid">'
+      + '<div class="modal-fg"><label>Full Name</label><input id="ef-name" value="'+name+'"></div>'
+      + '<div class="modal-fg"><label>WhatsApp Number</label><input id="ef-phone" value="'+phone+'"></div>'
+      + '<div class="modal-fg"><label>Email</label><input id="ef-email" value="'+email+'"></div>'
+      + '<div class="modal-fg"><label>City</label><input id="ef-city" value="'+city+'"></div>'
+      + '<div class="modal-fg"><label>Qualification</label><input id="ef-qual" value="'+qual+'"></div>'
+      + '<div class="modal-fg"><label>Experience</label><input id="ef-exp" value="'+exp+'"></div>'
+      + '<div class="modal-fg full"><label>Subjects</label><input id="ef-subjects" value="'+subj+'"></div>'
+      + '<div class="modal-fg"><label>Classes</label><input id="ef-classes" value="'+cls+'"></div>'
+      + '<div class="modal-fg"><label>Status</label><select id="ef-status">'
+      + '<option '+sel(status,'New Application')+'>New Application</option>'
+      + '<option '+sel(status,'Reviewed')+'>Reviewed</option>'
+      + '<option '+sel(status,'Interview Scheduled')+'>Interview Scheduled</option>'
+      + '<option '+sel(status,'Approved')+'>Approved</option>'
+      + '<option '+sel(status,'Rejected')+'>Rejected</option>'
+      + '</select></div>'
+      + '<div class="modal-fg full"><label>Introduction / Notes</label><textarea id="ef-notes">'+intro+'</textarea></div>'
+      + '</div>';
   }
   
   document.getElementById('modalFields').innerHTML = fields;
