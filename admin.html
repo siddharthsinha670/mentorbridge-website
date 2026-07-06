@@ -354,13 +354,19 @@ async function loadAll() {
 
 async function loadStudents() {
   try {
-    const res = await fetch(APIS.students);
+    const res = await fetch(APIS.students + '?limit=500');
     const data = await res.json();
+    console.log('Student data raw:', data);
+    if(Array.isArray(data) && data.length > 0) {
+      console.log('Student columns:', Object.keys(data[0]));
+    }
     allStudents = Array.isArray(data) ? data : [];
     renderStudents();
     renderDashStudents();
   } catch(e) {
-    document.getElementById('students-body').innerHTML = '<tr><td colspan="12" class="loading">⚠️ Could not load data. Check SheetDB connection.</td></tr>';
+    console.error('Student load error:', e);
+    document.getElementById('students-body').innerHTML = '<tr><td colspan="13" class="loading">⚠️ Could not load data: ' + e.message + '</td></tr>';
+    document.getElementById('dash-students').innerHTML = '<tr><td colspan="6" class="loading">⚠️ Could not load</td></tr>';
   }
 }
 
@@ -392,15 +398,15 @@ function updateDashboard() {
 function renderDashStudents() {
   const tbody = document.getElementById('dash-students');
   const recent = allStudents.slice(-5).reverse();
-  if(!recent.length){ tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No enquiries yet</td></tr>'; return; }
+  if(!recent.length){ tbody.innerHTML = '<tr><td colspan="6"><div style="text-align:center;padding:20px;color:var(--muted)">No enquiries yet</div></td></tr>'; return; }
   tbody.innerHTML = recent.map((r,i) => `
     <tr>
       <td><span class="id-badge">STU${String(allStudents.length - i).padStart(4,'0')}</span></td>
-      <td><strong>${r['Student Name']||r['student name']||'—'}</strong></td>
-      <td>${r['Class / Grade']||r['class']||'—'}</td>
-      <td>${r['Subjects Required']||r['subjects']||'—'}</td>
-      <td><a href="https://wa.me/91${(r['WhatsApp Number']||'').replace(/\D/g,'')}" target="_blank" style="color:var(--teal)">${r['WhatsApp Number']||'—'}</a></td>
-      <td>${r['Date']||r['Submission Date']||'—'}</td>
+      <td><strong>${getVal(r,'Student Name','student name','name')}</strong></td>
+      <td><strong style="color:var(--orange)">${getVal(r,'Class / Grade','Class','class','grade')}</strong></td>
+      <td>${getVal(r,'Subjects Required','Subjects','subjects')}</td>
+      <td><a href="https://wa.me/91${getVal(r,'WhatsApp Number','phone').replace(/\D/g,'')}" target="_blank" style="color:var(--teal)">${getVal(r,'WhatsApp Number','phone')}</a></td>
+      <td>${getVal(r,'Date','Submission Date','date')}</td>
     </tr>`).join('');
 }
 
@@ -420,29 +426,44 @@ function renderDashTeachers() {
 }
 
 // ── FULL TABLES ──
+function getVal(r, ...keys) {
+  for(const k of keys) {
+    // Try exact match
+    if(r[k] !== undefined && r[k] !== '') return r[k];
+    // Try lowercase
+    if(r[k.toLowerCase()] !== undefined && r[k.toLowerCase()] !== '') return r[k.toLowerCase()];
+    // Try finding partial match
+    const found = Object.keys(r).find(rk => rk.toLowerCase().includes(k.toLowerCase().split(' ')[0]));
+    if(found && r[found] !== '') return r[found];
+  }
+  return '—';
+}
+
 function renderStudents() {
   const tbody = document.getElementById('students-body');
-  if(!allStudents.length){ tbody.innerHTML = '<tr><td colspan="13"><div class="empty-state"><div class="ei">📭</div><p>No student enquiries yet</p></div></td></tr>'; return; }
+  if(!allStudents.length){ 
+    tbody.innerHTML = '<tr><td colspan="13"><div class="empty-state"><div class="ei">📭</div><p>No student enquiries yet.<br><small>Submit a test form on the website to see data here.</small></p></div></td></tr>'; 
+    return; 
+  }
   tbody.innerHTML = allStudents.slice().reverse().map((r,i) => {
     const idx = allStudents.length - 1 - i;
     const id = 'STU' + String(idx + 1).padStart(4,'0');
-    const phone = (r['WhatsApp Number']||r['whatsapp number']||'').replace(/\D/g,'');
-    const date = r['Date']||r['date']||r['Submission Date']||'—';
-    const cls = r['Class / Grade']||r['class']||r['Class']||'—';
-    const board = r['Board']||r['board']||'—';
-    const status = r['Status']||r['status']||'New Enquiry';
-    const statusClass = status.toLowerCase().includes('contact') ? 'status-contacted' : status.toLowerCase().includes('pending') ? 'status-pending' : 'status-new';
+    const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/\D/g,'');
+    const date = getVal(r,'Date','Submission Date','date');
+    const cls = getVal(r,'Class / Grade','Class','class','grade');
+    const board = getVal(r,'Board','board');
+    const status = getVal(r,'Status','status') === '—' ? 'New Enquiry' : getVal(r,'Status','status');
     return `<tr id="srow-${idx}">
       <td><span class="id-badge">${id}</span></td>
       <td style="white-space:nowrap;font-size:12px">${date}</td>
-      <td><strong>${r['Student Name']||r['student name']||'—'}</strong></td>
-      <td>${r['Parent / Guardian Name']||r['parent name']||'—'}</td>
-      <td><a href="https://wa.me/91${phone}" target="_blank" style="color:var(--teal);font-weight:700">${r['WhatsApp Number']||'—'}</a></td>
+      <td><strong>${getVal(r,'Student Name','student name','name')}</strong></td>
+      <td>${getVal(r,'Parent / Guardian Name','Parent Name','parent name')}</td>
+      <td><a href="https://wa.me/91${phone}" target="_blank" style="color:var(--teal);font-weight:700">${getVal(r,'WhatsApp Number','phone')}</a></td>
       <td><strong style="color:var(--orange)">${cls}</strong></td>
       <td><strong style="color:var(--teal)">${board}</strong></td>
-      <td>${r['Subjects Required']||r['subjects']||'—'}</td>
-      <td>${r['Teaching Mode']||r['mode']||'—'}</td>
-      <td>${r['Home Address / Area']||r['address']||'—'}</td>
+      <td>${getVal(r,'Subjects Required','Subjects','subjects')}</td>
+      <td>${getVal(r,'Teaching Mode','Mode','mode')}</td>
+      <td>${getVal(r,'Home Address / Area','Address','address')}</td>
       <td><select class="status-select" onchange="updateStatus('students','${id}',this.value,'srow-${idx}')">
         <option ${status==='New Enquiry'?'selected':''}>New Enquiry</option>
         <option ${status==='Contacted'?'selected':''}>Contacted</option>
