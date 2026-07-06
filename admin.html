@@ -473,7 +473,7 @@ function renderStudents() {
       </select></td>
       <td style="white-space:nowrap">
         <a href="https://wa.me/91${phone}?text=Hello%2C%20I%20am%20calling%20from%20MentorBridge%20regarding%20your%20tutor%20enquiry!" target="_blank" style="color:var(--teal);font-weight:700;font-size:12px;display:block;margin-bottom:4px">💬 WhatsApp</a>
-        <button onclick="openEdit('student',${idx})" style="background:var(--orange);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">✏️ Edit</button>
+        <button data-type="student" data-idx="${idx}" class="edit-btn" style="background:var(--orange);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">✏️ Edit</button>
       </td>
     </tr>`;
   }).join('');
@@ -508,7 +508,7 @@ function renderTeachers() {
       </select></td>
       <td style="white-space:nowrap">
         <a href="https://wa.me/91${phone}?text=Hello%2C%20I%20am%20calling%20from%20MentorBridge%20regarding%20your%20teacher%20application!" target="_blank" style="color:var(--teal);font-weight:700;font-size:12px;display:block;margin-bottom:4px">💬 WhatsApp</a>
-        <button onclick="openEdit('teacher',${idx})" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">✏️ Edit</button>
+        <button data-type="teacher" data-idx="${idx}" class="edit-btn" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">✏️ Edit</button>
       </td>
     </tr>`;
   }).join('');
@@ -672,14 +672,25 @@ function showToast(msg) {
 }
 
 // Close modal on overlay click
-document.getElementById('editModal').addEventListener('click', function(e) {
-  if(e.target === this) closeEdit();
+// Use event delegation for edit buttons
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.edit-btn');
+  if(btn) {
+    e.stopPropagation();
+    const type = btn.getAttribute('data-type');
+    const idx = parseInt(btn.getAttribute('data-idx'));
+    openEdit(type, idx);
+    return;
+  }
+  // Close modal only if clicking the overlay itself
+  const overlay = document.getElementById('editModal');
+  if(e.target === overlay) closeEdit();
 });
 
 </script>
 
 <!-- EDIT MODAL -->
-<div class="modal-overlay" id="editModal">
+<div class="modal-overlay" id="editModal" onclick="if(event.target===this)closeEdit()">
   <div class="modal-box">
     <div class="modal-head">
       <h2 id="modalTitle">Edit Entry</h2>
