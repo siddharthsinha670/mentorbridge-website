@@ -383,13 +383,19 @@ async function loadStudents() {
 
 async function loadTeachers() {
   try {
-    const res = await fetch(APIS.teachers);
+    const res = await fetch(APIS.teachers + '?limit=500');
     const data = await res.json();
+    console.log('Teacher data:', data);
+    if(Array.isArray(data) && data.length > 0) {
+      console.log('Teacher columns:', Object.keys(data[0]));
+      console.log('First teacher record:', data[0]);
+    }
     allTeachers = Array.isArray(data) ? data : [];
     renderTeachers();
     renderDashTeachers();
   } catch(e) {
-    document.getElementById('teachers-body').innerHTML = '<tr><td colspan="12" class="loading">⚠️ Could not load data. Check SheetDB connection.</td></tr>';
+    console.error('Teacher load error:', e);
+    document.getElementById('teachers-body').innerHTML = '<tr><td colspan="13" class="loading">⚠️ Could not load data: ' + e.message + '</td></tr>';
   }
 }
 
@@ -512,9 +518,10 @@ function renderTeachers() {
   tbody.innerHTML = allTeachers.slice().reverse().map((r,i) => {
     const idx = allTeachers.length - 1 - i;
     const id = 'TCH' + String(idx + 1).padStart(4,'0');
-    const phone = (r['WhatsApp Number']||'').replace(/\D/g,'');
-    const date = r['Date']||r['Submission Date']||'—';
-    const status = r['Status']||r['status']||'New Application';
+    const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/\D/g,'');
+    const dateKey = Object.keys(r).find(k => k.toLowerCase().includes('date'));
+    const date = dateKey ? r[dateKey] : '—';
+    const status = getVal(r,'Status','status') === '—' ? 'New Application' : getVal(r,'Status','status');
     return `<tr id="trow-${idx}">
       <td><span class="id-badge">${id}</span></td>
       <td style="white-space:nowrap;font-size:12px">${date}</td>
