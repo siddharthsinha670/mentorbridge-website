@@ -113,6 +113,27 @@ tr:hover td{background:rgba(29,122,107,.03)}
   .content{padding:16px}
   .topbar{padding:0 16px}
 }
+
+/* EDIT MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:20px;padding:32px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.modal-head h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--navy)}
+.modal-close{width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.modal-fg{margin-bottom:0}
+.modal-fg.full{grid-column:1/-1}
+.modal-fg label{display:block;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:5px;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.5px;text-transform:uppercase}
+.modal-fg input,.modal-fg select,.modal-fg textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Nunito',sans-serif;color:var(--text)}
+.modal-fg input:focus,.modal-fg select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(29,122,107,.07)}
+.modal-fg textarea{min-height:70px;resize:vertical}
+.modal-btns{display:flex;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.modal-save{flex:1;padding:12px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.modal-save:hover{background:#14614e}
+.modal-cancel{padding:12px 20px;background:var(--bg);color:var(--muted);border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;z-index:9999;display:none;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{display:flex}
 </style>
 </head>
 <body>
@@ -248,7 +269,7 @@ tr:hover td{background:rgba(29,122,107,.03)}
           </div>
           <div class="table-wrap">
             <table id="students-table">
-              <thead><tr><th>ID</th><th>Date</th><th>Student Name</th><th>Parent Name</th><th>WhatsApp</th><th>Class</th><th>Board</th><th>Subjects</th><th>Mode</th><th>Address</th><th>Status</th><th>Action</th></tr></thead>
+              <thead><tr><th>ID</th><th>Date</th><th>Student Name</th><th>Parent Name</th><th>WhatsApp</th><th>Class</th><th>Board</th><th>Subjects</th><th>Mode</th><th>Address</th><th>Status</th><th>Actions</th></tr></thead>
               <tbody id="students-body"><tr><td colspan="12" class="loading">Loading data...</td></tr></tbody>
             </table>
           </div>
@@ -267,7 +288,7 @@ tr:hover td{background:rgba(29,122,107,.03)}
           </div>
           <div class="table-wrap">
             <table id="teachers-table">
-              <thead><tr><th>ID</th><th>Date</th><th>Name</th><th>WhatsApp</th><th>Email</th><th>City</th><th>Qualification</th><th>Experience</th><th>Subjects</th><th>Classes</th><th>Status</th><th>Action</th></tr></thead>
+              <thead><tr><th>ID</th><th>Date</th><th>Name</th><th>WhatsApp</th><th>Email</th><th>City</th><th>Qualification</th><th>Experience</th><th>Subjects</th><th>Classes</th><th>Status</th><th>Actions</th></tr></thead>
               <tbody id="teachers-body"><tr><td colspan="12" class="loading">Loading data...</td></tr></tbody>
             </table>
           </div>
@@ -401,46 +422,73 @@ function renderDashTeachers() {
 // ── FULL TABLES ──
 function renderStudents() {
   const tbody = document.getElementById('students-body');
-  if(!allStudents.length){ tbody.innerHTML = '<tr><td colspan="12"><div class="empty-state"><div class="ei">📭</div><p>No student enquiries yet</p></div></td></tr>'; return; }
+  if(!allStudents.length){ tbody.innerHTML = '<tr><td colspan="13"><div class="empty-state"><div class="ei">📭</div><p>No student enquiries yet</p></div></td></tr>'; return; }
   tbody.innerHTML = allStudents.slice().reverse().map((r,i) => {
-    const id = 'STU' + String(allStudents.length - i).padStart(4,'0');
-    const phone = (r['WhatsApp Number']||'').replace(/\D/g,'');
-    return `<tr>
+    const idx = allStudents.length - 1 - i;
+    const id = 'STU' + String(idx + 1).padStart(4,'0');
+    const phone = (r['WhatsApp Number']||r['whatsapp number']||'').replace(/\D/g,'');
+    const date = r['Date']||r['date']||r['Submission Date']||'—';
+    const cls = r['Class / Grade']||r['class']||r['Class']||'—';
+    const board = r['Board']||r['board']||'—';
+    const status = r['Status']||r['status']||'New Enquiry';
+    const statusClass = status.toLowerCase().includes('contact') ? 'status-contacted' : status.toLowerCase().includes('pending') ? 'status-pending' : 'status-new';
+    return `<tr id="srow-${idx}">
       <td><span class="id-badge">${id}</span></td>
-      <td style="white-space:nowrap;font-size:12px">${r['Date']||r['Submission Date']||'—'}</td>
-      <td><strong>${r['Student Name']||'—'}</strong></td>
-      <td>${r['Parent / Guardian Name']||'—'}</td>
+      <td style="white-space:nowrap;font-size:12px">${date}</td>
+      <td><strong>${r['Student Name']||r['student name']||'—'}</strong></td>
+      <td>${r['Parent / Guardian Name']||r['parent name']||'—'}</td>
       <td><a href="https://wa.me/91${phone}" target="_blank" style="color:var(--teal);font-weight:700">${r['WhatsApp Number']||'—'}</a></td>
-      <td>${r['Class / Grade']||'—'}</td>
-      <td>${r['Board']||'—'}</td>
-      <td>${r['Subjects Required']||'—'}</td>
-      <td>${r['Teaching Mode']||'—'}</td>
-      <td>${r['Home Address / Area']||'—'}</td>
-      <td><span class="status-badge status-new">New</span></td>
-      <td><a href="https://wa.me/91${phone}?text=Hello%20from%20MentorBridge!" target="_blank" style="color:var(--teal);font-weight:700;font-size:12px">💬 WhatsApp</a></td>
+      <td><strong style="color:var(--orange)">${cls}</strong></td>
+      <td><strong style="color:var(--teal)">${board}</strong></td>
+      <td>${r['Subjects Required']||r['subjects']||'—'}</td>
+      <td>${r['Teaching Mode']||r['mode']||'—'}</td>
+      <td>${r['Home Address / Area']||r['address']||'—'}</td>
+      <td><select class="status-select" onchange="updateStatus('students','${id}',this.value,'srow-${idx}')">
+        <option ${status==='New Enquiry'?'selected':''}>New Enquiry</option>
+        <option ${status==='Contacted'?'selected':''}>Contacted</option>
+        <option ${status==='Demo Scheduled'?'selected':''}>Demo Scheduled</option>
+        <option ${status==='Admitted'?'selected':''}>Admitted</option>
+        <option ${status==='Not Interested'?'selected':''}>Not Interested</option>
+      </select></td>
+      <td style="white-space:nowrap">
+        <a href="https://wa.me/91${phone}?text=Hello%2C%20I%20am%20calling%20from%20MentorBridge%20regarding%20your%20tutor%20enquiry!" target="_blank" style="color:var(--teal);font-weight:700;font-size:12px;display:block;margin-bottom:4px">💬 WhatsApp</a>
+        <button onclick="openEdit('student',${idx})" style="background:var(--orange);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">✏️ Edit</button>
+      </td>
     </tr>`;
   }).join('');
 }
 
 function renderTeachers() {
   const tbody = document.getElementById('teachers-body');
-  if(!allTeachers.length){ tbody.innerHTML = '<tr><td colspan="12"><div class="empty-state"><div class="ei">📭</div><p>No teacher applications yet</p></div></td></tr>'; return; }
+  if(!allTeachers.length){ tbody.innerHTML = '<tr><td colspan="13"><div class="empty-state"><div class="ei">📭</div><p>No teacher applications yet</p></div></td></tr>'; return; }
   tbody.innerHTML = allTeachers.slice().reverse().map((r,i) => {
-    const id = 'TCH' + String(allTeachers.length - i).padStart(4,'0');
+    const idx = allTeachers.length - 1 - i;
+    const id = 'TCH' + String(idx + 1).padStart(4,'0');
     const phone = (r['WhatsApp Number']||'').replace(/\D/g,'');
-    return `<tr>
+    const date = r['Date']||r['Submission Date']||'—';
+    const status = r['Status']||r['status']||'New Application';
+    return `<tr id="trow-${idx}">
       <td><span class="id-badge">${id}</span></td>
-      <td style="white-space:nowrap;font-size:12px">${r['Date']||r['Submission Date']||'—'}</td>
+      <td style="white-space:nowrap;font-size:12px">${date}</td>
       <td><strong>${r['Full Name']||'—'}</strong></td>
       <td><a href="https://wa.me/91${phone}" target="_blank" style="color:var(--teal);font-weight:700">${r['WhatsApp Number']||'—'}</a></td>
       <td>${r['Email Address']||'—'}</td>
       <td>${r['City / Area']||'—'}</td>
-      <td>${r['Highest Qualification']||'—'}</td>
-      <td>${r['Teaching Experience']||'—'}</td>
+      <td><strong style="color:var(--teal)">${r['Highest Qualification']||'—'}</strong></td>
+      <td><strong style="color:var(--orange)">${r['Teaching Experience']||'—'}</strong></td>
       <td>${r['Subjects You Can Teach']||'—'}</td>
       <td>${r['Classes You Can Teach']||'—'}</td>
-      <td><span class="status-badge status-new">New</span></td>
-      <td><a href="https://wa.me/91${phone}?text=Hello%20from%20MentorBridge!" target="_blank" style="color:var(--teal);font-weight:700;font-size:12px">💬 WhatsApp</a></td>
+      <td><select class="status-select" onchange="updateStatus('teachers','${id}',this.value,'trow-${idx}')">
+        <option ${status==='New Application'?'selected':''}>New Application</option>
+        <option ${status==='Reviewed'?'selected':''}>Reviewed</option>
+        <option ${status==='Interview Scheduled'?'selected':''}>Interview Scheduled</option>
+        <option ${status==='Approved'?'selected':''}>Approved</option>
+        <option ${status==='Rejected'?'selected':''}>Rejected</option>
+      </select></td>
+      <td style="white-space:nowrap">
+        <a href="https://wa.me/91${phone}?text=Hello%2C%20I%20am%20calling%20from%20MentorBridge%20regarding%20your%20teacher%20application!" target="_blank" style="color:var(--teal);font-weight:700;font-size:12px;display:block;margin-bottom:4px">💬 WhatsApp</a>
+        <button onclick="openEdit('teacher',${idx})" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">✏️ Edit</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -469,7 +517,143 @@ function exportCSV(type) {
 document.addEventListener('keydown', e => {
   if(e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') login();
 });
+
+// ── EDIT MODAL ──
+let editType = '';
+let editIdx = 0;
+
+function openEdit(type, idx) {
+  editType = type;
+  editIdx = idx;
+  const r = type === 'student' ? allStudents[idx] : allTeachers[idx];
+  const title = type === 'student' ? '✏️ Edit Student Enquiry' : '✏️ Edit Teacher Application';
+  document.getElementById('modalTitle').textContent = title;
+  
+  let fields = '';
+  if(type === 'student') {
+    fields = `
+      <div class="modal-grid">
+        <div class="modal-fg"><label>Student Name</label><input id="ef-sname" value="${r['Student Name']||''}"></div>
+        <div class="modal-fg"><label>Parent Name</label><input id="ef-pname" value="${r['Parent / Guardian Name']||''}"></div>
+        <div class="modal-fg"><label>WhatsApp Number</label><input id="ef-phone" value="${r['WhatsApp Number']||''}"></div>
+        <div class="modal-fg"><label>Email</label><input id="ef-email" value="${r['Email Address']||''}"></div>
+        <div class="modal-fg"><label>Class / Grade</label><input id="ef-class" value="${r['Class / Grade']||''}"></div>
+        <div class="modal-fg"><label>Board</label><select id="ef-board">
+          <option ${r['Board']==='CBSE'?'selected':''}>CBSE</option>
+          <option ${r['Board']==='ICSE'?'selected':''}>ICSE</option>
+          <option ${r['Board']==='Bihar State Board (BSEB)'?'selected':''}>Bihar State Board (BSEB)</option>
+        </select></div>
+        <div class="modal-fg full"><label>Subjects Required</label><input id="ef-subjects" value="${r['Subjects Required']||''}"></div>
+        <div class="modal-fg"><label>Teaching Mode</label><input id="ef-mode" value="${r['Teaching Mode']||''}"></div>
+        <div class="modal-fg"><label>Address</label><input id="ef-address" value="${r['Home Address / Area']||''}"></div>
+        <div class="modal-fg"><label>Status</label><select id="ef-status">
+          <option ${r['Status']==='New Enquiry'?'selected':''}>New Enquiry</option>
+          <option ${r['Status']==='Contacted'?'selected':''}>Contacted</option>
+          <option ${r['Status']==='Demo Scheduled'?'selected':''}>Demo Scheduled</option>
+          <option ${r['Status']==='Admitted'?'selected':''}>Admitted</option>
+          <option ${r['Status']==='Not Interested'?'selected':''}>Not Interested</option>
+        </select></div>
+        <div class="modal-fg full"><label>Additional Notes</label><textarea id="ef-notes">${r['Additional Requirements']||''}</textarea></div>
+      </div>`;
+  } else {
+    fields = `
+      <div class="modal-grid">
+        <div class="modal-fg"><label>Full Name</label><input id="ef-name" value="${r['Full Name']||''}"></div>
+        <div class="modal-fg"><label>WhatsApp Number</label><input id="ef-phone" value="${r['WhatsApp Number']||''}"></div>
+        <div class="modal-fg"><label>Email</label><input id="ef-email" value="${r['Email Address']||''}"></div>
+        <div class="modal-fg"><label>City</label><input id="ef-city" value="${r['City / Area']||''}"></div>
+        <div class="modal-fg"><label>Qualification</label><input id="ef-qual" value="${r['Highest Qualification']||''}"></div>
+        <div class="modal-fg"><label>Experience</label><input id="ef-exp" value="${r['Teaching Experience']||''}"></div>
+        <div class="modal-fg full"><label>Subjects</label><input id="ef-subjects" value="${r['Subjects You Can Teach']||''}"></div>
+        <div class="modal-fg"><label>Classes</label><input id="ef-classes" value="${r['Classes You Can Teach']||''}"></div>
+        <div class="modal-fg"><label>Status</label><select id="ef-status">
+          <option ${r['Status']==='New Application'?'selected':''}>New Application</option>
+          <option ${r['Status']==='Reviewed'?'selected':''}>Reviewed</option>
+          <option ${r['Status']==='Interview Scheduled'?'selected':''}>Interview Scheduled</option>
+          <option ${r['Status']==='Approved'?'selected':''}>Approved</option>
+          <option ${r['Status']==='Rejected'?'selected':''}>Rejected</option>
+        </select></div>
+        <div class="modal-fg full"><label>Introduction / Notes</label><textarea id="ef-notes">${r['Brief Introduction']||''}</textarea></div>
+      </div>`;
+  }
+  
+  document.getElementById('modalFields').innerHTML = fields;
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeEdit() {
+  document.getElementById('editModal').classList.remove('open');
+}
+
+function saveEdit() {
+  if(editType === 'student') {
+    allStudents[editIdx]['Student Name'] = document.getElementById('ef-sname').value;
+    allStudents[editIdx]['Parent / Guardian Name'] = document.getElementById('ef-pname').value;
+    allStudents[editIdx]['WhatsApp Number'] = document.getElementById('ef-phone').value;
+    allStudents[editIdx]['Email Address'] = document.getElementById('ef-email').value;
+    allStudents[editIdx]['Class / Grade'] = document.getElementById('ef-class').value;
+    allStudents[editIdx]['Board'] = document.getElementById('ef-board').value;
+    allStudents[editIdx]['Subjects Required'] = document.getElementById('ef-subjects').value;
+    allStudents[editIdx]['Teaching Mode'] = document.getElementById('ef-mode').value;
+    allStudents[editIdx]['Home Address / Area'] = document.getElementById('ef-address').value;
+    allStudents[editIdx]['Status'] = document.getElementById('ef-status').value;
+    allStudents[editIdx]['Additional Requirements'] = document.getElementById('ef-notes').value;
+    renderStudents();
+    renderDashStudents();
+  } else {
+    allTeachers[editIdx]['Full Name'] = document.getElementById('ef-name').value;
+    allTeachers[editIdx]['WhatsApp Number'] = document.getElementById('ef-phone').value;
+    allTeachers[editIdx]['Email Address'] = document.getElementById('ef-email').value;
+    allTeachers[editIdx]['City / Area'] = document.getElementById('ef-city').value;
+    allTeachers[editIdx]['Highest Qualification'] = document.getElementById('ef-qual').value;
+    allTeachers[editIdx]['Teaching Experience'] = document.getElementById('ef-exp').value;
+    allTeachers[editIdx]['Subjects You Can Teach'] = document.getElementById('ef-subjects').value;
+    allTeachers[editIdx]['Classes You Can Teach'] = document.getElementById('ef-classes').value;
+    allTeachers[editIdx]['Status'] = document.getElementById('ef-status').value;
+    allTeachers[editIdx]['Brief Introduction'] = document.getElementById('ef-notes').value;
+    renderTeachers();
+    renderDashTeachers();
+  }
+  closeEdit();
+  showToast('✅ Changes saved successfully!');
+}
+
+function updateStatus(type, id, status, rowId) {
+  showToast('✅ Status updated to: ' + status);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Close modal on overlay click
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if(e.target === this) closeEdit();
+});
+
 </script>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="modalTitle">Edit Entry</h2>
+      <button class="modal-close" onclick="closeEdit()">✕</button>
+    </div>
+    <div id="modalFields"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeEdit()">Cancel</button>
+      <button class="modal-save" onclick="saveEdit()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 </body>
 </html>
 <!-- admin rebuild -->
