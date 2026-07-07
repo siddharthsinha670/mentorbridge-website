@@ -259,7 +259,7 @@ tr:hover td{background:rgba(29,122,107,.03)}
 
       <!-- STUDENTS -->
       <div id="sec-students" style="display:none">
-  <div id="debug-info" style="display:none;background:#FFF8E1;border:1px solid #FFB300;border-radius:10px;padding:16px;margin-bottom:16px;font-size:12px;line-height:1.8"></div>
+
         <div class="table-card">
           <div class="table-head">
             <h2>🎓 All Student Enquiries</h2>
@@ -361,15 +361,7 @@ async function loadStudents() {
     if(Array.isArray(data) && data.length > 0) {
       console.log('Student columns:', Object.keys(data[0]));
       console.log('First record:', data[0]);
-      // Show debug info visually
-      const debugDiv = document.getElementById('debug-info');
-      if(debugDiv) {
-        debugDiv.innerHTML = '<strong>Sheet Column Names:</strong><br>' + 
-          Object.keys(data[0]).map(k => `<code style="background:#f0f0f0;padding:2px 6px;margin:2px;display:inline-block;border-radius:4px">${k}</code>`).join(' ') +
-          '<br><br><strong>First Row Data:</strong><br>' +
-          Object.entries(data[0]).map(([k,v]) => `<code style="font-size:11px">${k}: <b>${v||'(empty)'}</b></code>`).join('<br>');
-        debugDiv.style.display = 'block';
-      }
+
     }
     allStudents = Array.isArray(data) ? data : [];
     renderStudents();
