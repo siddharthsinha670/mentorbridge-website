@@ -1039,22 +1039,44 @@ footer{background:#060D18;padding:64px 0 28px}
 <div id="p-tutor-form" class="page">
   <div class="form-hero fh-orange"><div class="container"><h1>🔍 Find a Verified Tutor</h1><p>Fill this form — we'll match you with 5–10 verified teachers within 24 hours. First demo class is FREE!</p></div></div>
   <div class="container form-outer"><div class="form-card">
-    <h2>Tell Us About Your Child</h2>
-    <p class="form-subtitle">Our team will call you within 24 hours with perfectly matched, verified teacher profiles.</p>
-    <div class="suc-box" id="s-tutor">✅ Enquiry submitted! WhatsApp pe bhi message ja raha hai. Hum 24 ghante mein call karenge!</div>
-    <form onsubmit="sub(event,'s-tutor')">
-      <div class="f2"><div class="fg"><label>Student Name <span class="req">*</span></label><input type="text" name="Student Name" placeholder="Student's full name" required></div><div class="fg"><label>Parent / Guardian Name <span class="req">*</span></label><input type="text" name="Parent / Guardian Name" placeholder="Parent's full name" required></div></div>
-      <div class="f2"><div class="fg"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" name="WhatsApp Number" placeholder="+91 XXXXX XXXXX" required></div><div class="fg"><label>Email Address</label><input type="email" name="Email Address" placeholder="your@email.com"></div></div>
-      <div class="f2"><div class="fg"><label>Class / Grade <span class="req">*</span></label><select name="Class / Grade" required><option value="">Select class</option><option value="Nursery / KG">Nursery / KG</option><option value="1">Class 1</option><option value="2">Class 2</option><option value="3">Class 3</option><option value="4">Class 4</option><option value="5">Class 5</option><option value="6">Class 6</option><option value="7">Class 7</option><option value="8">Class 8</option><option value="9">Class 9</option><option value="10">Class 10</option></select></div><div class="fg"><label>Board <span class="req">*</span></label><select name="Board" required><option value="">Select board</option><option>CBSE</option><option>ICSE</option><option>Bihar State Board (BSEB)</option><option>Not sure</option></select></div></div>
-      <div class="fg"><label>Subjects Required <span class="req">*</span></label><input type="text" name="Subjects Required" placeholder="e.g. Maths, Science, English" required></div>
-      <div class="f2"><div class="fg"><label>Teaching Mode <span class="req">*</span></label><select name="Teaching Mode" required><option value="">Select mode</option><option>Home Tuition (Teacher Visits)</option><option>Online Tuition</option><option>Both / Flexible</option></select></div><div class="fg"><label>Preferred Timing</label><select name="Preferred Timing"><option value="">Select timing</option><option>Morning (6–9 AM)</option><option>Afternoon (12–4 PM)</option><option>Evening (4–8 PM)</option><option>Flexible</option></select></div></div>
-      <div class="f2"><div class="fg"><label>Medium of Instruction</label><select name="Medium of Instruction"><option value="">Select medium</option><option>Hindi Medium</option><option>English Medium</option><option>Bilingual</option></select></div><div class="fg"><label>Teacher Gender Preference</label><select name="Teacher Gender Preference"><option value="">No preference</option><option>Male Teacher</option><option>Female Teacher</option></select></div></div>
-      <div class="fg"><label>Home Address / Area <span class="req">*</span></label><input type="text" name="Home Address / Area" placeholder="Your area or locality in Bihar" required></div>
-      <div class="fg"><label>Additional Requirements</label><textarea name="Additional Requirements" placeholder="Any special instructions — e.g. child needs extra help in fractions, has board exams in 2 months..."></textarea></div>
-      <button type="submit" class="btn btn-orange btn-lg form-sub">Submit Enquiry — Find My Tutor 🎯</button>
+    <h2>Find a Tutor for Your Child(ren)</h2>
+    <p class="form-subtitle">Ek se zyada bacche hain? "Add Another Child" karke sabki details bharo. Team 24 ghante mein call karegi!</p>
+    <div class="suc-box" id="s-tutor">✅ Enquiry submitted! WhatsApp pe message ja raha hai. Hum 24 ghante mein call karenge!</div>
+    <form onsubmit="submitTutorForm(event)">
+
+      <!-- Parent Info -->
+      <div style="background:var(--bg2);border-radius:12px;padding:20px;margin-bottom:20px;border:1.5px solid var(--border)">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--teal);margin-bottom:14px">👤 Parent / Guardian Information</div>
+        <div class="f2">
+          <div class="fg"><label>Parent / Guardian Name <span class="req">*</span></label><input type="text" id="p-parent-name" placeholder="Parent's full name" required></div>
+          <div class="fg"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" id="p-phone" placeholder="+91 XXXXX XXXXX" required></div>
+        </div>
+        <div class="f2">
+          <div class="fg"><label>Email Address</label><input type="email" id="p-email" placeholder="your@email.com"></div>
+          <div class="fg"><label>Home Address / Area <span class="req">*</span></label><input type="text" id="p-address" placeholder="Your area/locality in Bihar" required></div>
+        </div>
+        <div class="f2">
+          <div class="fg"><label>Teaching Mode <span class="req">*</span></label><select id="p-mode" required><option value="">Select mode</option><option>Home Tuition (Teacher Visits)</option><option>Online Tuition</option><option>Both / Flexible</option></select></div>
+          <div class="fg"><label>Preferred Timing</label><select id="p-timing"><option value="">Select timing</option><option>Morning (6-9 AM)</option><option>Afternoon (12-4 PM)</option><option>Evening (4-8 PM)</option><option>Flexible</option></select></div>
+        </div>
+      </div>
+
+      <!-- Students -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy)">🎓 Student Details</div>
+        <button type="button" onclick="addStudent()" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">+ Add Another Child</button>
+      </div>
+
+      <div id="students-container"></div>
+
+      <div class="fg" style="margin-top:16px"><label>Additional Notes</label><textarea id="p-notes" placeholder="Any special instructions — e.g. weak in Maths, upcoming board exams..."></textarea></div>
+      <button type="submit" class="btn btn-orange btn-lg form-sub">Submit Enquiry 🎯</button>
       <p class="form-note">🔒 Your information is 100% confidential. Our team will call within 24 hours.</p>
     </form>
   </div></div>
+</div>
+
+</div></div>
 </div>
 
 <!-- ============ APPLY AS TUTOR FORM ============ -->
