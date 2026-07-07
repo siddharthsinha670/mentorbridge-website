@@ -412,7 +412,7 @@ function renderDashStudents() {
     <tr>
       <td><span class="id-badge">STU${String(allStudents.length - i).padStart(4,'0')}</span></td>
       <td><strong>${getVal(r,'Student Name','student name','name')}</strong></td>
-      <td><strong style="color:var(--orange)">${getVal(r,'Class / Grade','Class','class','grade')}</strong></td>
+      <td><strong style="color:var(--orange)">${(()=>{const v=getVal(r,'Class / Grade','Class','class','grade');return v!=='—'&&!isNaN(v)?'Class '+v:v;})()}</strong></td>
       <td>${getVal(r,'Subjects Required','Subjects','subjects')}</td>
       <td><a href="https://wa.me/91${getVal(r,'WhatsApp Number','phone').replace(/\D/g,'')}" target="_blank" style="color:var(--teal)">${getVal(r,'WhatsApp Number','phone')}</a></td>
       <td>${getVal(r,'Date','Submission Date','date')}</td>
@@ -484,7 +484,7 @@ function renderStudents() {
       <td><strong>${getVal(r,'Student Name','student name','name')}</strong></td>
       <td>${getVal(r,'Parent / Guardian Name','Parent Name','parent name')}</td>
       <td><a href="https://wa.me/91${phone}" target="_blank" style="color:var(--teal);font-weight:700">${getVal(r,'WhatsApp Number','phone')}</a></td>
-      <td><strong style="color:var(--orange)">${cls}</strong></td>
+      <td><strong style="color:var(--orange)">${cls !== '—' && !isNaN(cls) ? 'Class '+cls : cls}</strong></td>
       <td><strong style="color:var(--teal)">${board}</strong></td>
       <td>${getVal(r,'Subjects Required','Subjects','subjects')}</td>
       <td>${getVal(r,'Teaching Mode','Mode','mode')}</td>
