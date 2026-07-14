@@ -138,47 +138,53 @@ const BOARDS = ['CBSE','ICSE','Bihar State Board (BSEB)','Not sure'];
 
 function addStudent() {
   studentCount++;
-  const idx = studentCount;
-  const div = document.createElement('div');
+  var idx = studentCount;
+  var div = document.createElement('div');
   div.className = 'student-card';
   div.id = 'student-' + idx;
-  div.innerHTML = `
-    <div class="student-card-head">
-      <div class="student-card-title">🎒 Child ${idx}</div>
-      ${idx > 1 ? `<button type="button" class="remove-student" onclick="removeStudent(${idx})">✕ Remove</button>` : ''}
-    </div>
-    <div class="f2">
-      <div class="fg"><label>Student Name <span class="req">*</span></label><input type="text" id="s${idx}-name" placeholder="Child's name" required></div>
-      <div class="fg"><label>Teacher Gender Preference</label><select id="s${idx}-gender"><option value="">No preference</option><option>Male Teacher</option><option>Female Teacher</option></select></div>
-    </div>
-    <div class="f2">
-      <div class="fg">
-        <label>Class / Grade <span class="req">*</span></label>
-        <select id="s${idx}-class" required>
-          <option value="">Select class</option>
-          ${CLASSES.map(c => `<option value="${c}">${c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c}</option>`).join('')}
-        </select>
-      </div>
-      <div class="fg">
-        <label>Board <span class="req">*</span></label>
-        <select id="s${idx}-board" required>
-          <option value="">Select board</option>
-          ${BOARDS.map(b => `<option>${b}</option>`).join('')}
-        </select>
-      </div>
-    </div>
-    <div class="fg">
-      <label>Subjects Required <span class="req">*</span> <span style="font-size:11px;color:var(--muted);font-weight:600">(Select all that apply)</span></label>
-      <div class="subjects-grid" id="s${idx}-subjects">
-        ${SUBJECTS.map(s => `
-          <label class="subj-chip" id="chip-${idx}-${s.replace(/\s/g,'')}">
-            <input type="checkbox" value="${s}" onchange="toggleChip(this)"> ${s}
-          </label>`).join('')}
-      </div>
-      <input type="text" id="s${idx}-other-subj" placeholder="Other subjects (optional)" style="margin-top:8px">
-    </div>
-    <div class="fg"><label>Special Instructions for this child</label><input type="text" id="s${idx}-note" placeholder="e.g. weak in fractions, upcoming exams..."></div>
-  `;
+
+  // Build class options
+  var classOpts = '<option value="">Select class</option>';
+  CLASSES.forEach(function(c) {
+    classOpts += '<option value="' + c + '">' + (c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c) + '</option>';
+  });
+
+  // Build board options
+  var boardOpts = '<option value="">Select board</option>';
+  BOARDS.forEach(function(b) {
+    boardOpts += '<option>' + b + '</option>';
+  });
+
+  // Build subject checkboxes
+  var subjHtml = '';
+  SUBJECTS.forEach(function(s) {
+    subjHtml += '<label class="subj-chip" onclick="toggleChip(this)">' +
+      '<input type="checkbox" value="' + s + '"> ' + s + '</label>';
+  });
+
+  // Remove button (only for child 2+)
+  var removeBtn = idx > 1 ? '<button type="button" class="remove-student" onclick="removeStudent(' + idx + ')">✕ Remove</button>' : '';
+
+  div.innerHTML =
+    '<div class="student-card-head">' +
+      '<div class="student-card-title">🎒 Child ' + idx + '</div>' +
+      removeBtn +
+    '</div>' +
+    '<div class="f2">' +
+      '<div class="fg"><label>Student Name <span class="req">*</span></label><input type="text" id="s' + idx + '-name" placeholder="Child's name" required></div>' +
+      '<div class="fg"><label>Teacher Gender Preference</label><select id="s' + idx + '-gender"><option value="">No preference</option><option>Male Teacher</option><option>Female Teacher</option></select></div>' +
+    '</div>' +
+    '<div class="f2">' +
+      '<div class="fg"><label>Class / Grade <span class="req">*</span></label><select id="s' + idx + '-class" required>' + classOpts + '</select></div>' +
+      '<div class="fg"><label>Board <span class="req">*</span></label><select id="s' + idx + '-board" required>' + boardOpts + '</select></div>' +
+    '</div>' +
+    '<div class="fg">' +
+      '<label>Subjects Required <span class="req">*</span> <span style="font-size:11px;color:var(--muted);font-weight:600">(Select all that apply)</span></label>' +
+      '<div class="subjects-grid" id="s' + idx + '-subjects">' + subjHtml + '</div>' +
+      '<input type="text" id="s' + idx + '-other-subj" placeholder="Other subjects (optional)" style="margin-top:8px">' +
+    '</div>' +
+    '<div class="fg"><label>Special Instructions for this child</label><input type="text" id="s' + idx + '-note" placeholder="e.g. weak in fractions, upcoming exams..."></div>';
+
   document.getElementById('students-container').appendChild(div);
 }
 
@@ -187,8 +193,14 @@ function removeStudent(idx) {
   if(el) el.remove();
 }
 
-function toggleChip(cb) {
-  const chip = cb.closest('.subj-chip');
+function toggleChip(el) {
+  // el can be label or checkbox
+  var chip = el.classList && el.classList.contains('subj-chip') ? el : el.closest('.subj-chip');
+  if(!chip) return;
+  var cb = chip.querySelector('input[type="checkbox"]');
+  if(!cb) return;
+  // If label clicked, toggle checkbox
+  if(el === chip) { cb.checked = !cb.checked; }
   if(cb.checked) chip.classList.add('checked');
   else chip.classList.remove('checked');
 }
@@ -285,19 +297,10 @@ async function submitTutorForm(e) {
   }
 }
 
-// Initialize with 1 student on page load
+// Init student form when page loads
 document.addEventListener('DOMContentLoaded', () => {
-  // Will be called when tutor form page is shown
+  if(studentCount === 0) addStudent();
 });
-
-// Override go() to init student form
-const _origGo = go;
-window.go = function(id) {
-  _origGo(id);
-  if(id === 'tutor-form' && studentCount === 0) {
-    addStudent();
-  }
-};
 
 </script>
 
@@ -1177,6 +1180,11 @@ function go(id){
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',contact:'n-contact'};
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
+  // Init student form
+  if(id==='tutor-form'){
+    var cont=document.getElementById('students-container');
+    if(cont && cont.children.length===0){studentCount=0;addStudent();}
+  }
 }
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
 function faq(el){
