@@ -129,178 +129,7 @@ const statsBand = document.querySelector('.stats-band');
 if(statsBand) statsObserver.observe(statsBand);
 
 
-// ── MULTI STUDENT FORM ──
-let studentCount = 0;
-
-const SUBJECTS = ['Maths','Science','English','Hindi','Social Studies','Physics','Chemistry','Biology','Computer Science','Sanskrit','EVS','GK'];
-const CLASSES = ['Nursery / KG','1','2','3','4','5','6','7','8','9','10'];
-const BOARDS = ['CBSE','ICSE','Bihar State Board (BSEB)','Not sure'];
-
-function addStudent() {
-  studentCount++;
-  var idx = studentCount;
-  var div = document.createElement('div');
-  div.className = 'student-card';
-  div.id = 'student-' + idx;
-
-  // Build class options
-  var classOpts = '<option value="">Select class</option>';
-  CLASSES.forEach(function(c) {
-    classOpts += '<option value="' + c + '">' + (c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c) + '</option>';
-  });
-
-  // Build board options
-  var boardOpts = '<option value="">Select board</option>';
-  BOARDS.forEach(function(b) {
-    boardOpts += '<option>' + b + '</option>';
-  });
-
-  // Build subject checkboxes
-  var subjHtml = '';
-  SUBJECTS.forEach(function(s) {
-    subjHtml += '<label class="subj-chip" onclick="toggleChip(this)">' +
-      '<input type="checkbox" value="' + s + '"> ' + s + '</label>';
-  });
-
-  // Remove button (only for child 2+)
-  var removeBtn = idx > 1 ? '<button type="button" class="remove-student" onclick="removeStudent(' + idx + ')">✕ Remove</button>' : '';
-
-  div.innerHTML =
-    '<div class="student-card-head">' +
-      '<div class="student-card-title">🎒 Child ' + idx + '</div>' +
-      removeBtn +
-    '</div>' +
-    '<div class="f2">' +
-      '<div class="fg"><label>Student Name <span class="req">*</span></label><input type="text" id="s' + idx + '-name" placeholder="Child's name" required></div>' +
-      '<div class="fg"><label>Teacher Gender Preference</label><select id="s' + idx + '-gender"><option value="">No preference</option><option>Male Teacher</option><option>Female Teacher</option></select></div>' +
-    '</div>' +
-    '<div class="f2">' +
-      '<div class="fg"><label>Class / Grade <span class="req">*</span></label><select id="s' + idx + '-class" required>' + classOpts + '</select></div>' +
-      '<div class="fg"><label>Board <span class="req">*</span></label><select id="s' + idx + '-board" required>' + boardOpts + '</select></div>' +
-    '</div>' +
-    '<div class="fg">' +
-      '<label>Subjects Required <span class="req">*</span> <span style="font-size:11px;color:var(--muted);font-weight:600">(Select all that apply)</span></label>' +
-      '<div class="subjects-grid" id="s' + idx + '-subjects">' + subjHtml + '</div>' +
-      '<input type="text" id="s' + idx + '-other-subj" placeholder="Other subjects (optional)" style="margin-top:8px">' +
-    '</div>' +
-    '<div class="fg"><label>Special Instructions for this child</label><input type="text" id="s' + idx + '-note" placeholder="e.g. weak in fractions, upcoming exams..."></div>';
-
-  document.getElementById('students-container').appendChild(div);
-}
-
-function removeStudent(idx) {
-  const el = document.getElementById('student-' + idx);
-  if(el) el.remove();
-}
-
-function toggleChip(el) {
-  // el can be label or checkbox
-  var chip = el.classList && el.classList.contains('subj-chip') ? el : el.closest('.subj-chip');
-  if(!chip) return;
-  var cb = chip.querySelector('input[type="checkbox"]');
-  if(!cb) return;
-  // If label clicked, toggle checkbox
-  if(el === chip) { cb.checked = !cb.checked; }
-  if(cb.checked) chip.classList.add('checked');
-  else chip.classList.remove('checked');
-}
-
-async function submitTutorForm(e) {
-  e.preventDefault();
-  
-  const parentName = document.getElementById('p-parent-name').value.trim();
-  const phone = document.getElementById('p-phone').value.trim();
-  const email = document.getElementById('p-email').value.trim();
-  const address = document.getElementById('p-address').value.trim();
-  const mode = document.getElementById('p-mode').value;
-  const timing = document.getElementById('p-timing').value;
-  const notes = document.getElementById('p-notes').value.trim();
-
-  // Collect all students
-  const studentCards = document.querySelectorAll('.student-card');
-  if(studentCards.length === 0) { alert('Please add at least one child!'); return; }
-
-  let allJsonData = [];
-  let waMsg = '🎓 *NEW STUDENT ENQUIRY - MentorBridge*%0A%0A';
-  waMsg += `*Parent Name:* ${encodeURIComponent(parentName)}%0A`;
-  waMsg += `*WhatsApp:* ${encodeURIComponent(phone)}%0A`;
-  waMsg += `*Address:* ${encodeURIComponent(address)}%0A`;
-  waMsg += `*Mode:* ${encodeURIComponent(mode)}%0A`;
-  waMsg += `*Timing:* ${encodeURIComponent(timing)}%0A%0A`;
-
-  let valid = true;
-  studentCards.forEach((card, i) => {
-    const idx = card.id.replace('student-','');
-    const sname = document.getElementById('s'+idx+'-name')?.value.trim() || '';
-    const cls = document.getElementById('s'+idx+'-class')?.value || '';
-    const board = document.getElementById('s'+idx+'-board')?.value || '';
-    const gender = document.getElementById('s'+idx+'-gender')?.value || '';
-    const otherSubj = document.getElementById('s'+idx+'-other-subj')?.value.trim() || '';
-    const note = document.getElementById('s'+idx+'-note')?.value.trim() || '';
-    
-    // Get checked subjects
-    const checkedSubjs = [...card.querySelectorAll('.subj-chip input:checked')].map(cb => cb.value);
-    if(otherSubj) checkedSubjs.push(otherSubj);
-    const subjects = checkedSubjs.join(', ');
-
-    if(!sname || !cls || !board) { valid = false; return; }
-
-    waMsg += `*Child ${i+1}: ${encodeURIComponent(sname)}*%0A`;
-    waMsg += `  Class: ${cls} | Board: ${encodeURIComponent(board)}%0A`;
-    waMsg += `  Subjects: ${encodeURIComponent(subjects||'Not specified')}%0A`;
-    if(note) waMsg += `  Note: ${encodeURIComponent(note)}%0A`;
-    waMsg += '%0A';
-
-    allJsonData.push({
-      'Student Name': sname,
-      'Parent / Guardian Name': parentName,
-      'WhatsApp Number': phone,
-      'Email Address': email,
-      'Class / Grade': cls,
-      'Board': board,
-      'Subjects Required': subjects,
-      'Teaching Mode': mode,
-      'Preferred Timing': timing,
-      'Medium of Instruction': '',
-      'Teacher Gender Preference': gender,
-      'Home Address / Area': address,
-      'Additional Requirements': note || notes,
-      'Date': new Date().toLocaleString('en-IN')
-    });
-  });
-
-  if(!valid) { alert('Please fill Student Name, Class, and Board for all children!'); return; }
-
-  waMsg += `*Notes:* ${encodeURIComponent(notes||'None')}%0A`;
-  waMsg += '%0A----%0A🌐 MentorBridge Website';
-
-  // Show success
-  const b = document.getElementById('s-tutor');
-  b.classList.add('show');
-  e.target.style.display = 'none';
-  b.scrollIntoView({behavior:'smooth', block:'center'});
-
-  // Send WhatsApp
-  setTimeout(() => window.open('https://wa.me/918540016415?text=' + waMsg, '_blank'), 600);
-
-  // Send each student to SheetDB
-  for(const data of allJsonData) {
-    try {
-      await fetch('https://sheetdb.io/api/v1/qmklc1a104hli', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: JSON.stringify({data: [data]})
-      });
-    } catch(err) {
-      console.log('Sheet error:', err);
-    }
-  }
-}
-
-// Init student form when page loads
-document.addEventListener('DOMContentLoaded', () => {
-  if(studentCount === 0) addStudent();
-});
+;
 
 </script>
 
@@ -1042,8 +871,8 @@ footer{background:#060D18;padding:64px 0 28px}
 <div id="p-tutor-form" class="page">
   <div class="form-hero fh-orange"><div class="container"><h1>🔍 Find a Verified Tutor</h1><p>Fill this form — we'll match you with 5–10 verified teachers within 24 hours. First demo class is FREE!</p></div></div>
   <div class="container form-outer"><div class="form-card">
-    <h2>Find a Tutor for Your Child(ren)</h2>
-    <p class="form-subtitle">Ek se zyada bacche hain? "Add Another Child" karke sabki details bharo. Team 24 ghante mein call karegi!</p>
+    <h2>Apne Bachche Ke Liye Tutor Dhundhe</h2>
+    <p class="form-subtitle">Ek ya ek se zyada bacche hain — sabki details ek hi form mein bharo. Team 24 ghante mein call karegi!</p>
     <div class="suc-box" id="s-tutor">✅ Enquiry submitted! WhatsApp pe message ja raha hai. Hum 24 ghante mein call karenge!</div>
     <form onsubmit="submitTutorForm(event)">
 
@@ -1182,8 +1011,10 @@ function go(id){
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
   // Init student form
   if(id==='tutor-form'){
-    var cont=document.getElementById('students-container');
-    if(cont && cont.children.length===0){studentCount=0;addStudent();}
+    setTimeout(function(){
+      var cont=document.getElementById('students-container');
+      if(cont){cont.innerHTML='';studentCount=0;addStudent();}
+    },10);
   }
 }
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
@@ -1334,5 +1165,179 @@ if(g)g.innerHTML=TD.map(t=>`<div class="tc-card"><div class="tc-top"><div class=
     <li>Police verified tutor Bihar</li>
   </ul>
 </div>
+<script>
+// ── MULTI STUDENT FORM ──
+let studentCount = 0;
+
+const SUBJECTS = ['Maths','Science','English','Hindi','Social Studies','Physics','Chemistry','Biology','Computer Science','Sanskrit','EVS','GK'];
+const CLASSES = ['Nursery / KG','1','2','3','4','5','6','7','8','9','10'];
+const BOARDS = ['CBSE','ICSE','Bihar State Board (BSEB)','Not sure'];
+
+function addStudent() {
+  studentCount++;
+  var idx = studentCount;
+  var div = document.createElement('div');
+  div.className = 'student-card';
+  div.id = 'student-' + idx;
+
+  // Build class options
+  var classOpts = '<option value="">Select class</option>';
+  CLASSES.forEach(function(c) {
+    classOpts += '<option value="' + c + '">' + (c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c) + '</option>';
+  });
+
+  // Build board options
+  var boardOpts = '<option value="">Select board</option>';
+  BOARDS.forEach(function(b) {
+    boardOpts += '<option>' + b + '</option>';
+  });
+
+  // Build subject checkboxes
+  var subjHtml = '';
+  SUBJECTS.forEach(function(s) {
+    subjHtml += '<label class="subj-chip" onclick="toggleChip(this)">' +
+      '<input type="checkbox" value="' + s + '"> ' + s + '</label>';
+  });
+
+  // Remove button (only for child 2+)
+  var removeBtn = idx > 1 ? '<button type="button" class="remove-student" onclick="removeStudent(' + idx + ')">✕ Remove</button>' : '';
+
+  div.innerHTML =
+    '<div class="student-card-head">' +
+      '<div class="student-card-title">🎒 Child ' + idx + '</div>' +
+      removeBtn +
+    '</div>' +
+    '<div class="f2">' +
+      '<div class="fg"><label>Student Name <span class="req">*</span></label><input type="text" id="s' + idx + '-name" placeholder="Child's name" required></div>' +
+      '<div class="fg"><label>Teacher Gender Preference</label><select id="s' + idx + '-gender"><option value="">No preference</option><option>Male Teacher</option><option>Female Teacher</option></select></div>' +
+    '</div>' +
+    '<div class="f2">' +
+      '<div class="fg"><label>Class / Grade <span class="req">*</span></label><select id="s' + idx + '-class" required>' + classOpts + '</select></div>' +
+      '<div class="fg"><label>Board <span class="req">*</span></label><select id="s' + idx + '-board" required>' + boardOpts + '</select></div>' +
+    '</div>' +
+    '<div class="fg">' +
+      '<label>Subjects Required <span class="req">*</span> <span style="font-size:11px;color:var(--muted);font-weight:600">(Select all that apply)</span></label>' +
+      '<div class="subjects-grid" id="s' + idx + '-subjects">' + subjHtml + '</div>' +
+      '<input type="text" id="s' + idx + '-other-subj" placeholder="Other subjects (optional)" style="margin-top:8px">' +
+    '</div>' +
+    '<div class="fg"><label>Special Instructions for this child</label><input type="text" id="s' + idx + '-note" placeholder="e.g. weak in fractions, upcoming exams..."></div>';
+
+  document.getElementById('students-container').appendChild(div);
+}
+
+function removeStudent(idx) {
+  const el = document.getElementById('student-' + idx);
+  if(el) el.remove();
+}
+
+function toggleChip(el) {
+  // el can be label or checkbox
+  var chip = el.classList && el.classList.contains('subj-chip') ? el : el.closest('.subj-chip');
+  if(!chip) return;
+  var cb = chip.querySelector('input[type="checkbox"]');
+  if(!cb) return;
+  // If label clicked, toggle checkbox
+  if(el === chip) { cb.checked = !cb.checked; }
+  if(cb.checked) chip.classList.add('checked');
+  else chip.classList.remove('checked');
+}
+
+async function submitTutorForm(e) {
+  e.preventDefault();
+  
+  const parentName = document.getElementById('p-parent-name').value.trim();
+  const phone = document.getElementById('p-phone').value.trim();
+  const email = document.getElementById('p-email').value.trim();
+  const address = document.getElementById('p-address').value.trim();
+  const mode = document.getElementById('p-mode').value;
+  const timing = document.getElementById('p-timing').value;
+  const notes = document.getElementById('p-notes').value.trim();
+
+  // Collect all students
+  const studentCards = document.querySelectorAll('.student-card');
+  if(studentCards.length === 0) { alert('Please add at least one child!'); return; }
+
+  let allJsonData = [];
+  let waMsg = '🎓 *NEW STUDENT ENQUIRY - MentorBridge*%0A%0A';
+  waMsg += `*Parent Name:* ${encodeURIComponent(parentName)}%0A`;
+  waMsg += `*WhatsApp:* ${encodeURIComponent(phone)}%0A`;
+  waMsg += `*Address:* ${encodeURIComponent(address)}%0A`;
+  waMsg += `*Mode:* ${encodeURIComponent(mode)}%0A`;
+  waMsg += `*Timing:* ${encodeURIComponent(timing)}%0A%0A`;
+
+  let valid = true;
+  studentCards.forEach((card, i) => {
+    const idx = card.id.replace('student-','');
+    const sname = document.getElementById('s'+idx+'-name')?.value.trim() || '';
+    const cls = document.getElementById('s'+idx+'-class')?.value || '';
+    const board = document.getElementById('s'+idx+'-board')?.value || '';
+    const gender = document.getElementById('s'+idx+'-gender')?.value || '';
+    const otherSubj = document.getElementById('s'+idx+'-other-subj')?.value.trim() || '';
+    const note = document.getElementById('s'+idx+'-note')?.value.trim() || '';
+    
+    // Get checked subjects
+    const checkedSubjs = [...card.querySelectorAll('.subj-chip input:checked')].map(cb => cb.value);
+    if(otherSubj) checkedSubjs.push(otherSubj);
+    const subjects = checkedSubjs.join(', ');
+
+    if(!sname || !cls || !board) { valid = false; return; }
+
+    waMsg += `*Child ${i+1}: ${encodeURIComponent(sname)}*%0A`;
+    waMsg += `  Class: ${cls} | Board: ${encodeURIComponent(board)}%0A`;
+    waMsg += `  Subjects: ${encodeURIComponent(subjects||'Not specified')}%0A`;
+    if(note) waMsg += `  Note: ${encodeURIComponent(note)}%0A`;
+    waMsg += '%0A';
+
+    allJsonData.push({
+      'Student Name': sname,
+      'Parent / Guardian Name': parentName,
+      'WhatsApp Number': phone,
+      'Email Address': email,
+      'Class / Grade': cls,
+      'Board': board,
+      'Subjects Required': subjects,
+      'Teaching Mode': mode,
+      'Preferred Timing': timing,
+      'Medium of Instruction': '',
+      'Teacher Gender Preference': gender,
+      'Home Address / Area': address,
+      'Additional Requirements': note || notes,
+      'Date': new Date().toLocaleString('en-IN')
+    });
+  });
+
+  if(!valid) { alert('Please fill Student Name, Class, and Board for all children!'); return; }
+
+  waMsg += `*Notes:* ${encodeURIComponent(notes||'None')}%0A`;
+  waMsg += '%0A----%0A🌐 MentorBridge Website';
+
+  // Show success
+  const b = document.getElementById('s-tutor');
+  b.classList.add('show');
+  e.target.style.display = 'none';
+  b.scrollIntoView({behavior:'smooth', block:'center'});
+
+  // Send WhatsApp
+  setTimeout(() => window.open('https://wa.me/918540016415?text=' + waMsg, '_blank'), 600);
+
+  // Send each student to SheetDB
+  for(const data of allJsonData) {
+    try {
+      await fetch('https://sheetdb.io/api/v1/qmklc1a104hli', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify({data: [data]})
+      });
+    } catch(err) {
+      console.log('Sheet error:', err);
+    }
+  }
+}
+
+// Init student form when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  if(studentCount === 0) addStudent();
+})
+</script>
 </body>
 </html><!-- Tue Jul  7 06:30:02 UTC 2026 -->
