@@ -96,7 +96,7 @@
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); }});
 }, {threshold: 0.12});
-document.querySelectorAll('.why-card,.srv-card,.tc-card,.rv-card,.step-item,.stat').forEach(el => {
+document.querySelect modeorAll('.why-card,.srv-card,.tc-card,.rv-card,.step-item,.stat').forEach(el => {
   el.classList.add('reveal');
   observer.observe(el);
 });
@@ -118,14 +118,14 @@ const statsObserver = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if(e.isIntersecting && !e.target.dataset.counted) {
       e.target.dataset.counted = true;
-      const nums = e.target.querySelectorAll('.stat-num');
+      const nums = e.target.querySelect modeorAll('.stat-num');
       const targets = [150, 500, 98, 5];
       const suffixes = ['+', '+', '%', '+'];
       nums.forEach((n, i) => animateCounter(n, targets[i], suffixes[i]));
     }
   });
 }, {threshold: 0.3});
-const statsBand = document.querySelector('.stats-band');
+const statsBand = document.querySelect modeor('.stats-band');
 if(statsBand) statsObserver.observe(statsBand);
 
 
@@ -916,7 +916,7 @@ footer{background:#060D18;padding:64px 0 28px}
             <div class="fg">
               <label>Teaching Mode <span class="req">*</span></label>
               <select id="tf-mode" required>
-                <option value="">Select</option>
+                <option value="">Select mode</option>
                 <option value="Home Tuition (Teacher Visits)">Home Tuition (Teacher Visits Home)</option>
                 <option value="Online Tuition">Online Tuition</option>
                 <option value="Both / Flexible">Both / Flexible</option>
@@ -925,7 +925,7 @@ footer{background:#060D18;padding:64px 0 28px}
             <div class="fg">
               <label>Preferred Timing</label>
               <select id="tf-timing">
-                <option value="">Select</option>
+                <option value="">Select mode</option>
                 <option value="Morning (6-9 AM)">Morning (6-9 AM)</option>
                 <option value="Afternoon (12-4 PM)">Afternoon (12-4 PM)</option>
                 <option value="Evening (4-8 PM)">Evening (4-8 PM)</option>
@@ -944,8 +944,8 @@ footer{background:#060D18;padding:64px 0 28px}
         <div id="tf-students-wrap"></div>
 
         <div class="fg" style="margin-top:8px">
-          <label>Additional Notes</label>
-          <textarea id="tf-notes" placeholder="Any special instructions — e.g. weak in Maths, upcoming board exams..." rows="3"></textarea>
+          <label>Additional Requirements</label>
+          <textarea id="tf-notes" placeholder="Any special instructions — e.g. child needs extra attention in Maths, upcoming board exams in 2 months..." rows="3"></textarea>
         </div>
 
         <button type="button" id="tf-submit-btn" class="btn btn-orange btn-lg form-submit" style="margin-top:8px">
@@ -966,10 +966,10 @@ footer{background:#060D18;padding:64px 0 28px}
     <form onsubmit="sub(event,'s-teacher')">
       <div class="f2"><div class="fg"><label>Full Name <span class="req">*</span></label><input type="text" placeholder="Your full name" required></div><div class="fg"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" required></div></div>
       <div class="f2"><div class="fg"><label>Email Address <span class="req">*</span></label><input type="email" placeholder="your@email.com" required></div><div class="fg"><label>City / Area <span class="req">*</span></label><input type="text" placeholder="Your city or locality" required></div></div>
-      <div class="f2"><div class="fg"><label>Highest Qualification <span class="req">*</span></label><select required><option value="">Select</option><option>12th Pass</option><option>Pursuing Graduation</option><option>B.A. / B.Sc. / B.Com</option><option>B.Tech / B.E.</option><option>B.Ed / D.El.Ed</option><option>M.A. / M.Sc. / M.Com</option><option>M.Tech</option><option>M.Ed</option><option>PhD / Research Scholar</option></select></div><div class="fg"><label>Teaching Experience <span class="req">*</span></label><select required><option value="">Select</option><option>Fresher (0 years)</option><option>Less than 1 year</option><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div></div>
+      <div class="f2"><div class="fg"><label>Highest Qualification <span class="req">*</span></label><select required><option value="">Select mode</option><option>12th Pass</option><option>Pursuing Graduation</option><option>B.A. / B.Sc. / B.Com</option><option>B.Tech / B.E.</option><option>B.Ed / D.El.Ed</option><option>M.A. / M.Sc. / M.Com</option><option>M.Tech</option><option>M.Ed</option><option>PhD / Research Scholar</option></select></div><div class="fg"><label>Teaching Experience <span class="req">*</span></label><select required><option value="">Select mode</option><option>Fresher (0 years)</option><option>Less than 1 year</option><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div></div>
       <div class="fg"><label>Subjects Required You Can Teach <span class="req">*</span></label><input type="text" placeholder="e.g. Maths, Science, English, Hindi, Physics" required></div>
-      <div class="f2"><div class="fg"><label>Classes You Can Teach <span class="req">*</span></label><input type="text" placeholder="e.g. Class 6 to Class 10" required></div><div class="fg"><label>Board Expertise</label><select><option value="">Select board</option><option>CBSE</option><option>ICSE</option><option>Bihar Board (BSEB)</option><option>All Boards</option></select></div></div>
-      <div class="f2"><div class="fg"><label>Teaching Mode Preferred</label><select><option value="">Select</option><option>Home Tuition (Visit Students)</option><option>Online Tuition</option><option>Both</option></select></div><div class="fg"><label>Medium of Instruction</label><select><option value="">Select</option><option>Hindi Medium</option><option>English Medium</option><option>Bilingual</option></select></div></div>
+      <div class="f2"><div class="fg"><label>Classes You Can Teach <span class="req">*</span></label><input type="text" placeholder="e.g. Class 6 to Class 10" required></div><div class="fg"><label>Board Expertise</label><select><option value="">Select mode board</option><option>CBSE</option><option>ICSE</option><option>Bihar Board (BSEB)</option><option>All Boards</option></select></div></div>
+      <div class="f2"><div class="fg"><label>Teaching Mode Preferred</label><select><option value="">Select mode</option><option>Home Tuition (Visit Students)</option><option>Online Tuition</option><option>Both</option></select></div><div class="fg"><label>Medium of Instruction</label><select><option value="">Select mode</option><option>Hindi Medium</option><option>English Medium</option><option>Bilingual</option></select></div></div>
       <div class="f2"><div class="fg"><label>Upload Resume / CV <span style="color:var(--muted);font-weight:600">(Optional)</span></label><input type="file" accept=".pdf,.doc,.docx"></div><div class="fg"><label>Upload Qualification Certificate</label><input type="file" accept=".pdf,.jpg,.jpeg,.png"></div></div>
       <div class="fg"><label>Brief Introduction</label><textarea placeholder="Tell us about your teaching experience, approach, and why you want to join MentorBridge..."></textarea></div>
       <button type="submit" class="btn btn-teal btn-lg form-sub">Submit Application — Join MentorBridge 🎓</button>
@@ -997,7 +997,7 @@ footer{background:#060D18;padding:64px 0 28px}
       <div class="suc-box" id="s-contact">✅ Message sent! WhatsApp pe bhi notification ja raha hai. Jaldi reply karenge!</div>
       <form onsubmit="sub(event,'s-contact')">
         <div class="f2"><div class="fg"><label>Your Name <span class="req">*</span></label><input type="text" placeholder="Full name" required></div><div class="fg"><label>Phone / WhatsApp <span class="req">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" required></div></div>
-        <div class="fg"><label>I am a <span class="req">*</span></label><select required><option value="">Select</option><option>Parent looking for a Tutor</option><option>Teacher wanting to join</option><option>Student</option><option>Other</option></select></div>
+        <div class="fg"><label>I am a <span class="req">*</span></label><select required><option value="">Select mode</option><option>Parent looking for a Tutor</option><option>Teacher wanting to join</option><option>Student</option><option>Other</option></select></div>
         <div class="fg"><label>Your Message <span class="req">*</span></label><textarea placeholder="How can we help you?" required></textarea></div>
         <button type="submit" class="btn btn-orange btn-lg form-sub">Send Message →</button>
       </form>
@@ -1048,10 +1048,10 @@ footer{background:#060D18;padding:64px 0 28px}
 
 <script>
 function go(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelect modeorAll('.page').forEach(p=>p.classList.remove('active'));
   const p=document.getElementById('p-'+id);
   if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.querySelect modeorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',contact:'n-contact'};
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
   // Init student form
@@ -1062,13 +1062,13 @@ function go(id){
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
 function faq(el){
   const item=el.parentElement,ans=el.nextElementSibling,open=item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-a').classList.remove('show');});
+  document.querySelect modeorAll('.faq-item').forEach(i=>{i.classList.remove('open');i.querySelect modeor('.faq-a').classList.remove('show');});
   if(!open){item.classList.add('open');ans.classList.add('show');}
 }
 async function sub(e, sid) {
   e.preventDefault();
   const form = e.target;
-  const fields = form.querySelectorAll('input,select,textarea');
+  const fields = form.querySelect modeorAll('input,select,textarea');
 
   // Build WhatsApp message
   let waMsg = '';
@@ -1093,7 +1093,7 @@ async function sub(e, sid) {
     if(f.name && f.name !== '') {
       labelText = f.name;
     } else {
-      const label = f.closest('.fg') ? f.closest('.fg').querySelector('label') : null;
+      const label = f.closest('.fg') ? f.closest('.fg').querySelect modeor('label') : null;
       labelText = label ? label.textContent.replace(/[*]/g,'').trim() : 'Field';
     }
     const val = f.value ? f.value.trim() : '';
@@ -1242,11 +1242,11 @@ function tfAddChild() {
   row1 += '</div>';
 
   // Class + Board
-  var classOpts = '<option value="">Select class</option>';
+  var classOpts = '<option value="">Select mode class</option>';
   TF_CLASSES.forEach(function(c) {
     classOpts += '<option value="' + c + '">' + (c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c) + '</option>';
   });
-  var boardOpts = '<option value="">Select board</option>';
+  var boardOpts = '<option value="">Select mode board</option>';
   TF_BOARDS.forEach(function(b) { boardOpts += '<option value="' + b + '">' + b + '</option>'; });
 
   var row2 = '<div class="f2">';
@@ -1255,12 +1255,14 @@ function tfAddChild() {
   row2 += '</div>';
 
   // Subjects Required
-  var subjGrid = '<div class="fg"><label>Subjects Required <span class="req">*</span> <span style="font-size:11px;color:#527060;font-weight:600">(Select all that apply)</span></label>';
+  var subjGrid = '<div class="fg"><label>Subjects Required <span class="req">*</span> <span style="font-size:11px;color:#527060;font-weight:600">(Select mode all that apply)</span></label>';
   subjGrid += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">';
   TF_SUBJECTS.forEach(function(s) {
-    subjGrid += '<label id="tfchip-' + n + '-' + s.replace(/\s/g,'') + '" style="display:flex;align-items:center;gap:6px;padding:8px 10px;border:1.5px solid #D4EAE2;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s" onclick="tfToggleChip(this)">';
-    subjGrid += '<input type="checkbox" value="' + s + '" style="accent-color:#1D7A6B;width:14px;height:14px"> ' + s;
-    subjGrid += '</label>';
+    var sid = 'tfchip-' + n + '-' + s.replace(/ /g,'');
+    subjGrid += '<div id="' + sid + '" data-subject="' + s + '" onclick="tfToggleChip(this,\'' + n + '\')" style="display:flex;align-items:center;gap:6px;padding:8px 10px;border:1.5px solid #D4EAE2;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;background:#fff;user-select:none">';
+    subjGrid += '<span style="width:16px;height:16px;border:1.5px solid #D4EAE2;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;background:#fff" class="tfcheck-box"></span>';
+    subjGrid += '<span>' + s + '</span>';
+    subjGrid += '</div>';
   });
   subjGrid += '</div>';
   subjGrid += '<input type="text" id="tfc' + n + '-othersubj" placeholder="Other subjects (optional)" style="width:100%;padding:10px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:13px;margin-top:8px;font-family:Nunito,sans-serif">';
@@ -1280,20 +1282,23 @@ function tfRemoveChild(n) {
   if(card) card.remove();
 }
 
-function tfToggleChip(label) {
-  var cb = label.querySelector('input[type="checkbox"]');
-  if(!cb) return;
-  cb.checked = !cb.checked;
-  if(cb.checked) {
-    label.style.borderColor = '#1D7A6B';
-    label.style.background = '#E6F4F1';
-    label.style.color = '#1D7A6B';
-    label.style.fontWeight = '700';
+function tfToggleChip(el, n) {
+  var isSelect modeed = el.getAttribute('data-selected') === '1';
+  var box = el.querySelect modeor('.tfcheck-box');
+  if(isSelect modeed) {
+    el.setAttribute('data-selected','0');
+    el.style.borderColor = '#D4EAE2';
+    el.style.background = '#fff';
+    el.style.color = '#18281E';
+    el.style.fontWeight = '600';
+    if(box){ box.style.background='#fff'; box.style.borderColor='#D4EAE2'; box.innerHTML=''; }
   } else {
-    label.style.borderColor = '#D4EAE2';
-    label.style.background = '#fff';
-    label.style.color = '#18281E';
-    label.style.fontWeight = '600';
+    el.setAttribute('data-selected','1');
+    el.style.borderColor = '#1D7A6B';
+    el.style.background = '#E6F4F1';
+    el.style.color = '#1D7A6B';
+    el.style.fontWeight = '700';
+    if(box){ box.style.background='#1D7A6B'; box.style.borderColor='#1D7A6B'; box.innerHTML='✓'; box.style.color='#fff'; }
   }
 }
 
@@ -1331,8 +1336,8 @@ function tfSubmit() {
     if(!sname || !cls || !board) { valid = false; break; }
 
     var checkedSubjs = [];
-    var cbs = card.querySelectorAll('input[type="checkbox"]:checked');
-    for(var j=0;j<cbs.length;j++) checkedSubjs.push(cbs[j].value);
+    var chips = card.querySelect modeorAll('[data-selected="1"]');
+    for(var j=0;j<chips.length;j++) checkedSubjs.push(chips[j].getAttribute('data-subject'));
     if(otherSubj) checkedSubjs.push(otherSubj);
 
     allData.push({
