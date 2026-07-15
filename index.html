@@ -869,49 +869,94 @@ footer{background:#060D18;padding:64px 0 28px}
 
 <!-- ============ FIND A TUTOR FORM ============ -->
 <div id="p-tutor-form" class="page">
-  <div class="form-hero fh-orange"><div class="container"><h1>🔍 Find a Verified Tutor</h1><p>Fill this form — we'll match you with 5–10 verified teachers within 24 hours. First demo class is FREE!</p></div></div>
-  <div class="container form-outer"><div class="form-card">
-    <h2>Apne Bachche Ke Liye Tutor Dhundhe</h2>
-    <p class="form-subtitle">Ek ya ek se zyada bacche hain — sabki details ek hi form mein bharo. Team 24 ghante mein call karegi!</p>
-    <div class="suc-box" id="s-tutor">✅ Enquiry submitted! WhatsApp pe message ja raha hai. Hum 24 ghante mein call karenge!</div>
-    <form onsubmit="submitTutorForm(event)">
+  <div class="form-hero fh-orange">
+    <div class="container">
+      <h1>🔍 Tutor Dhundhe — Free</h1>
+      <p>Apni details bharo — 24 ghante mein verified teacher profiles milenge. Pehli demo class bilkul free!</p>
+    </div>
+  </div>
+  <div class="container form-outer">
+    <div class="form-card">
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px">Apni Details Bharo</h2>
+      <p class="form-subtitle">Hamaari team 24 ghante mein call karegi aur matching verified teacher profiles share karegi.</p>
 
-      <!-- Parent Info -->
-      <div style="background:var(--bg2);border-radius:12px;padding:20px;margin-bottom:20px;border:1.5px solid var(--border)">
-        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--teal);margin-bottom:14px">👤 Parent / Guardian Information</div>
-        <div class="f2">
-          <div class="fg"><label>Parent / Guardian Name <span class="req">*</span></label><input type="text" id="p-parent-name" placeholder="Parent's full name" required></div>
-          <div class="fg"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" id="p-phone" placeholder="+91 XXXXX XXXXX" required></div>
-        </div>
-        <div class="f2">
-          <div class="fg"><label>Email Address</label><input type="email" id="p-email" placeholder="your@email.com"></div>
-          <div class="fg"><label>Home Address / Area <span class="req">*</span></label><input type="text" id="p-address" placeholder="Your area/locality in Bihar" required></div>
-        </div>
-        <div class="f2">
-          <div class="fg"><label>Teaching Mode <span class="req">*</span></label><select id="p-mode" required><option value="">Select mode</option><option>Home Tuition (Teacher Visits)</option><option>Online Tuition</option><option>Both / Flexible</option></select></div>
-          <div class="fg"><label>Preferred Timing</label><select id="p-timing"><option value="">Select timing</option><option>Morning (6-9 AM)</option><option>Afternoon (12-4 PM)</option><option>Evening (4-8 PM)</option><option>Flexible</option></select></div>
-        </div>
+      <div class="suc-box" id="s-tutor">
+        ✅ Enquiry submit ho gayi! WhatsApp pe message ja raha hai. Hum 24 ghante mein call karenge!
       </div>
 
-      <!-- Students -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy)">🎓 Student Details</div>
-        <button type="button" onclick="addStudent()" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">+ Add Another Child</button>
-      </div>
+      <form id="tutor-form-el">
 
-      <div id="students-container"></div>
+        <!-- Parent Info Box -->
+        <div style="background:var(--teal-bg);border:1.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:24px">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;color:var(--teal);margin-bottom:16px">👤 Parent / Guardian Information</div>
 
-      <div class="fg" style="margin-top:16px"><label>Additional Notes</label><textarea id="p-notes" placeholder="Any special instructions — e.g. weak in Maths, upcoming board exams..."></textarea></div>
-      <button type="submit" class="btn btn-orange btn-lg form-sub">Submit Enquiry 🎯</button>
-      <p class="form-note">🔒 Your information is 100% confidential. Our team will call within 24 hours.</p>
-    </form>
-  </div></div>
+          <div class="f2">
+            <div class="fg">
+              <label>Parent / Guardian Name <span class="req">*</span></label>
+              <input type="text" id="tf-parent" placeholder="Apna poora naam" required>
+            </div>
+            <div class="fg">
+              <label>WhatsApp Number <span class="req">*</span></label>
+              <input type="tel" id="tf-phone" placeholder="+91 XXXXX XXXXX" required>
+            </div>
+          </div>
+
+          <div class="f2">
+            <div class="fg">
+              <label>Email Address</label>
+              <input type="email" id="tf-email" placeholder="your@email.com">
+            </div>
+            <div class="fg">
+              <label>Ghar ka Address / Area <span class="req">*</span></label>
+              <input type="text" id="tf-address" placeholder="Aapka mohalla ya area" required>
+            </div>
+          </div>
+
+          <div class="f2">
+            <div class="fg">
+              <label>Teaching Mode <span class="req">*</span></label>
+              <select id="tf-mode" required>
+                <option value="">Select karo</option>
+                <option value="Home Tuition (Teacher Visits)">Home Tuition (Teacher Ghar Aayega)</option>
+                <option value="Online Tuition">Online Tuition</option>
+                <option value="Both / Flexible">Dono / Flexible</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Preferred Timing</label>
+              <select id="tf-timing">
+                <option value="">Select karo</option>
+                <option value="Morning (6-9 AM)">Subah (6-9 AM)</option>
+                <option value="Afternoon (12-4 PM)">Dopahar (12-4 PM)</option>
+                <option value="Evening (4-8 PM)">Shaam (4-8 PM)</option>
+                <option value="Flexible">Flexible</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Students Box -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;color:var(--navy)">🎓 Bachche Ki Details</div>
+          <button type="button" id="add-child-btn" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">+ Ek Aur Bachcha Add Karo</button>
+        </div>
+
+        <div id="tf-students-wrap"></div>
+
+        <div class="fg" style="margin-top:8px">
+          <label>Additional Notes</label>
+          <textarea id="tf-notes" placeholder="Koi special instruction — jaise maths mein weak hai, exams aane wale hain..." rows="3"></textarea>
+        </div>
+
+        <button type="button" id="tf-submit-btn" class="btn btn-orange btn-lg form-submit" style="margin-top:8px">
+          Submit Karo — Tutor Dhundho 🎯
+        </button>
+        <p class="form-note">🔒 Aapki information 100% confidential hai. Team 24 ghante mein call karegi.</p>
+      </form>
+    </div>
+  </div>
 </div>
 
-</div></div>
-</div>
-
-<!-- ============ APPLY AS TUTOR FORM ============ -->
 <div id="p-teacher-form" class="page">
   <div class="form-hero fh-dark"><div class="container"><h1>✏️ Apply as a Tutor</h1><p>Join our verified teacher network — flexible hours, guaranteed students, professional growth.</p></div></div>
   <div class="container form-outer"><div class="form-card">
@@ -1011,10 +1056,7 @@ function go(id){
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
   // Init student form
   if(id==='tutor-form'){
-    setTimeout(function(){
-      var cont=document.getElementById('students-container');
-      if(cont){cont.innerHTML='';studentCount=0;addStudent();}
-    },10);
+    setTimeout(function(){ tfInit(); }, 10);
   }
 }
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
@@ -1165,179 +1207,202 @@ if(g)g.innerHTML=TD.map(t=>`<div class="tc-card"><div class="tc-top"><div class=
     <li>Police verified tutor Bihar</li>
   </ul>
 </div>
+
+
 <script>
-// ── MULTI STUDENT FORM ──
-let studentCount = 0;
+// ── FIND A TUTOR FORM ──
+var tfChildCount = 0;
 
-const SUBJECTS = ['Maths','Science','English','Hindi','Social Studies','Physics','Chemistry','Biology','Computer Science','Sanskrit','EVS','GK'];
-const CLASSES = ['Nursery / KG','1','2','3','4','5','6','7','8','9','10'];
-const BOARDS = ['CBSE','ICSE','Bihar State Board (BSEB)','Not sure'];
+var TF_SUBJECTS = ['Maths','Science','English','Hindi','Social Studies','Physics','Chemistry','Biology','Computer Science','Sanskrit','EVS','GK'];
+var TF_CLASSES = ['Nursery / KG','1','2','3','4','5','6','7','8','9','10'];
+var TF_BOARDS = ['CBSE','ICSE','Bihar State Board (BSEB)','Not sure'];
 
-function addStudent() {
-  studentCount++;
-  var idx = studentCount;
-  var div = document.createElement('div');
-  div.className = 'student-card';
-  div.id = 'student-' + idx;
+function tfAddChild() {
+  tfChildCount++;
+  var n = tfChildCount;
+  var wrap = document.getElementById('tf-students-wrap');
+  if(!wrap) return;
 
-  // Build class options
-  var classOpts = '<option value="">Select class</option>';
-  CLASSES.forEach(function(c) {
+  var card = document.createElement('div');
+  card.id = 'tf-child-' + n;
+  card.style.cssText = 'background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:20px;margin-bottom:14px';
+
+  // Head
+  var head = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">';
+  head += '<div style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:800;color:#E8601A">🎒 Bachcha ' + n + '</div>';
+  if(n > 1) {
+    head += '<button type="button" onclick="tfRemoveChild(' + n + ')" style="background:#FEE;color:#C00;border:1px solid #FCC;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">✕ Hatao</button>';
+  }
+  head += '</div>';
+
+  // Name + Gender
+  var row1 = '<div class="f2">';
+  row1 += '<div class="fg"><label>Bachche Ka Naam <span class="req">*</span></label><input type="text" id="tfc' + n + '-name" placeholder="Bachche ka naam" style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif"></div>';
+  row1 += '<div class="fg"><label>Teacher Gender Preference</label><select id="tfc' + n + '-gender" style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif"><option value="">No preference</option><option value="Male Teacher">Male Teacher</option><option value="Female Teacher">Female Teacher</option></select></div>';
+  row1 += '</div>';
+
+  // Class + Board
+  var classOpts = '<option value="">Class select karo</option>';
+  TF_CLASSES.forEach(function(c) {
     classOpts += '<option value="' + c + '">' + (c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c) + '</option>';
   });
+  var boardOpts = '<option value="">Board select karo</option>';
+  TF_BOARDS.forEach(function(b) { boardOpts += '<option value="' + b + '">' + b + '</option>'; });
 
-  // Build board options
-  var boardOpts = '<option value="">Select board</option>';
-  BOARDS.forEach(function(b) {
-    boardOpts += '<option>' + b + '</option>';
+  var row2 = '<div class="f2">';
+  row2 += '<div class="fg"><label>Class / Grade <span class="req">*</span></label><select id="tfc' + n + '-class" required style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif">' + classOpts + '</select></div>';
+  row2 += '<div class="fg"><label>Board <span class="req">*</span></label><select id="tfc' + n + '-board" required style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif">' + boardOpts + '</select></div>';
+  row2 += '</div>';
+
+  // Subjects
+  var subjGrid = '<div class="fg"><label>Subjects <span class="req">*</span> <span style="font-size:11px;color:#527060;font-weight:600">(Jo chahiye wo tick karo)</span></label>';
+  subjGrid += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">';
+  TF_SUBJECTS.forEach(function(s) {
+    subjGrid += '<label id="tfchip-' + n + '-' + s.replace(/\s/g,'') + '" style="display:flex;align-items:center;gap:6px;padding:8px 10px;border:1.5px solid #D4EAE2;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s" onclick="tfToggleChip(this)">';
+    subjGrid += '<input type="checkbox" value="' + s + '" style="accent-color:#1D7A6B;width:14px;height:14px"> ' + s;
+    subjGrid += '</label>';
   });
+  subjGrid += '</div>';
+  subjGrid += '<input type="text" id="tfc' + n + '-othersubj" placeholder="Aur koi subject (optional)" style="width:100%;padding:10px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:13px;margin-top:8px;font-family:Nunito,sans-serif">';
+  subjGrid += '</div>';
 
-  // Build subject checkboxes
-  var subjHtml = '';
-  SUBJECTS.forEach(function(s) {
-    subjHtml += '<label class="subj-chip" onclick="toggleChip(this)">' +
-      '<input type="checkbox" value="' + s + '"> ' + s + '</label>';
-  });
+  // Note
+  var noteRow = '<div class="fg" style="margin-top:4px"><label>Is Bachche Ke Liye Special Instructions</label>';
+  noteRow += '<input type="text" id="tfc' + n + '-note" placeholder="jaise: maths mein weak, exams aane wale hain..." style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif">';
+  noteRow += '</div>';
 
-  // Remove button (only for child 2+)
-  var removeBtn = idx > 1 ? '<button type="button" class="remove-student" onclick="removeStudent(' + idx + ')">✕ Remove</button>' : '';
-
-  div.innerHTML =
-    '<div class="student-card-head">' +
-      '<div class="student-card-title">🎒 Child ' + idx + '</div>' +
-      removeBtn +
-    '</div>' +
-    '<div class="f2">' +
-      '<div class="fg"><label>Student Name <span class="req">*</span></label><input type="text" id="s' + idx + '-name" placeholder="Child's name" required></div>' +
-      '<div class="fg"><label>Teacher Gender Preference</label><select id="s' + idx + '-gender"><option value="">No preference</option><option>Male Teacher</option><option>Female Teacher</option></select></div>' +
-    '</div>' +
-    '<div class="f2">' +
-      '<div class="fg"><label>Class / Grade <span class="req">*</span></label><select id="s' + idx + '-class" required>' + classOpts + '</select></div>' +
-      '<div class="fg"><label>Board <span class="req">*</span></label><select id="s' + idx + '-board" required>' + boardOpts + '</select></div>' +
-    '</div>' +
-    '<div class="fg">' +
-      '<label>Subjects Required <span class="req">*</span> <span style="font-size:11px;color:var(--muted);font-weight:600">(Select all that apply)</span></label>' +
-      '<div class="subjects-grid" id="s' + idx + '-subjects">' + subjHtml + '</div>' +
-      '<input type="text" id="s' + idx + '-other-subj" placeholder="Other subjects (optional)" style="margin-top:8px">' +
-    '</div>' +
-    '<div class="fg"><label>Special Instructions for this child</label><input type="text" id="s' + idx + '-note" placeholder="e.g. weak in fractions, upcoming exams..."></div>';
-
-  document.getElementById('students-container').appendChild(div);
+  card.innerHTML = head + row1 + row2 + subjGrid + noteRow;
+  wrap.appendChild(card);
 }
 
-function removeStudent(idx) {
-  const el = document.getElementById('student-' + idx);
-  if(el) el.remove();
+function tfRemoveChild(n) {
+  var card = document.getElementById('tf-child-' + n);
+  if(card) card.remove();
 }
 
-function toggleChip(el) {
-  // el can be label or checkbox
-  var chip = el.classList && el.classList.contains('subj-chip') ? el : el.closest('.subj-chip');
-  if(!chip) return;
-  var cb = chip.querySelector('input[type="checkbox"]');
+function tfToggleChip(label) {
+  var cb = label.querySelector('input[type="checkbox"]');
   if(!cb) return;
-  // If label clicked, toggle checkbox
-  if(el === chip) { cb.checked = !cb.checked; }
-  if(cb.checked) chip.classList.add('checked');
-  else chip.classList.remove('checked');
+  cb.checked = !cb.checked;
+  if(cb.checked) {
+    label.style.borderColor = '#1D7A6B';
+    label.style.background = '#E6F4F1';
+    label.style.color = '#1D7A6B';
+    label.style.fontWeight = '700';
+  } else {
+    label.style.borderColor = '#D4EAE2';
+    label.style.background = '#fff';
+    label.style.color = '#18281E';
+    label.style.fontWeight = '600';
+  }
 }
 
-async function submitTutorForm(e) {
-  e.preventDefault();
-  
-  const parentName = document.getElementById('p-parent-name').value.trim();
-  const phone = document.getElementById('p-phone').value.trim();
-  const email = document.getElementById('p-email').value.trim();
-  const address = document.getElementById('p-address').value.trim();
-  const mode = document.getElementById('p-mode').value;
-  const timing = document.getElementById('p-timing').value;
-  const notes = document.getElementById('p-notes').value.trim();
+function tfSubmit() {
+  var parentName = document.getElementById('tf-parent') ? document.getElementById('tf-parent').value.trim() : '';
+  var phone = document.getElementById('tf-phone') ? document.getElementById('tf-phone').value.trim() : '';
+  var email = document.getElementById('tf-email') ? document.getElementById('tf-email').value.trim() : '';
+  var address = document.getElementById('tf-address') ? document.getElementById('tf-address').value.trim() : '';
+  var mode = document.getElementById('tf-mode') ? document.getElementById('tf-mode').value : '';
+  var timing = document.getElementById('tf-timing') ? document.getElementById('tf-timing').value : '';
+  var notes = document.getElementById('tf-notes') ? document.getElementById('tf-notes').value.trim() : '';
 
-  // Collect all students
-  const studentCards = document.querySelectorAll('.student-card');
-  if(studentCards.length === 0) { alert('Please add at least one child!'); return; }
+  if(!parentName || !phone || !address || !mode) {
+    alert('Parent name, WhatsApp number, address aur teaching mode zaroori hai!');
+    return;
+  }
 
-  let allJsonData = [];
-  let waMsg = '🎓 *NEW STUDENT ENQUIRY - MentorBridge*%0A%0A';
-  waMsg += `*Parent Name:* ${encodeURIComponent(parentName)}%0A`;
-  waMsg += `*WhatsApp:* ${encodeURIComponent(phone)}%0A`;
-  waMsg += `*Address:* ${encodeURIComponent(address)}%0A`;
-  waMsg += `*Mode:* ${encodeURIComponent(mode)}%0A`;
-  waMsg += `*Timing:* ${encodeURIComponent(timing)}%0A%0A`;
+  // Collect all children
+  var cards = document.getElementById('tf-students-wrap').children;
+  if(cards.length === 0) { alert('Kam se kam ek bachche ki details bharo!'); return; }
 
-  let valid = true;
-  studentCards.forEach((card, i) => {
-    const idx = card.id.replace('student-','');
-    const sname = document.getElementById('s'+idx+'-name')?.value.trim() || '';
-    const cls = document.getElementById('s'+idx+'-class')?.value || '';
-    const board = document.getElementById('s'+idx+'-board')?.value || '';
-    const gender = document.getElementById('s'+idx+'-gender')?.value || '';
-    const otherSubj = document.getElementById('s'+idx+'-other-subj')?.value.trim() || '';
-    const note = document.getElementById('s'+idx+'-note')?.value.trim() || '';
-    
-    // Get checked subjects
-    const checkedSubjs = [...card.querySelectorAll('.subj-chip input:checked')].map(cb => cb.value);
+  var allData = [];
+  var valid = true;
+
+  for(var i = 0; i < cards.length; i++) {
+    var card = cards[i];
+    var n = card.id.replace('tf-child-','');
+    var sname = document.getElementById('tfc'+n+'-name') ? document.getElementById('tfc'+n+'-name').value.trim() : '';
+    var cls = document.getElementById('tfc'+n+'-class') ? document.getElementById('tfc'+n+'-class').value : '';
+    var board = document.getElementById('tfc'+n+'-board') ? document.getElementById('tfc'+n+'-board').value : '';
+    var gender = document.getElementById('tfc'+n+'-gender') ? document.getElementById('tfc'+n+'-gender').value : '';
+    var otherSubj = document.getElementById('tfc'+n+'-othersubj') ? document.getElementById('tfc'+n+'-othersubj').value.trim() : '';
+    var note = document.getElementById('tfc'+n+'-note') ? document.getElementById('tfc'+n+'-note').value.trim() : '';
+
+    if(!sname || !cls || !board) { valid = false; break; }
+
+    var checkedSubjs = [];
+    var cbs = card.querySelectorAll('input[type="checkbox"]:checked');
+    for(var j=0;j<cbs.length;j++) checkedSubjs.push(cbs[j].value);
     if(otherSubj) checkedSubjs.push(otherSubj);
-    const subjects = checkedSubjs.join(', ');
 
-    if(!sname || !cls || !board) { valid = false; return; }
-
-    waMsg += `*Child ${i+1}: ${encodeURIComponent(sname)}*%0A`;
-    waMsg += `  Class: ${cls} | Board: ${encodeURIComponent(board)}%0A`;
-    waMsg += `  Subjects: ${encodeURIComponent(subjects||'Not specified')}%0A`;
-    if(note) waMsg += `  Note: ${encodeURIComponent(note)}%0A`;
-    waMsg += '%0A';
-
-    allJsonData.push({
+    allData.push({
       'Student Name': sname,
       'Parent / Guardian Name': parentName,
       'WhatsApp Number': phone,
       'Email Address': email,
       'Class / Grade': cls,
       'Board': board,
-      'Subjects Required': subjects,
+      'Subjects Required': checkedSubjs.join(', ') || 'Not specified',
       'Teaching Mode': mode,
       'Preferred Timing': timing,
-      'Medium of Instruction': '',
-      'Teacher Gender Preference': gender,
+      'Teacher Gender Preference': gender || 'No preference',
       'Home Address / Area': address,
-      'Additional Requirements': note || notes,
-      'Date': new Date().toLocaleString('en-IN')
+      'Additional Requirements': note || notes
     });
-  });
+  }
 
-  if(!valid) { alert('Please fill Student Name, Class, and Board for all children!'); return; }
-
-  waMsg += `*Notes:* ${encodeURIComponent(notes||'None')}%0A`;
-  waMsg += '%0A----%0A🌐 MentorBridge Website';
+  if(!valid) { alert('Har bachche ka naam, class aur board zaroori hai!'); return; }
 
   // Show success
-  const b = document.getElementById('s-tutor');
-  b.classList.add('show');
-  e.target.style.display = 'none';
-  b.scrollIntoView({behavior:'smooth', block:'center'});
+  document.getElementById('s-tutor').classList.add('show');
+  document.getElementById('tutor-form-el').style.display = 'none';
 
-  // Send WhatsApp
-  setTimeout(() => window.open('https://wa.me/918540016415?text=' + waMsg, '_blank'), 600);
+  // Build WhatsApp message
+  var waMsg = '🎓 *NEW STUDENT ENQUIRY - MentorBridge*%0A%0A';
+  waMsg += '*Parent:* ' + encodeURIComponent(parentName) + '%0A';
+  waMsg += '*Phone:* ' + encodeURIComponent(phone) + '%0A';
+  waMsg += '*Address:* ' + encodeURIComponent(address) + '%0A';
+  waMsg += '*Mode:* ' + encodeURIComponent(mode) + '%0A';
+  waMsg += '*Timing:* ' + encodeURIComponent(timing) + '%0A%0A';
+  allData.forEach(function(d,i) {
+    waMsg += '*Bachcha ' + (i+1) + ': ' + encodeURIComponent(d['Student Name']) + '*%0A';
+    waMsg += 'Class: ' + d['Class / Grade'] + ' | Board: ' + encodeURIComponent(d['Board']) + '%0A';
+    waMsg += 'Subjects: ' + encodeURIComponent(d['Subjects Required']) + '%0A%0A';
+  });
+  waMsg += '*Notes:* ' + encodeURIComponent(notes||'None') + '%0A%0A----%0AMentorBridge Website';
 
-  // Send each student to SheetDB
-  for(const data of allJsonData) {
-    try {
-      await fetch('https://sheetdb.io/api/v1/qmklc1a104hli', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: JSON.stringify({data: [data]})
-      });
-    } catch(err) {
-      console.log('Sheet error:', err);
-    }
-  }
+  // Open WhatsApp
+  setTimeout(function() {
+    window.open('https://wa.me/918540016415?text=' + waMsg, '_blank');
+  }, 500);
+
+  // Send to SheetDB
+  allData.forEach(function(d) {
+    d['Date'] = new Date().toLocaleString('en-IN');
+    fetch('https://sheetdb.io/api/v1/qmklc1a104hli', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({data:[d]})
+    }).catch(function(e){ console.log('Sheet error:', e); });
+  });
 }
 
-// Init student form when page loads
-document.addEventListener('DOMContentLoaded', () => {
-  if(studentCount === 0) addStudent();
-})
+// Init tutor form when page opens
+function tfInit() {
+  var wrap = document.getElementById('tf-students-wrap');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  tfChildCount = 0;
+  tfAddChild();
+
+  // Bind buttons
+  var addBtn = document.getElementById('add-child-btn');
+  if(addBtn) addBtn.onclick = tfAddChild;
+
+  var submitBtn = document.getElementById('tf-submit-btn');
+  if(submitBtn) submitBtn.onclick = tfSubmit;
+}
 </script>
+
 </body>
 </html><!-- Tue Jul  7 06:30:02 UTC 2026 -->
