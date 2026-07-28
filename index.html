@@ -96,7 +96,7 @@
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); }});
 }, {threshold: 0.12});
-document.querySelect modeorAll('.why-card,.srv-card,.tc-card,.rv-card,.step-item,.stat').forEach(el => {
+document.querySelectorAll('.why-card,.srv-card,.tc-card,.rv-card,.step-item,.stat').forEach(el => {
   el.classList.add('reveal');
   observer.observe(el);
 });
@@ -118,14 +118,14 @@ const statsObserver = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if(e.isIntersecting && !e.target.dataset.counted) {
       e.target.dataset.counted = true;
-      const nums = e.target.querySelect modeorAll('.stat-num');
+      const nums = e.target.querySelectorAll('.stat-num');
       const targets = [150, 500, 98, 5];
       const suffixes = ['+', '+', '%', '+'];
       nums.forEach((n, i) => animateCounter(n, targets[i], suffixes[i]));
     }
   });
 }, {threshold: 0.3});
-const statsBand = document.querySelect modeor('.stats-band');
+const statsBand = document.querySelector('.stats-band');
 if(statsBand) statsObserver.observe(statsBand);
 
 
@@ -1048,10 +1048,10 @@ footer{background:#060D18;padding:64px 0 28px}
 
 <script>
 function go(id){
-  document.querySelect modeorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const p=document.getElementById('p-'+id);
   if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
-  document.querySelect modeorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',contact:'n-contact'};
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
   // Init student form
@@ -1062,13 +1062,13 @@ function go(id){
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
 function faq(el){
   const item=el.parentElement,ans=el.nextElementSibling,open=item.classList.contains('open');
-  document.querySelect modeorAll('.faq-item').forEach(i=>{i.classList.remove('open');i.querySelect modeor('.faq-a').classList.remove('show');});
+  document.querySelectorAll('.faq-item').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-a').classList.remove('show');});
   if(!open){item.classList.add('open');ans.classList.add('show');}
 }
 async function sub(e, sid) {
   e.preventDefault();
   const form = e.target;
-  const fields = form.querySelect modeorAll('input,select,textarea');
+  const fields = form.querySelectorAll('input,select,textarea');
 
   // Build WhatsApp message
   let waMsg = '';
@@ -1093,7 +1093,7 @@ async function sub(e, sid) {
     if(f.name && f.name !== '') {
       labelText = f.name;
     } else {
-      const label = f.closest('.fg') ? f.closest('.fg').querySelect modeor('label') : null;
+      const label = f.closest('.fg') ? f.closest('.fg').querySelector('label') : null;
       labelText = label ? label.textContent.replace(/[*]/g,'').trim() : 'Field';
     }
     const val = f.value ? f.value.trim() : '';
@@ -1284,7 +1284,7 @@ function tfRemoveChild(n) {
 
 function tfToggleChip(el, n) {
   var isSelect modeed = el.getAttribute('data-selected') === '1';
-  var box = el.querySelect modeor('.tfcheck-box');
+  var box = el.querySelector('.tfcheck-box');
   if(isSelect modeed) {
     el.setAttribute('data-selected','0');
     el.style.borderColor = '#D4EAE2';
@@ -1336,7 +1336,7 @@ function tfSubmit() {
     if(!sname || !cls || !board) { valid = false; break; }
 
     var checkedSubjs = [];
-    var chips = card.querySelect modeorAll('[data-selected="1"]');
+    var chips = card.querySelectorAll('[data-selected="1"]');
     for(var j=0;j<chips.length;j++) checkedSubjs.push(chips[j].getAttribute('data-subject'));
     if(otherSubj) checkedSubjs.push(otherSubj);
 
