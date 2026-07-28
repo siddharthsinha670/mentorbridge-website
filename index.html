@@ -925,7 +925,7 @@ footer{background:#060D18;padding:64px 0 28px}
             <div class="fg">
               <label>Preferred Timing</label>
               <select id="tf-timing">
-                <option value="">Select mode</option>
+                <option value="">Select timing</option>
                 <option value="Morning (6-9 AM)">Morning (6-9 AM)</option>
                 <option value="Afternoon (12-4 PM)">Afternoon (12-4 PM)</option>
                 <option value="Evening (4-8 PM)">Evening (4-8 PM)</option>
@@ -962,7 +962,7 @@ footer{background:#060D18;padding:64px 0 28px}
   <div class="container form-outer"><div class="form-card">
     <h2>Teacher Application Form</h2>
     <p class="form-subtitle">Fill in your details and our team will contact you within 48 hours for verification.</p>
-    <div class="suc-box" id="s-teacher">✅ Application received! WhatsApp pe details ja rahi hain. 48 ghante mein contact karenge!</div>
+    <div class="suc-box" id="s-teacher">✅ Application received! WhatsApp pe details ja rahi hain. Our team will review and contact you within 48 hours!</div>
     <form onsubmit="sub(event,'s-teacher')">
       <div class="f2"><div class="fg"><label>Full Name <span class="req">*</span></label><input type="text" placeholder="Your full name" required></div><div class="fg"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" required></div></div>
       <div class="f2"><div class="fg"><label>Email Address <span class="req">*</span></label><input type="email" placeholder="your@email.com" required></div><div class="fg"><label>City / Area <span class="req">*</span></label><input type="text" placeholder="Your city or locality" required></div></div>
@@ -1242,11 +1242,11 @@ function tfAddChild() {
   row1 += '</div>';
 
   // Class + Board
-  var classOpts = '<option value="">Select mode class</option>';
+  var classOpts = '<option value="">Select class</option>';
   TF_CLASSES.forEach(function(c) {
     classOpts += '<option value="' + c + '">' + (c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c) + '</option>';
   });
-  var boardOpts = '<option value="">Select mode board</option>';
+  var boardOpts = '<option value="">Select board</option>';
   TF_BOARDS.forEach(function(b) { boardOpts += '<option value="' + b + '">' + b + '</option>'; });
 
   var row2 = '<div class="f2">';
