@@ -938,7 +938,7 @@ footer{background:#060D18;padding:64px 0 28px}
         <!-- Students Box -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
           <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;color:var(--navy)">🎓 Student Details</div>
-          <button type="button" id="add-child-btn" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">+ Add Another Child</button>
+          <button type="button" id="add-child-btn" onclick="tfAddChild()" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">+ Add Another Child</button>
         </div>
 
         <div id="tf-students-wrap"></div>
@@ -948,7 +948,7 @@ footer{background:#060D18;padding:64px 0 28px}
           <textarea id="tf-notes" placeholder="Any special instructions — e.g. child needs extra attention in Maths, upcoming board exams in 2 months..." rows="3"></textarea>
         </div>
 
-        <button type="button" id="tf-submit-btn" class="btn btn-orange btn-lg form-submit" style="margin-top:8px">
+        <button type="button" id="tf-submit-btn" onclick="tfSubmit()" class="btn btn-orange btn-lg form-submit" style="margin-top:8px">
           Submit Enquiry — Find My Tutor 🎯
         </button>
         <p class="form-note">🔒 Your information is 100% confidential. Our team will call within 24 hours.</p>
@@ -1392,6 +1392,14 @@ function tfSubmit() {
   });
 }
 
+// Auto init on page load if tutor form is visible
+document.addEventListener('DOMContentLoaded', function() {
+  var page = document.getElementById('p-tutor-form');
+  if(page && page.classList.contains('active')) {
+    setTimeout(function(){ tfAddChild(); }, 50);
+  }
+});
+
 // Init tutor form when page opens
 function tfInit() {
   var wrap = document.getElementById('tf-students-wrap');
@@ -1399,13 +1407,6 @@ function tfInit() {
   wrap.innerHTML = '';
   tfChildCount = 0;
   tfAddChild();
-
-  // Bind buttons
-  var addBtn = document.getElementById('add-child-btn');
-  if(addBtn) addBtn.onclick = tfAddChild;
-
-  var submitBtn = document.getElementById('tf-submit-btn');
-  if(submitBtn) submitBtn.onclick = tfSubmit;
 }
 </script>
 
