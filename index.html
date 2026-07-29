@@ -1210,135 +1210,160 @@ if(g)g.innerHTML=TD.map(t=>`<div class="tc-card"><div class="tc-top"><div class=
 
 
 <script>
-// ── FIND A TUTOR FORM ──
+// ── FIND A TUTOR FORM - CLEAN REWRITE ──
 var tfChildCount = 0;
 
 var TF_SUBJECTS = ['Maths','Science','English','Hindi','Social Studies','Physics','Chemistry','Biology','Computer Science','Sanskrit','EVS','GK'];
-var TF_CLASSES = ['Nursery / KG','1','2','3','4','5','6','7','8','9','10'];
-var TF_BOARDS = ['CBSE','ICSE','Bihar State Board (BSEB)','Not sure'];
+var TF_CLASSES  = ['Nursery / KG','1','2','3','4','5','6','7','8','9','10'];
+var TF_BOARDS   = ['CBSE','ICSE','Bihar State Board (BSEB)','Not sure'];
 
+// ── ADD CHILD ──
 function tfAddChild() {
   tfChildCount++;
   var n = tfChildCount;
   var wrap = document.getElementById('tf-students-wrap');
-  if(!wrap) return;
+  if (!wrap) { console.error('tf-students-wrap not found'); return; }
 
   var card = document.createElement('div');
   card.id = 'tf-child-' + n;
   card.style.cssText = 'background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:20px;margin-bottom:14px';
 
-  // Head
-  var head = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">';
-  head += '<div style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:800;color:#E8601A">🎒 Child ' + n + '</div>';
-  if(n > 1) {
-    head += '<button type="button" onclick="tfRemoveChild(' + n + ')" style="background:#FEE;color:#C00;border:1px solid #FCC;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">✕ Remove</button>';
-  }
-  head += '</div>';
+  // Remove button
+  var removeBtn = n > 1
+    ? '<button type="button" onclick="tfRemoveChild(' + n + ')" style="background:#fee;color:#c00;border:1px solid #fcc;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">Remove</button>'
+    : '';
 
-  // Name + Gender
-  var row1 = '<div class="f2">';
-  row1 += '<div class="fg"><label>Student Name <span class="req">*</span></label><input type="text" id="tfc' + n + '-name" placeholder="Child's name" style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif"></div>';
-  row1 += '<div class="fg"><label>Teacher Gender Preference</label><select id="tfc' + n + '-gender" style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif"><option value="">No preference</option><option value="Male Teacher">Male Teacher</option><option value="Female Teacher">Female Teacher</option></select></div>';
-  row1 += '</div>';
-
-  // Class + Board
+  // Class options
   var classOpts = '<option value="">Select class</option>';
-  TF_CLASSES.forEach(function(c) {
-    classOpts += '<option value="' + c + '">' + (c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c) + '</option>';
-  });
+  for (var i = 0; i < TF_CLASSES.length; i++) {
+    var c = TF_CLASSES[i];
+    var label = c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c;
+    classOpts += '<option value="' + c + '">' + label + '</option>';
+  }
+
+  // Board options
   var boardOpts = '<option value="">Select board</option>';
-  TF_BOARDS.forEach(function(b) { boardOpts += '<option value="' + b + '">' + b + '</option>'; });
+  for (var j = 0; j < TF_BOARDS.length; j++) {
+    boardOpts += '<option value="' + TF_BOARDS[j] + '">' + TF_BOARDS[j] + '</option>';
+  }
 
-  var row2 = '<div class="f2">';
-  row2 += '<div class="fg"><label>Class / Grade <span class="req">*</span></label><select id="tfc' + n + '-class" required style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif">' + classOpts + '</select></div>';
-  row2 += '<div class="fg"><label>Board <span class="req">*</span></label><select id="tfc' + n + '-board" required style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif">' + boardOpts + '</select></div>';
-  row2 += '</div>';
+  // Subject chips
+  var chips = '';
+  for (var k = 0; k < TF_SUBJECTS.length; k++) {
+    var s = TF_SUBJECTS[k];
+    chips += '<div data-subject="' + s + '" data-selected="0"'
+      + ' onclick="tfToggle(this)"'
+      + ' style="display:flex;align-items:center;gap:6px;padding:8px 10px;border:1.5px solid #D4EAE2;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;user-select:none">'
+      + '<span class="tf-tick" style="width:16px;height:16px;border:1.5px solid #D4EAE2;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0"></span>'
+      + s + '</div>';
+  }
 
-  // Subjects Required
-  var subjGrid = '<div class="fg"><label>Subjects Required <span class="req">*</span> <span style="font-size:11px;color:#527060;font-weight:600">(Select mode all that apply)</span></label>';
-  subjGrid += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">';
-  TF_SUBJECTS.forEach(function(s) {
-    var sid = 'tfchip-' + n + '-' + s.replace(/ /g,'');
-    subjGrid += '<div id="' + sid + '" data-subject="' + s + '" onclick="tfToggleChip(this,\'' + n + '\')" style="display:flex;align-items:center;gap:6px;padding:8px 10px;border:1.5px solid #D4EAE2;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;background:#fff;user-select:none">';
-    subjGrid += '<span style="width:16px;height:16px;border:1.5px solid #D4EAE2;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;background:#fff" class="tfcheck-box"></span>';
-    subjGrid += '<span>' + s + '</span>';
-    subjGrid += '</div>';
-  });
-  subjGrid += '</div>';
-  subjGrid += '<input type="text" id="tfc' + n + '-othersubj" placeholder="Other subjects (optional)" style="width:100%;padding:10px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:13px;margin-top:8px;font-family:Nunito,sans-serif">';
-  subjGrid += '</div>';
+  var inputStyle = 'width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif;box-sizing:border-box';
+  var selStyle   = inputStyle + ';cursor:pointer';
 
-  // Note
-  var noteRow = '<div class="fg" style="margin-top:4px"><label>Special Instructions for this child</label>';
-  noteRow += '<input type="text" id="tfc' + n + '-note" placeholder="e.g. weak in fractions, upcoming board exams..." style="width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif">';
-  noteRow += '</div>';
+  card.innerHTML =
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">'
+      + '<div style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:800;color:#E8601A">Child ' + n + '</div>'
+      + removeBtn
+    + '</div>'
+    + '<div class="f2">'
+      + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Student Name <span style="color:#E8601A">*</span></label>'
+        + '<input type="text" id="tfc' + n + '-name" placeholder="Child's full name" style="' + inputStyle + '"></div>'
+      + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Teacher Gender Preference</label>'
+        + '<select id="tfc' + n + '-gender" style="' + selStyle + '"><option value="">No preference</option><option value="Male Teacher">Male Teacher</option><option value="Female Teacher">Female Teacher</option></select></div>'
+    + '</div>'
+    + '<div class="f2">'
+      + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Class / Grade <span style="color:#E8601A">*</span></label>'
+        + '<select id="tfc' + n + '-class" style="' + selStyle + '">' + classOpts + '</select></div>'
+      + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Board <span style="color:#E8601A">*</span></label>'
+        + '<select id="tfc' + n + '-board" style="' + selStyle + '">' + boardOpts + '</select></div>'
+    + '</div>'
+    + '<div class="fg">'
+      + '<label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Subjects Required <span style="color:#E8601A">*</span> <span style="font-size:11px;color:#527060;font-weight:600;text-transform:none">(Select all that apply)</span></label>'
+      + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">' + chips + '</div>'
+      + '<input type="text" id="tfc' + n + '-othersubj" placeholder="Other subjects (optional)" style="' + inputStyle + ';margin-top:8px">'
+    + '</div>'
+    + '<div class="fg" style="margin-top:8px">'
+      + '<label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Special Instructions</label>'
+      + '<input type="text" id="tfc' + n + '-note" placeholder="e.g. weak in Maths, upcoming board exams..." style="' + inputStyle + '">'
+    + '</div>';
 
-  card.innerHTML = head + row1 + row2 + subjGrid + noteRow;
   wrap.appendChild(card);
+  console.log('Child ' + n + ' added!');
 }
 
+// ── REMOVE CHILD ──
 function tfRemoveChild(n) {
   var card = document.getElementById('tf-child-' + n);
-  if(card) card.remove();
+  if (card) card.remove();
 }
 
-function tfToggleChip(el, n) {
-  var isSelect modeed = el.getAttribute('data-selected') === '1';
-  var box = el.querySelector('.tfcheck-box');
-  if(isSelect modeed) {
-    el.setAttribute('data-selected','0');
+// ── TOGGLE SUBJECT ──
+function tfToggle(el) {
+  var selected = el.getAttribute('data-selected') === '1';
+  var tick = el.querySelector('.tf-tick');
+  if (selected) {
+    el.setAttribute('data-selected', '0');
     el.style.borderColor = '#D4EAE2';
     el.style.background = '#fff';
     el.style.color = '#18281E';
     el.style.fontWeight = '600';
-    if(box){ box.style.background='#fff'; box.style.borderColor='#D4EAE2'; box.innerHTML=''; }
+    if (tick) { tick.style.background = '#fff'; tick.style.borderColor = '#D4EAE2'; tick.innerHTML = ''; }
   } else {
-    el.setAttribute('data-selected','1');
+    el.setAttribute('data-selected', '1');
     el.style.borderColor = '#1D7A6B';
     el.style.background = '#E6F4F1';
     el.style.color = '#1D7A6B';
     el.style.fontWeight = '700';
-    if(box){ box.style.background='#1D7A6B'; box.style.borderColor='#1D7A6B'; box.innerHTML='✓'; box.style.color='#fff'; }
+    if (tick) { tick.style.background = '#1D7A6B'; tick.style.borderColor = '#1D7A6B'; tick.style.color = '#fff'; tick.innerHTML = '&#10003;'; }
   }
 }
 
+// ── SUBMIT ──
 function tfSubmit() {
-  var parentName = document.getElementById('tf-parent') ? document.getElementById('tf-parent').value.trim() : '';
-  var phone = document.getElementById('tf-phone') ? document.getElementById('tf-phone').value.trim() : '';
-  var email = document.getElementById('tf-email') ? document.getElementById('tf-email').value.trim() : '';
-  var address = document.getElementById('tf-address') ? document.getElementById('tf-address').value.trim() : '';
-  var mode = document.getElementById('tf-mode') ? document.getElementById('tf-mode').value : '';
-  var timing = document.getElementById('tf-timing') ? document.getElementById('tf-timing').value : '';
-  var notes = document.getElementById('tf-notes') ? document.getElementById('tf-notes').value.trim() : '';
+  var parentName = (document.getElementById('tf-parent') || {}).value || '';
+  var phone      = (document.getElementById('tf-phone')  || {}).value || '';
+  var email      = (document.getElementById('tf-email')  || {}).value || '';
+  var address    = (document.getElementById('tf-address')|| {}).value || '';
+  var mode       = (document.getElementById('tf-mode')   || {}).value || '';
+  var timing     = (document.getElementById('tf-timing') || {}).value || '';
+  var notes      = (document.getElementById('tf-notes')  || {}).value || '';
 
-  if(!parentName || !phone || !address || !mode) {
-    alert('Parent name, WhatsApp number, address and teaching mode are required!');
+  parentName = parentName.trim(); phone = phone.trim(); address = address.trim();
+
+  if (!parentName || !phone || !address || !mode) {
+    alert('Please fill Parent Name, WhatsApp Number, Address and Teaching Mode!');
     return;
   }
 
-  // Collect all children
-  var cards = document.getElementById('tf-students-wrap').children;
-  if(cards.length === 0) { alert('Please add at least one child!'); return; }
+  var wrap = document.getElementById('tf-students-wrap');
+  if (!wrap || wrap.children.length === 0) {
+    alert('Please add at least one child!');
+    return;
+  }
 
   var allData = [];
   var valid = true;
 
-  for(var i = 0; i < cards.length; i++) {
-    var card = cards[i];
-    var n = card.id.replace('tf-child-','');
-    var sname = document.getElementById('tfc'+n+'-name') ? document.getElementById('tfc'+n+'-name').value.trim() : '';
-    var cls = document.getElementById('tfc'+n+'-class') ? document.getElementById('tfc'+n+'-class').value : '';
-    var board = document.getElementById('tfc'+n+'-board') ? document.getElementById('tfc'+n+'-board').value : '';
-    var gender = document.getElementById('tfc'+n+'-gender') ? document.getElementById('tfc'+n+'-gender').value : '';
-    var otherSubj = document.getElementById('tfc'+n+'-othersubj') ? document.getElementById('tfc'+n+'-othersubj').value.trim() : '';
-    var note = document.getElementById('tfc'+n+'-note') ? document.getElementById('tfc'+n+'-note').value.trim() : '';
+  for (var i = 0; i < wrap.children.length; i++) {
+    var card = wrap.children[i];
+    var n = card.id.replace('tf-child-', '');
+    var sname    = (document.getElementById('tfc' + n + '-name')    || {}).value || '';
+    var cls      = (document.getElementById('tfc' + n + '-class')   || {}).value || '';
+    var board    = (document.getElementById('tfc' + n + '-board')   || {}).value || '';
+    var gender   = (document.getElementById('tfc' + n + '-gender')  || {}).value || '';
+    var otherSub = (document.getElementById('tfc' + n + '-othersubj') || {}).value || '';
+    var note     = (document.getElementById('tfc' + n + '-note')    || {}).value || '';
 
-    if(!sname || !cls || !board) { valid = false; break; }
+    sname = sname.trim();
+    if (!sname || !cls || !board) { valid = false; break; }
 
-    var checkedSubjs = [];
+    var selectedSubjs = [];
     var chips = card.querySelectorAll('[data-selected="1"]');
-    for(var j=0;j<chips.length;j++) checkedSubjs.push(chips[j].getAttribute('data-subject'));
-    if(otherSubj) checkedSubjs.push(otherSubj);
+    for (var j = 0; j < chips.length; j++) {
+      selectedSubjs.push(chips[j].getAttribute('data-subject'));
+    }
+    if (otherSub.trim()) selectedSubjs.push(otherSub.trim());
 
     allData.push({
       'Student Name': sname,
@@ -1347,63 +1372,57 @@ function tfSubmit() {
       'Email Address': email,
       'Class / Grade': cls,
       'Board': board,
-      'Subjects Required Required': checkedSubjs.join(', ') || 'Not specified',
+      'Subjects Required': selectedSubjs.join(', ') || 'Not specified',
       'Teaching Mode': mode,
       'Preferred Timing': timing,
       'Teacher Gender Preference': gender || 'No preference',
       'Home Address / Area': address,
-      'Additional Requirements': note || notes
+      'Additional Requirements': note || notes,
+      'Date': new Date().toLocaleString('en-IN')
     });
   }
 
-  if(!valid) { alert('Please fill Student Name, Class and Board for all children!'); return; }
+  if (!valid) {
+    alert('Please fill Student Name, Class and Board for all children!');
+    return;
+  }
 
   // Show success
-  document.getElementById('s-tutor').classList.add('show');
-  document.getElementById('tutor-form-el').style.display = 'none';
+  var sucBox = document.getElementById('s-tutor');
+  var formEl = document.getElementById('tutor-form-el');
+  if (sucBox) sucBox.classList.add('show');
+  if (formEl) formEl.style.display = 'none';
+  if (sucBox) sucBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  // Build WhatsApp message
-  var waMsg = '🎓 *NEW STUDENT ENQUIRY - MentorBridge*%0A%0A';
-  waMsg += '*Parent:* ' + encodeURIComponent(parentName) + '%0A';
-  waMsg += '*Phone:* ' + encodeURIComponent(phone) + '%0A';
-  waMsg += '*Address:* ' + encodeURIComponent(address) + '%0A';
-  waMsg += '*Mode:* ' + encodeURIComponent(mode) + '%0A';
-  waMsg += '*Timing:* ' + encodeURIComponent(timing) + '%0A%0A';
-  allData.forEach(function(d,i) {
-    waMsg += '*Child ' + (i+1) + ': ' + encodeURIComponent(d['Student Name']) + '*%0A';
-    waMsg += 'Class: ' + d['Class / Grade'] + ' | Board: ' + encodeURIComponent(d['Board']) + '%0A';
-    waMsg += 'Subjects Required: ' + encodeURIComponent(d['Subjects Required Required']) + '%0A%0A';
-  });
-  waMsg += '*Notes:* ' + encodeURIComponent(notes||'None') + '%0A%0A----%0AMentorBridge Website';
+  // WhatsApp message
+  var msg = encodeURIComponent('🎓 NEW STUDENT ENQUIRY - MentorBridge\n\n');
+  msg += encodeURIComponent('Parent: ' + parentName + '\nPhone: ' + phone + '\nAddress: ' + address + '\nMode: ' + mode + '\n\n');
+  for (var k = 0; k < allData.length; k++) {
+    var d = allData[k];
+    msg += encodeURIComponent('Child ' + (k+1) + ': ' + d['Student Name'] + '\nClass: ' + d['Class / Grade'] + ' | Board: ' + d['Board'] + '\nSubjects: ' + d['Subjects Required'] + '\n\n');
+  }
+  msg += encodeURIComponent('Notes: ' + (notes || 'None') + '\n\n----\nMentorBridge Website');
 
-  // Open WhatsApp
   setTimeout(function() {
-    window.open('https://wa.me/918540016415?text=' + waMsg, '_blank');
-  }, 500);
+    window.open('https://wa.me/918540016415?text=' + msg, '_blank');
+  }, 600);
 
-  // Send to SheetDB
-  allData.forEach(function(d) {
-    d['Date'] = new Date().toLocaleString('en-IN');
-    fetch('https://sheetdb.io/api/v1/qmklc1a104hli', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json','Accept':'application/json'},
-      body: JSON.stringify({data:[d]})
-    }).catch(function(e){ console.log('Sheet error:', e); });
-  });
+  // SheetDB
+  for (var m = 0; m < allData.length; m++) {
+    (function(data) {
+      fetch('https://sheetdb.io/api/v1/qmklc1a104hli', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ data: [data] })
+      }).catch(function(e) { console.log('SheetDB error:', e); });
+    })(allData[m]);
+  }
 }
 
-// Auto init on page load if tutor form is visible
-document.addEventListener('DOMContentLoaded', function() {
-  var page = document.getElementById('p-tutor-form');
-  if(page && page.classList.contains('active')) {
-    setTimeout(function(){ tfAddChild(); }, 50);
-  }
-});
-
-// Init tutor form when page opens
+// ── INIT ──
 function tfInit() {
   var wrap = document.getElementById('tf-students-wrap');
-  if(!wrap) return;
+  if (!wrap) return;
   wrap.innerHTML = '';
   tfChildCount = 0;
   tfAddChild();
