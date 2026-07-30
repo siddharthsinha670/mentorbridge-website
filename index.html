@@ -1056,9 +1056,23 @@ function go(id){
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
   // Init student form
   if(id==='tutor-form'){
-    setTimeout(function(){ tfInit(); }, 10);
+    setTimeout(function(){
+      if(typeof tfInit === 'function'){
+        tfInit();
+      } else {
+        console.error('tfInit not found!');
+      }
+    }, 100);
   }
 }
+
+// Auto-init if tutor form is shown on load
+window.addEventListener('load', function(){
+  var active = document.querySelector('.page.active');
+  if(active && active.id === 'p-tutor-form'){
+    if(typeof tfInit === 'function') tfInit();
+  }
+});
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
 function faq(el){
   const item=el.parentElement,ans=el.nextElementSibling,open=item.classList.contains('open');
@@ -1429,5 +1443,18 @@ function tfInit() {
 }
 </script>
 
+<script>
+// Final safety init - runs after ALL scripts loaded
+window.addEventListener('load', function(){
+  // Auto-init tutor form child 1 if page is showing
+  var tutorPage = document.getElementById('p-tutor-form');
+  if(tutorPage && tutorPage.classList.contains('active')){
+    if(typeof tfAddChild === 'function'){
+      var wrap = document.getElementById('tf-students-wrap');
+      if(wrap && wrap.children.length === 0){ tfChildCount=0; tfAddChild(); }
+    }
+  }
+});
+</script>
 </body>
 </html><!-- Tue Jul  7 06:30:02 UTC 2026 -->
