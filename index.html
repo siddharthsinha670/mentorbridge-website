@@ -1054,6 +1054,12 @@ function go(id){
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',contact:'n-contact'};
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
+  // Update URL hash
+  if(id==='home'){
+    history.pushState(null,null,' ');
+  } else {
+    history.pushState(null,null,'#'+id);
+  }
   // Init student form
   if(id==='tutor-form'){
     setTimeout(function(){
@@ -1066,12 +1072,16 @@ function go(id){
   }
 }
 
-// Auto-init if tutor form is shown on load
+// Handle browser back/forward
+window.addEventListener('popstate', function(){
+  var hash = window.location.hash.replace('#','') || 'home';
+  go(hash);
+});
+
+// Load page from hash on start
 window.addEventListener('load', function(){
-  var active = document.querySelector('.page.active');
-  if(active && active.id === 'p-tutor-form'){
-    if(typeof tfInit === 'function') tfInit();
-  }
+  var hash = window.location.hash.replace('#','') || 'home';
+  go(hash);
 });
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
 function faq(el){
