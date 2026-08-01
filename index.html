@@ -1640,6 +1640,11 @@ function submitContact() {
       var suc = document.getElementById('s-contact');
       suc.style.display = 'flex';
       suc.scrollIntoView({behavior:'smooth', block:'center'});
+      // Also send to WhatsApp
+      var msg = 'Hello MentorBridge!%0A%0AName: ' + encodeURIComponent(name) + '%0APhone: ' + encodeURIComponent(phone) + '%0AType: ' + encodeURIComponent(type) + '%0AMessage: ' + encodeURIComponent(message);
+      setTimeout(function() {
+        window.open('https://wa.me/918540016415?text=' + msg, '_blank');
+      }, 800);
     } else {
       btn.textContent = 'Send Message →';
       btn.disabled = false;
@@ -1647,14 +1652,14 @@ function submitContact() {
     }
   })
   .catch(function() {
-    // Fallback - show success anyway and open WhatsApp
     document.getElementById('contact-form-el').style.display = 'none';
     var suc = document.getElementById('s-contact');
     suc.style.display = 'flex';
     suc.scrollIntoView({behavior:'smooth', block:'center'});
-    var msg = 'Hello MentorBridge! I am ' + name + '. Phone: ' + phone + '. I am a ' + type + '. Message: ' + message;
+    // WhatsApp fallback
+    var msg = 'Hello MentorBridge!%0A%0AName: ' + encodeURIComponent(name) + '%0APhone: ' + encodeURIComponent(phone) + '%0AType: ' + encodeURIComponent(type) + '%0AMessage: ' + encodeURIComponent(message);
     setTimeout(function() {
-      window.open('https://wa.me/918540016415?text=' + encodeURIComponent(msg), '_blank');
+      window.open('https://wa.me/918540016415?text=' + msg, '_blank');
     }, 800);
   });
 }
