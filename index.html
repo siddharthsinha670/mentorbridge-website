@@ -1000,10 +1000,21 @@ footer{background:#060D18;padding:64px 0 28px}
       <h2 class="sec-title" style="font-size:28px;margin-bottom:6px">We'll Reply <span>Within Hours</span></h2>
       <p style="font-size:14px;color:var(--muted);margin-bottom:24px">Fill the form and our team will get back to you shortly.</p>
       <div class="suc-box" id="s-contact">✅ Message sent! WhatsApp pe bhi notification ja raha hai. Jaldi reply karenge!</div>
-      <form onsubmit="sub(event,'s-contact')">
-        <div class="f2"><div class="fg"><label>Your Name <span class="req">*</span></label><input type="text" placeholder="Full name" required></div><div class="fg"><label>Phone / WhatsApp <span class="req">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" required></div></div>
-        <div class="fg"><label>I am a <span class="req">*</span></label><select required><option value="">Select mode</option><option>Parent looking for a Tutor</option><option>Teacher wanting to join</option><option>Student</option><option>Other</option></select></div>
-        <div class="fg"><label>Your Message <span class="req">*</span></label><textarea placeholder="How can we help you?" required></textarea></div>
+      <form action="https://formsubmit.co/mentorbridgemuz@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="New Contact Message - MentorBridge">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://mentorbridge.info/#contact">
+        <div class="f2">
+          <div class="fg"><label>Your Name <span class="req">*</span></label><input type="text" name="Name" placeholder="Full name" required></div>
+          <div class="fg"><label>Phone / WhatsApp <span class="req">*</span></label><input type="tel" name="Phone" placeholder="+91 XXXXX XXXXX" required></div>
+        </div>
+        <div class="fg"><label>I am a <span class="req">*</span></label>
+          <select name="Type" required><option value="">Select</option><option>Parent looking for a Tutor</option><option>Teacher wanting to join</option><option>Student</option><option>Other</option></select>
+        </div>
+        <div class="fg"><label>Your Message <span class="req">*</span></label>
+          <textarea name="Message" placeholder="How can we help you?" required></textarea>
+        </div>
         <button type="submit" class="btn btn-orange btn-lg form-sub">Send Message →</button>
       </form>
     </div>
