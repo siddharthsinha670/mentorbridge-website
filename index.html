@@ -634,6 +634,7 @@ footer{background:#060D18;padding:64px 0 28px}
       <li><a href="#" onclick="go('about');return false" id="n-about">About Us</a></li>
       <li><a href="#" onclick="go('services');return false" id="n-services">Services</a></li>
       <li><a href="#" onclick="go('teachers');return false" id="n-teachers">Teachers</a></li>
+      <li><a href="#" onclick="go('blog');return false" id="n-blog">Blog</a></li>
       <li><a href="#" onclick="go('contact');return false" id="n-contact">Contact</a></li>
     </ul>
 
@@ -651,6 +652,7 @@ footer{background:#060D18;padding:64px 0 28px}
   <a onclick="go('about');toggleMenu()">ℹ️ About Us</a>
   <a onclick="go('services');toggleMenu()">📚 Services</a>
   <a onclick="go('teachers');toggleMenu()">👩‍🏫 Teachers</a>
+  <a onclick="go('blog');toggleMenu()">📝 Blog</a>
   <a onclick="go('tutor-form');toggleMenu()">🔍 Find a Tutor</a>
   <a onclick="go('teacher-form');toggleMenu()">✏️ Apply as Tutor</a>
   <a onclick="go('contact');toggleMenu()">📞 Contact</a>
@@ -1009,6 +1011,370 @@ footer{background:#060D18;padding:64px 0 28px}
 </div>
 
 <!-- FOOTER -->
+
+<div id="p-blog" class="page">
+  <!-- Blog CSS -->
+  <style>
+    .blog-hero{background:linear-gradient(135deg,var(--navy),#0D2B1E);padding:80px 0;text-align:center;position:relative;overflow:hidden}
+    .blog-hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(29,122,107,.18) 0%,transparent 70%)}
+    .blog-hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:44px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-1px;position:relative;z-index:1}
+    .blog-hero p{font-size:17px;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto;position:relative;z-index:1;line-height:1.75}
+    .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+    .blog-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r2);padding:28px;cursor:pointer;transition:all .28s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+    .blog-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--teal2));transform:scaleX(0);transition:.3s;transform-origin:left}
+    .blog-card:hover{border-color:var(--teal);box-shadow:0 16px 48px rgba(29,122,107,.14);transform:translateY(-6px)}
+    .blog-card:hover::before{transform:scaleX(1)}
+    .blog-cat{display:inline-block;background:var(--teal-bg);color:var(--teal);font-size:11px;font-weight:800;padding:4px 12px;border-radius:50px;margin-bottom:14px;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.5px;text-transform:uppercase}
+    .blog-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:12px;line-height:1.4}
+    .blog-intro{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+    .blog-meta{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--muted);font-weight:600;flex-wrap:wrap}
+    .blog-read-btn{margin-left:auto;color:var(--orange);font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
+    /* Article styles */
+    .article-hero{background:linear-gradient(135deg,var(--navy),#0D2B1E);padding:80px 0;position:relative;overflow:hidden}
+    .article-hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(29,122,107,.15) 0%,transparent 70%)}
+    .article-cat{display:inline-block;background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);font-size:11px;font-weight:800;padding:5px 14px;border-radius:50px;margin-bottom:16px;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.8px;text-transform:uppercase;position:relative;z-index:1}
+    .article-hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:38px;font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-1px;max-width:700px;line-height:1.2;position:relative;z-index:1}
+    .article-meta-top{font-size:13px;color:rgba(255,255,255,.5);display:flex;gap:16px;font-weight:600;position:relative;z-index:1}
+    .article-body{max-width:780px;padding:52px 24px 80px}
+    .article-intro{font-size:18px;color:var(--muted);line-height:1.8;margin-bottom:36px;padding-bottom:28px;border-bottom:2px solid var(--border);font-style:italic}
+    .article-body h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--navy);margin:36px 0 14px;letter-spacing:-.5px}
+    .article-body h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--teal);margin:24px 0 10px}
+    .article-body p{font-size:16px;color:#334444;line-height:1.85;margin-bottom:16px}
+    .article-body ul,.article-body ol{padding-left:24px;margin-bottom:16px}
+    .article-body li{font-size:15px;color:#334444;line-height:1.8;margin-bottom:8px}
+    .article-body strong{color:var(--navy);font-weight:800}
+    .article-cta-box{background:linear-gradient(135deg,var(--teal),var(--teal2));border-radius:var(--r2);padding:36px;margin-top:48px;text-align:center}
+    .article-cta-box h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:10px}
+    .article-cta-box p{font-size:15px;color:rgba(255,255,255,.8);margin-bottom:20px;line-height:1.7}
+    @media(max-width:768px){
+      .blog-grid{grid-template-columns:1fr}
+      .article-hero h1{font-size:26px}
+      .article-intro{font-size:16px}
+      .article-body h2{font-size:22px}
+    }
+  </style>
+
+  <!-- Blog List View -->
+  <div id="blog-list-view">
+    <div class="blog-hero">
+      <div class="container">
+        <h1>MentorBridge Blog</h1>
+        <p>Expert guides, study tips, and education insights for Bihar students and parents.</p>
+      </div>
+    </div>
+    <section class="sec">
+      <div class="container">
+        <div class="sec-eyebrow teal">Latest Articles</div>
+        <h2 class="sec-title">Learn from Our <span>Education Experts</span></h2>
+        <div class="blog-grid">
+          
+        <div class="blog-card" onclick="showArticle('best-home-tutor-muzaffarpur')">
+          <div class="blog-cat">Parent Guide</div>
+          <h3 class="blog-title">How to Find the Best Home Tutor in Muzaffarpur Bihar</h3>
+          <p class="blog-intro">Finding a reliable home tutor in Muzaffarpur can be challenging. With hundreds of options available, parents often struggle to identify qualified, tru...</p>
+          <div class="blog-meta">
+            <span>📅 July 2025</span>
+            <span>⏱ 5 min read</span>
+            <span class="blog-read-btn">Read More →</span>
+          </div>
+        </div>
+        <div class="blog-card" onclick="showArticle('cbse-vs-bihar-board')">
+          <div class="blog-cat">Education Guide</div>
+          <h3 class="blog-title">CBSE vs Bihar Board — Which is Better for Your Child?</h3>
+          <p class="blog-intro">One of the most common questions Bihar parents ask is: Should my child study under CBSE or Bihar State Board (BSEB)? Both have their advantages and th...</p>
+          <div class="blog-meta">
+            <span>📅 July 2025</span>
+            <span>⏱ 6 min read</span>
+            <span class="blog-read-btn">Read More →</span>
+          </div>
+        </div>
+        <div class="blog-card" onclick="showArticle('improve-childs-marks')">
+          <div class="blog-cat">Study Tips</div>
+          <h3 class="blog-title">How to Improve Your Child's Marks in 3 Months</h3>
+          <p class="blog-intro">Are your child's marks not up to expectations? Don't worry — with the right approach and consistent effort, significant improvement is possible in jus...</p>
+          <div class="blog-meta">
+            <span>📅 June 2025</span>
+            <span>⏱ 5 min read</span>
+            <span class="blog-read-btn">Read More →</span>
+          </div>
+        </div>
+        <div class="blog-card" onclick="showArticle('home-tuition-vs-coaching')">
+          <div class="blog-cat">Parent Guide</div>
+          <h3 class="blog-title">Home Tuition vs Coaching Centre — Which is Better for Bihar Students?</h3>
+          <p class="blog-intro">Parents in Muzaffarpur and across Bihar often debate between home tuition and coaching centres. Both have their place — but which is better for your c...</p>
+          <div class="blog-meta">
+            <span>📅 June 2025</span>
+            <span>⏱ 5 min read</span>
+            <span class="blog-read-btn">Read More →</span>
+          </div>
+        </div>
+        <div class="blog-card" onclick="showArticle('board-exam-preparation-class10')">
+          <div class="blog-cat">Exam Tips</div>
+          <h3 class="blog-title">Complete Board Exam Preparation Guide for Class 10 Bihar Students</h3>
+          <p class="blog-intro">Class 10 board exams are one of the most important milestones in a student's life. Whether you are appearing for BSEB Matric or CBSE Class 10, this gu...</p>
+          <div class="blog-meta">
+            <span>📅 May 2025</span>
+            <span>⏱ 7 min read</span>
+            <span class="blog-read-btn">Read More →</span>
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Individual Articles -->
+  
+    <div id="article-best-home-tutor-muzaffarpur" class="article-page" style="display:none">
+      <div class="article-hero">
+        <div class="container">
+          <div class="article-cat">Parent Guide</div>
+          <h1>How to Find the Best Home Tutor in Muzaffarpur Bihar</h1>
+          <div class="article-meta-top">
+            <span>📅 July 2025</span>
+            <span>⏱ 5 min read</span>
+          </div>
+        </div>
+      </div>
+      <div class="container article-body">
+        <div class="article-intro">Finding a reliable home tutor in Muzaffarpur can be challenging. With hundreds of options available, parents often struggle to identify qualified, trustworthy teachers for their children.</div>
+        
+<h2>Why Home Tuition is Important in Muzaffarpur</h2>
+<p>With the growing competition in academics, home tuition has become essential for students in Muzaffarpur. A good home tutor provides personalised attention that classroom teaching cannot always offer. Whether your child is in Class 5 or preparing for Class 10 board exams, one-on-one teaching makes a significant difference.</p>
+
+<h2>5 Key Things to Check Before Hiring a Home Tutor</h2>
+<h3>1. Educational Qualification</h3>
+<p>Always verify the tutor's degree certificates and B.Ed qualification. A tutor with proper educational background understands pedagogy — the science of teaching — and can explain concepts in multiple ways until the child understands.</p>
+
+<h3>2. Background Verification</h3>
+<p>This is non-negotiable. When you invite a tutor into your home, you must verify their identity and background. Always ask for Aadhaar card and police verification certificate. MentorBridge conducts triple verification — ID, qualification, and police background check — for every teacher on our platform.</p>
+
+<h3>3. Subject Expertise</h3>
+<p>A good Maths tutor may not be a good English tutor. Always hire subject-specific tutors, especially for Class 8 and above. Ask them to explain a sample concept before finalising.</p>
+
+<h3>4. Teaching Style</h3>
+<p>Every child learns differently. Some are visual learners, others are auditory. A good tutor assesses your child's learning style in the first session and adapts accordingly.</p>
+
+<h3>5. Consistency and Accountability</h3>
+<p>Ask if the tutor provides monthly progress reports. A committed tutor tracks attendance, homework completion, and test scores — giving you complete visibility into your child's academic progress.</p>
+
+<h2>Red Flags to Avoid</h2>
+<ul>
+<li>Tutors who cannot show qualification certificates</li>
+<li>No police verification or background check</li>
+<li>Unwilling to give a demo class</li>
+<li>No clear fee structure</li>
+<li>No accountability or progress updates</li>
+</ul>
+
+<h2>How MentorBridge Makes It Easy</h2>
+<p>MentorBridge is Muzaffarpur's most trusted home tutoring platform. We do all the hard work for you — verifying teachers, matching them with your child's requirements, and providing ongoing support. Our free demo class lets you evaluate the teacher before committing to anything.</p>
+
+<p>We serve students from Nursery to Class 10 across CBSE, ICSE, and Bihar State Board in Muzaffarpur, Patna, Darbhanga, Sitamarhi, and across Bihar.</p>
+
+        <div class="article-cta-box">
+          <h3>Looking for a Verified Home Tutor in Bihar?</h3>
+          <p>MentorBridge connects you with qualified, police-verified tutors in Muzaffarpur, Patna, Darbhanga and across Bihar.</p>
+          <button class="btn btn-orange" onclick="go('tutor-form')">Find a Tutor — Free Demo Class 🎯</button>
+        </div>
+        <button class="btn btn-outline" onclick="showBlogList()" style="margin-top:24px">← Back to Blog</button>
+      </div>
+    </div>
+    <div id="article-cbse-vs-bihar-board" class="article-page" style="display:none">
+      <div class="article-hero">
+        <div class="container">
+          <div class="article-cat">Education Guide</div>
+          <h1>CBSE vs Bihar Board — Which is Better for Your Child?</h1>
+          <div class="article-meta-top">
+            <span>📅 July 2025</span>
+            <span>⏱ 6 min read</span>
+          </div>
+        </div>
+      </div>
+      <div class="container article-body">
+        <div class="article-intro">One of the most common questions Bihar parents ask is: Should my child study under CBSE or Bihar State Board (BSEB)? Both have their advantages and the right choice depends on your child's goals.</div>
+        
+<h2>Understanding the Two Boards</h2>
+<h3>Bihar State Board (BSEB)</h3>
+<p>The Bihar School Examination Board conducts Matric (Class 10) and Inter (Class 12) examinations. BSEB follows the NCERT syllabus with some Bihar-specific additions. It is the most widely followed board in Bihar and the medium of instruction is primarily Hindi.</p>
+
+<h3>CBSE (Central Board of Secondary Education)</h3>
+<p>CBSE is a national level board recognised across India. The syllabus is standardised, competitive exam-oriented (JEE, NEET, UPSC), and instruction is primarily in English. Most private schools in urban Bihar follow CBSE.</p>
+
+<h2>Key Differences</h2>
+<h3>Syllabus & Difficulty</h3>
+<p>CBSE syllabus is designed to prepare students for national competitive exams. It is more conceptual and application-based. Bihar Board follows a similar NCERT pattern but the exam pattern focuses more on memorisation and theory.</p>
+
+<h3>Medium of Instruction</h3>
+<p>Bihar Board: Hindi medium primarily. CBSE: English medium primarily. If your child aims to pursue higher education in English-medium colleges or engineering/medical entrance exams, CBSE gives a stronger foundation.</p>
+
+<h3>Career Goals</h3>
+<p>For JEE, NEET, UPSC, and other national competitive exams — CBSE is more aligned. For Bihar state government jobs and Bihar-specific competitive exams — BSEB can be advantageous as the exam patterns are familiar.</p>
+
+<h2>Which Should You Choose?</h2>
+<p>Choose CBSE if your child aims for IIT, NEET, national universities, or plans to move out of Bihar for higher studies. Choose Bihar Board if your family has a Hindi-medium background, if your child is more comfortable in Hindi, or if you are targeting Bihar-specific government jobs.</p>
+
+<h2>How Home Tuition Helps Both Board Students</h2>
+<p>Regardless of the board, a good home tutor makes a huge difference. MentorBridge has verified tutors experienced in both CBSE and Bihar Board. Our tutors are trained to teach the specific exam patterns of each board and help students score maximum marks.</p>
+
+        <div class="article-cta-box">
+          <h3>Looking for a Verified Home Tutor in Bihar?</h3>
+          <p>MentorBridge connects you with qualified, police-verified tutors in Muzaffarpur, Patna, Darbhanga and across Bihar.</p>
+          <button class="btn btn-orange" onclick="go('tutor-form')">Find a Tutor — Free Demo Class 🎯</button>
+        </div>
+        <button class="btn btn-outline" onclick="showBlogList()" style="margin-top:24px">← Back to Blog</button>
+      </div>
+    </div>
+    <div id="article-improve-childs-marks" class="article-page" style="display:none">
+      <div class="article-hero">
+        <div class="container">
+          <div class="article-cat">Study Tips</div>
+          <h1>How to Improve Your Child's Marks in 3 Months</h1>
+          <div class="article-meta-top">
+            <span>📅 June 2025</span>
+            <span>⏱ 5 min read</span>
+          </div>
+        </div>
+      </div>
+      <div class="container article-body">
+        <div class="article-intro">Are your child's marks not up to expectations? Don't worry — with the right approach and consistent effort, significant improvement is possible in just 3 months.</div>
+        
+<h2>Why Do Students Struggle?</h2>
+<p>Before finding solutions, it is important to understand why a child may be struggling academically. Common reasons include weak foundation in basic concepts, lack of personalised attention in school, ineffective study habits, fear of certain subjects, and lack of consistent practice.</p>
+
+<h2>Month 1 — Identify and Strengthen Weak Areas</h2>
+<h3>Step 1: Assessment</h3>
+<p>Start with a proper assessment of your child's current level. A good tutor will identify exactly which chapters and concepts are weak. This targeted approach is far more effective than revising everything from scratch.</p>
+
+<h3>Step 2: Build the Foundation</h3>
+<p>Many students struggle in Class 9-10 because their Class 6-7 foundation is weak. A skilled home tutor revisits fundamentals without making the child feel embarrassed, building confidence gradually.</p>
+
+<h3>Step 3: Daily Practice Routine</h3>
+<p>Establish a fixed study schedule — minimum 2 hours of focused study daily. Break it into 45-minute sessions with 10-minute breaks. Consistency matters more than duration.</p>
+
+<h2>Month 2 — Intensive Practice</h2>
+<p>Once the foundation is clear, move to chapter-wise practice tests. Solve previous year question papers. This phase builds speed and accuracy — both critical for exam performance.</p>
+
+<h2>Month 3 — Exam Strategy</h2>
+<p>The final month is about exam strategy — time management, question selection, presentation, and revision. A good tutor teaches these skills explicitly, which schools often overlook.</p>
+
+<h2>The Role of a Home Tutor</h2>
+<p>A qualified home tutor provides what schools cannot — personalised attention, customised pace, and one-on-one doubt clearing. At MentorBridge, our tutors create a personalised learning plan for every child and provide monthly progress reports so parents can see the improvement clearly.</p>
+
+        <div class="article-cta-box">
+          <h3>Looking for a Verified Home Tutor in Bihar?</h3>
+          <p>MentorBridge connects you with qualified, police-verified tutors in Muzaffarpur, Patna, Darbhanga and across Bihar.</p>
+          <button class="btn btn-orange" onclick="go('tutor-form')">Find a Tutor — Free Demo Class 🎯</button>
+        </div>
+        <button class="btn btn-outline" onclick="showBlogList()" style="margin-top:24px">← Back to Blog</button>
+      </div>
+    </div>
+    <div id="article-home-tuition-vs-coaching" class="article-page" style="display:none">
+      <div class="article-hero">
+        <div class="container">
+          <div class="article-cat">Parent Guide</div>
+          <h1>Home Tuition vs Coaching Centre — Which is Better for Bihar Students?</h1>
+          <div class="article-meta-top">
+            <span>📅 June 2025</span>
+            <span>⏱ 5 min read</span>
+          </div>
+        </div>
+      </div>
+      <div class="container article-body">
+        <div class="article-intro">Parents in Muzaffarpur and across Bihar often debate between home tuition and coaching centres. Both have their place — but which is better for your child?</div>
+        
+<h2>Coaching Centres in Bihar — The Reality</h2>
+<p>Coaching centres are popular in Bihar, especially for competitive exam preparation. However, for school-level students (Class 1-10), large batch coaching centres often have major drawbacks.</p>
+
+<h3>Problems with Coaching Centres</h3>
+<ul>
+<li><strong>Large batches:</strong> 30-50 students per teacher — individual attention is impossible</li>
+<li><strong>Fixed pace:</strong> Weak students fall behind; strong students feel held back</li>
+<li><strong>Travel time:</strong> Children spend 1-2 hours daily in travel, adding fatigue</li>
+<li><strong>Safety concerns:</strong> Especially for younger children and girls</li>
+<li><strong>No parent visibility:</strong> Parents rarely know what is being taught daily</li>
+</ul>
+
+<h2>Home Tuition — The Advantages</h2>
+<ul>
+<li><strong>One-on-one attention:</strong> Teacher focuses entirely on your child</li>
+<li><strong>Personalised pace:</strong> Teaching matches your child's speed</li>
+<li><strong>Convenience:</strong> No travel, study at home in comfort</li>
+<li><strong>Safety:</strong> Child stays at home, parents can observe sessions</li>
+<li><strong>Flexibility:</strong> Timings adjusted to your schedule</li>
+<li><strong>Progress tracking:</strong> Monthly reports give full visibility</li>
+</ul>
+
+<h2>When is Coaching Better?</h2>
+<p>Coaching centres are better for competitive exam preparation like JEE, NEET, and UPSC where peer competition and expert faculty are important. For school-level academic improvement (Class 1-10), home tuition consistently delivers better results.</p>
+
+<h2>The MentorBridge Difference</h2>
+<p>MentorBridge brings the best of both worlds — expert, verified teachers who come to your home with a structured curriculum, regular assessments, and monthly progress reports. Our tutors are selected through a rigorous 3-step verification process to ensure only qualified, trustworthy teachers enter your home.</p>
+
+        <div class="article-cta-box">
+          <h3>Looking for a Verified Home Tutor in Bihar?</h3>
+          <p>MentorBridge connects you with qualified, police-verified tutors in Muzaffarpur, Patna, Darbhanga and across Bihar.</p>
+          <button class="btn btn-orange" onclick="go('tutor-form')">Find a Tutor — Free Demo Class 🎯</button>
+        </div>
+        <button class="btn btn-outline" onclick="showBlogList()" style="margin-top:24px">← Back to Blog</button>
+      </div>
+    </div>
+    <div id="article-board-exam-preparation-class10" class="article-page" style="display:none">
+      <div class="article-hero">
+        <div class="container">
+          <div class="article-cat">Exam Tips</div>
+          <h1>Complete Board Exam Preparation Guide for Class 10 Bihar Students</h1>
+          <div class="article-meta-top">
+            <span>📅 May 2025</span>
+            <span>⏱ 7 min read</span>
+          </div>
+        </div>
+      </div>
+      <div class="container article-body">
+        <div class="article-intro">Class 10 board exams are one of the most important milestones in a student's life. Whether you are appearing for BSEB Matric or CBSE Class 10, this guide will help you prepare effectively.</div>
+        
+<h2>Understanding the Class 10 Board Exam Pattern</h2>
+<h3>Bihar Board (BSEB) Matric</h3>
+<p>The BSEB Matric exam tests students on Science, Mathematics, Social Science, Hindi, and English. The exam is held in February-March. Total marks: 500. Minimum passing marks: 33% in each subject. The paper pattern includes objective (MCQ) and subjective questions.</p>
+
+<h3>CBSE Class 10</h3>
+<p>CBSE follows NCERT curriculum. The exam includes internal assessment (20%) and board exam (80%). The pattern emphasises application, analysis, and higher-order thinking skills over memorisation.</p>
+
+<h2>Subject-wise Preparation Strategy</h2>
+<h3>Mathematics</h3>
+<p>Mathematics requires consistent daily practice. Focus on: Algebra, Geometry, Trigonometry, Statistics. Solve at least 10 problems daily. Practice previous year papers from the last 5 years. Learn all formulas by heart and understand their applications.</p>
+
+<h3>Science</h3>
+<p>Divide Science into Physics, Chemistry, and Biology. Physics requires formula application and numerical practice. Chemistry needs understanding of reactions and equations. Biology is memory-based — use diagrams and flowcharts for retention.</p>
+
+<h3>Social Science</h3>
+<p>History, Geography, Economics, and Political Science. Create chapter-wise notes with important dates, names, and concepts. Practice map work for Geography. Focus on NCERT thoroughly — most questions come directly from it.</p>
+
+<h3>English</h3>
+<p>Focus on: Literature (prose and poetry), Grammar, and Writing skills. Practice letter writing, essay writing, and comprehension passages daily. Grammar — tenses, active/passive voice, reported speech — are high-scoring areas.</p>
+
+<h3>Hindi</h3>
+<p>For BSEB students, Hindi is crucial. Learn all poems and prose by heart. Practice essay writing and letter writing. Grammar — Sandhi, Samas, Alankar — carry significant marks.</p>
+
+<h2>Time Table for Last 3 Months</h2>
+<p><strong>3 months before exam:</strong> Complete syllabus revision, chapter by chapter.</p>
+<p><strong>2 months before exam:</strong> Previous year paper practice, topic-wise tests.</p>
+<p><strong>1 month before exam:</strong> Full mock tests, revision of weak areas, formula revision.</p>
+<p><strong>Last week:</strong> Light revision only, focus on sleep and health.</p>
+
+<h2>How a Home Tutor Helps in Board Exam Prep</h2>
+<p>A dedicated home tutor creates a personalised revision schedule, conducts regular mock tests, provides immediate doubt-clearing, and tracks your progress weekly. At MentorBridge, our board exam specialist tutors in Muzaffarpur and Bihar have helped hundreds of students improve their scores significantly.</p>
+
+        <div class="article-cta-box">
+          <h3>Looking for a Verified Home Tutor in Bihar?</h3>
+          <p>MentorBridge connects you with qualified, police-verified tutors in Muzaffarpur, Patna, Darbhanga and across Bihar.</p>
+          <button class="btn btn-orange" onclick="go('tutor-form')">Find a Tutor — Free Demo Class 🎯</button>
+        </div>
+        <button class="btn btn-outline" onclick="showBlogList()" style="margin-top:24px">← Back to Blog</button>
+      </div>
+    </div>
+</div>
+
 <footer>
   <div class="container">
     <div class="foot-grid">
@@ -1055,7 +1421,7 @@ function go(id){
   const p=document.getElementById('p-'+id);
   if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',contact:'n-contact'};
+  const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',blog:'n-blog',contact:'n-contact'};
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
   // Update URL hash
   if(id==='home'){
@@ -1078,13 +1444,23 @@ function go(id){
 // Handle browser back/forward
 window.addEventListener('popstate', function(){
   var hash = window.location.hash.replace('#','') || 'home';
-  go(hash);
+  if(hash.startsWith('blog-')) {
+    go('blog');
+    setTimeout(function(){ showArticle(hash.replace('blog-','')); }, 50);
+  } else {
+    go(hash);
+  }
 });
 
 // Load page from hash on start
 window.addEventListener('load', function(){
   var hash = window.location.hash.replace('#','') || 'home';
-  go(hash);
+  if(hash.startsWith('blog-')) {
+    go('blog');
+    setTimeout(function(){ showArticle(hash.replace('blog-','')); }, 100);
+  } else {
+    go(hash);
+  }
 });
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
 function faq(el){
@@ -1199,6 +1575,22 @@ const TD=[
 ];
 const g=document.getElementById('all-tc');
 if(g)g.innerHTML=TD.map(t=>`<div class="tc-card"><div class="tc-top"><div class="tc-ava-wrap"><div class="tc-ava" style="background:${t.bg};color:${t.col};border-color:${t.bc}">${t.i}</div><div class="tc-vbadge">✓ Verified</div></div><div class="tc-name">${t.n}</div><div class="tc-qual">${t.q} · ${t.e} Exp</div><div class="tc-stars">★ ${t.r}</div></div><div class="tc-bot"><div class="tc-row"><span class="tc-label">Subjects Required</span><span class="tc-val">${t.s}</span></div><div class="tc-row"><span class="tc-label">Classes</span><span class="tc-val">${t.c}</span></div><div class="tc-row"><span class="tc-label">Board</span><span class="tc-val">${t.b}</span></div><div class="tc-row"><span class="tc-label">Medium</span><span class="tc-val">${t.m}</span></div><button class="btn btn-orange btn-sm" onclick="go('tutor-form')">Book Free Demo</button></div></div>`).join('');
+
+// ── BLOG FUNCTIONS ──
+function showArticle(id) {
+  document.getElementById('blog-list-view').style.display = 'none';
+  document.querySelectorAll('.article-page').forEach(function(a){ a.style.display='none'; });
+  var article = document.getElementById('article-' + id);
+  if(article){ article.style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
+  history.pushState(null,null,'#blog-' + id);
+}
+
+function showBlogList() {
+  document.getElementById('blog-list-view').style.display = 'block';
+  document.querySelectorAll('.article-page').forEach(function(a){ a.style.display='none'; });
+  window.scrollTo({top:0,behavior:'smooth'});
+  history.pushState(null,null,'#blog');
+}
 </script>
 
 <!-- SEO Content - Hidden -->
