@@ -376,11 +376,13 @@ function logout() {
 
 // ── NAVIGATION ──
 function showSection(id) {
-  ['dashboard','students','teachers'].forEach(s => {
-    document.getElementById('sec-'+s).style.display = s===id ? 'block' : 'none';
+  ['dashboard','students','teachers','blog'].forEach(s => {
+    var el = document.getElementById('sec-'+s);
+    if(el) el.style.display = s===id ? 'block' : 'none';
   });
+  if(id === 'blog') renderBlogTable();
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const titles = {dashboard:'📊 Dashboard', students:'🎓 Student Enquiries', teachers:'👩‍🏫 Teacher Applications'};
+  const titles = {dashboard:'📊 Dashboard', students:'🎓 Student Enquiries', teachers:'👩‍🏫 Teacher Applications', blog:'📝 Blog Management'};
   document.getElementById('pageTitle').textContent = titles[id] || 'Dashboard';
   event.currentTarget && event.currentTarget.classList.add('active');
 }
@@ -694,12 +696,7 @@ function deleteBlog(idx) {
   }
 }
 
-// Init blog table when blog section shown
-var origShowSection = showSection;
-function showSection(id) {
-  origShowSection(id);
-  if(id === 'blog') renderBlogTable();
-}
+// Blog table init handled in showSection directly
 
 // ── EDIT MODAL ──
 let editType = '';
