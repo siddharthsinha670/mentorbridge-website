@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MentorBridge — Login</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#081526 0%,#0D2B1E 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.logo{text-align:center;margin-bottom:28px}
+.logo h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800}
+.logo h1 span.o{color:#E8601A}
+.logo h1 span.t{color:#1D7A6B}
+.logo p{font-size:13px;color:#888;margin-top:4px}
+.tabs{display:flex;background:#F4F7F6;border-radius:12px;padding:4px;margin-bottom:24px;gap:4px}
+.tab{flex:1;padding:10px;text-align:center;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;color:#527060;font-family:'Plus Jakarta Sans',sans-serif;border:none;background:none}
+.tab.active{background:#fff;color:#1D7A6B;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.section{display:none}.section.active{display:block}
+label{display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;font-family:'Plus Jakarta Sans',sans-serif;text-transform:uppercase;letter-spacing:.5px}
+input,select{width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:16px;transition:.2s}
+input:focus,select:focus{outline:none;border-color:#1D7A6B;box-shadow:0 0 0 3px rgba(29,122,107,.08)}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.2s}
+.btn-teal{background:#1D7A6B;color:#fff}.btn-teal:hover{background:#14614e}
+.btn-orange{background:#E8601A;color:#fff}.btn-orange:hover{background:#c94d10}
+.btn-outline{background:#fff;color:#1D7A6B;border:2px solid #1D7A6B;margin-top:10px}.btn-outline:hover{background:#E6F4F1}
+.divider{text-align:center;color:#aaa;font-size:13px;margin:16px 0;position:relative}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:#eee}
+.divider::before{left:0}.divider::after{right:0}
+.msg{padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:16px;display:none}
+.msg.success{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;display:block}
+.msg.error{background:#FFEBEE;color:#C62828;border:1px solid #EF9A9A;display:block}
+.otp-input{letter-spacing:8px;font-size:20px;text-align:center;font-weight:800}
+.back-link{text-align:center;margin-top:20px;font-size:13px;color:#888}
+.back-link a{color:#1D7A6B;font-weight:700;text-decoration:none}
+.role-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.role-card{border:2px solid #D4EAE2;border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:.2s}
+.role-card:hover{border-color:#1D7A6B;background:#E6F4F1}
+.role-card.selected{border-color:#1D7A6B;background:#E6F4F1}
+.role-card .icon{font-size:32px;margin-bottom:8px}
+.role-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#0B1E36}
+.role-card p{font-size:11px;color:#888;margin-top:3px}
+#recaptcha-container{margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <h1><span class="o">Mentor</span><span class="t">Bridge</span></h1>
+    <p>Login to your account</p>
+  </div>
+
+  <!-- Role Selection -->
+  <div id="step-role" class="section active">
+    <div class="role-cards">
+      <div class="role-card" id="role-parent" onclick="selectRole('parent')">
+        <div class="icon">👨‍👩‍👧</div>
+        <h3>Parent</h3>
+        <p>Track your child's progress</p>
+      </div>
+      <div class="role-card" id="role-teacher" onclick="selectRole('teacher')">
+        <div class="icon">👩‍🏫</div>
+        <h3>Teacher</h3>
+        <p>Manage your students</p>
+      </div>
+    </div>
+    <button class="btn btn-teal" onclick="goToLogin()">Continue →</button>
+    <div class="back-link"><a href="/">← Back to Website</a></div>
+  </div>
+
+  <!-- Phone Login -->
+  <div id="step-phone" class="section">
+    <div class="msg" id="phone-msg"></div>
+    <div id="role-badge" style="text-align:center;margin-bottom:20px">
+      <span id="role-label" style="background:#E6F4F1;color:#1D7A6B;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif"></span>
+    </div>
+    <label>Phone Number</label>
+    <input type="tel" id="phone-input" placeholder="+91 XXXXX XXXXX" maxlength="13">
+    <div id="recaptcha-container"></div>
+    <button class="btn btn-teal" onclick="sendOTP()">Send OTP →</button>
+    <div class="divider">or</div>
+    <label>Email</label>
+    <input type="email" id="email-input" placeholder="your@email.com">
+    <label>Password</label>
+    <input type="password" id="pass-input" placeholder="Enter password">
+    <button class="btn btn-orange" onclick="emailLogin()">Login with Email →</button>
+    <button class="btn btn-outline" onclick="goBack('step-role')">← Change Role</button>
+  </div>
+
+  <!-- OTP Verify -->
+  <div id="step-otp" class="section">
+    <div class="msg" id="otp-msg"></div>
+    <p style="text-align:center;color:#527060;font-size:14px;margin-bottom:20px">Enter the 6-digit OTP sent to <strong id="otp-phone-display"></strong></p>
+    <label>Enter OTP</label>
+    <input type="number" id="otp-input" class="otp-input" placeholder="------" maxlength="6">
+    <button class="btn btn-teal" onclick="verifyOTP()">Verify & Login →</button>
+    <button class="btn btn-outline" onclick="goBack('step-phone')" style="margin-top:10px">← Change Number</button>
+  </div>
+
+  <!-- Register (new user) -->
+  <div id="step-register" class="section">
+    <div class="msg" id="reg-msg"></div>
+    <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#0B1E36;margin-bottom:6px">Complete Your Profile</h3>
+    <p style="font-size:13px;color:#888;margin-bottom:20px">First time? Fill in your details to get started.</p>
+    <label>Full Name <span style="color:#E8601A">*</span></label>
+    <input type="text" id="reg-name" placeholder="Your full name">
+    <label>WhatsApp Number</label>
+    <input type="tel" id="reg-phone-show" placeholder="+91 XXXXX XXXXX">
+    <div id="reg-teacher-fields" style="display:none">
+      <label>Subjects You Teach</label>
+      <input type="text" id="reg-subjects" placeholder="e.g. Maths, Science">
+      <label>Classes You Teach</label>
+      <input type="text" id="reg-classes" placeholder="e.g. Class 6-10">
+    </div>
+    <button class="btn btn-teal" onclick="saveProfile()">Save & Continue →</button>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCdom73tJcf33NURfDNRN_sFNjF4kBfQcI",
+  authDomain: "mentorbridge-c3f7e.firebaseapp.com",
+  projectId: "mentorbridge-c3f7e",
+  storageBucket: "mentorbridge-c3f7e.firebasestorage.app",
+  messagingSenderId: "296700653081",
+  appId: "1:296700653081:web:b6ef08c6fd953ea5980488",
+  measurementId: "G-30QV6EV30L"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Make available globally
+window._auth = auth;
+window._db = db;
+window._signInWithPhoneNumber = signInWithPhoneNumber;
+window._signInWithEmailAndPassword = signInWithEmailAndPassword;
+window._createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+window._RecaptchaVerifier = RecaptchaVerifier;
+window._doc = doc;
+window._setDoc = setDoc;
+window._getDoc = getDoc;
+
+// Check if already logged in
+auth.onAuthStateChanged(async (user) => {
+  if(user) {
+    const role = localStorage.getItem('mb_role') || 'parent';
+    const docRef = doc(db, role + 's', user.uid);
+    const snap = await getDoc(docRef);
+    if(snap.exists()) {
+      window.location.href = role === 'teacher' ? '/teacher-dashboard.html' : '/parent-dashboard.html';
+    }
+  }
+});
+</script>
+
+<script>
+let selectedRole = '';
+let confirmationResult = null;
+
+function selectRole(role) {
+  selectedRole = role;
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('role-' + role).classList.add('selected');
+}
+
+function goToLogin() {
+  if(!selectedRole) { alert('Please select Parent or Teacher!'); return; }
+  document.getElementById('role-label').textContent = selectedRole === 'parent' ? '👨‍👩‍👧 Parent Login' : '👩‍🏫 Teacher Login';
+  showStep('step-phone');
+}
+
+function showStep(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goBack(step) { showStep(step); }
+
+function showMsg(id, msg, type) {
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'msg ' + type;
+}
+
+async function sendOTP() {
+  var phone = document.getElementById('phone-input').value.trim();
+  if(!phone) { showMsg('phone-msg', 'Please enter phone number!', 'error'); return; }
+  if(!phone.startsWith('+')) phone = '+91' + phone.replace(/\D/g,'');
+
+  try {
+    if(!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new window._RecaptchaVerifier(window._auth, 'recaptcha-container', { size: 'invisible' });
+    }
+    confirmationResult = await window._signInWithPhoneNumber(window._auth, phone, window.recaptchaVerifier);
+    document.getElementById('otp-phone-display').textContent = phone;
+    localStorage.setItem('mb_role', selectedRole);
+    showStep('step-otp');
+  } catch(err) {
+    showMsg('phone-msg', 'Error: ' + err.message, 'error');
+  }
+}
+
+async function verifyOTP() {
+  var otp = document.getElementById('otp-input').value.trim();
+  if(!otp || otp.length < 6) { showMsg('otp-msg', 'Enter valid 6-digit OTP!', 'error'); return; }
+  try {
+    var result = await confirmationResult.confirm(otp);
+    await checkAndRedirect(result.user);
+  } catch(err) {
+    showMsg('otp-msg', 'Wrong OTP! Please try again.', 'error');
+  }
+}
+
+async function emailLogin() {
+  var email = document.getElementById('email-input').value.trim();
+  var pass = document.getElementById('pass-input').value.trim();
+  if(!email || !pass) { showMsg('phone-msg', 'Please enter email and password!', 'error'); return; }
+  try {
+    localStorage.setItem('mb_role', selectedRole);
+    var result = await window._signInWithEmailAndPassword(window._auth, email, pass);
+    await checkAndRedirect(result.user);
+  } catch(err) {
+    if(err.code === 'auth/user-not-found') {
+      // Create new account
+      var result = await window._createUserWithEmailAndPassword(window._auth, email, pass);
+      await checkAndRedirect(result.user);
+    } else {
+      showMsg('phone-msg', 'Login failed: ' + err.message, 'error');
+    }
+  }
+}
+
+async function checkAndRedirect(user) {
+  var role = localStorage.getItem('mb_role') || 'parent';
+  var db = window._db;
+  var docRef = window._doc(db, role + 's', user.uid);
+  var snap = await window._getDoc(docRef);
+  if(snap.exists()) {
+    window.location.href = role === 'teacher' ? '/teacher-dashboard.html' : '/parent-dashboard.html';
+  } else {
+    // New user - show register form
+    document.getElementById('reg-phone-show').value = user.phoneNumber || user.email || '';
+    if(role === 'teacher') document.getElementById('reg-teacher-fields').style.display = 'block';
+    window._currentUser = user;
+    showStep('step-register');
+  }
+}
+
+async function saveProfile() {
+  var name = document.getElementById('reg-name').value.trim();
+  if(!name) { showMsg('reg-msg', 'Please enter your name!', 'error'); return; }
+  var role = localStorage.getItem('mb_role') || 'parent';
+  var user = window._currentUser;
+  var data = {
+    name: name,
+    phone: document.getElementById('reg-phone-show').value,
+    role: role,
+    createdAt: new Date().toISOString(),
+    uid: user.uid
+  };
+  if(role === 'teacher') {
+    data.subjects = document.getElementById('reg-subjects').value;
+    data.classes = document.getElementById('reg-classes').value;
+    data.status = 'pending';
+  }
+  await window._setDoc(window._doc(window._db, role + 's', user.uid), data);
+  window.location.href = role === 'teacher' ? '/teacher-dashboard.html' : '/parent-dashboard.html';
+}
+</script>
+</body>
+</html>

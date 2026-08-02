@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parent Dashboard — MentorBridge</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#E8601A;--teal:#1D7A6B;--teal2:#25A090;--navy:#0B1E36;--bg:#F4F7F6;--border:#D4EAE2}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:#18281E}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.topbar-logo{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800}
+.topbar-logo span.o{color:var(--orange)}.topbar-logo span.t{color:var(--teal)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.user-name{font-size:14px;font-weight:700;color:var(--navy)}
+.logout-btn{padding:7px 16px;background:#FEE;color:#C00;border:1px solid #FCC;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.content{max-width:1000px;margin:0 auto;padding:28px 20px}
+.welcome{background:linear-gradient(135deg,var(--navy),#0D2B1E);border-radius:20px;padding:28px 32px;margin-bottom:24px;color:#fff}
+.welcome h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;margin-bottom:6px}
+.welcome p{color:rgba(255,255,255,.6);font-size:15px}
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center}
+.stat-card .icon{font-size:32px;margin-bottom:10px}
+.stat-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;color:var(--navy)}
+.stat-card p{font-size:13px;color:#527060;margin-top:4px}
+.section-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+.section-card h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.enquiry-item{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px}
+.enquiry-item h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.enquiry-meta{display:flex;flex-wrap:wrap;gap:8px}
+.meta-tag{background:#fff;border:1px solid var(--border);border-radius:50px;padding:4px 12px;font-size:12px;font-weight:600;color:#527060}
+.status-badge{padding:4px 12px;border-radius:50px;font-size:12px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
+.status-new{background:#FFF3E0;color:#E65100}
+.status-contacted{background:#E8F5E9;color:#2E7D32}
+.status-demo{background:#E3F2FD;color:#1565C0}
+.empty-state{text-align:center;padding:40px;color:#888}
+.empty-state .ei{font-size:48px;margin-bottom:12px}
+.btn-orange{background:var(--orange);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:.2s}
+.btn-orange:hover{background:#c94d10}
+.loading{text-align:center;padding:32px;color:#888;font-size:14px}
+@media(max-width:600px){.cards-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo"><span class="o">Mentor</span><span class="t">Bridge</span></div>
+  <div class="topbar-right">
+    <span class="user-name" id="user-name">Loading...</span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="welcome">
+    <h2>Welcome back, <span id="welcome-name">Parent</span>! 👋</h2>
+    <p>Track your child's tuition enquiries and progress from here.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="stat-card">
+      <div class="icon">📋</div>
+      <h3 id="total-enquiries">0</h3>
+      <p>Total Enquiries</p>
+    </div>
+    <div class="stat-card">
+      <div class="icon">👩‍🏫</div>
+      <h3 id="active-teachers">0</h3>
+      <p>Active Teachers</p>
+    </div>
+    <div class="stat-card">
+      <div class="icon">📅</div>
+      <h3 id="demo-scheduled">0</h3>
+      <p>Demo Scheduled</p>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <h2>📋 My Enquiries</h2>
+    <div id="enquiries-list"><div class="loading">Loading your enquiries...</div></div>
+    <button class="btn-orange" onclick="window.location.href='/'" style="margin-top:16px">+ New Enquiry</button>
+  </div>
+
+  <div class="section-card">
+    <h2>📞 Contact MentorBridge</h2>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <a href="https://wa.me/918540016415" target="_blank" style="display:flex;align-items:center;gap:12px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:12px;padding:14px 18px;text-decoration:none;color:#1B5E20;font-weight:700">
+        <span style="font-size:24px">💬</span> WhatsApp Support — Quick Response
+      </a>
+      <a href="mailto:mentorbridgemuz@gmail.com" style="display:flex;align-items:center;gap:12px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:12px;padding:14px 18px;text-decoration:none;color:#1565C0;font-weight:700">
+        <span style="font-size:24px">📧</span> Email: mentorbridgemuz@gmail.com
+      </a>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCdom73tJcf33NURfDNRN_sFNjF4kBfQcI",
+  authDomain: "mentorbridge-c3f7e.firebaseapp.com",
+  projectId: "mentorbridge-c3f7e",
+  storageBucket: "mentorbridge-c3f7e.firebasestorage.app",
+  messagingSenderId: "296700653081",
+  appId: "1:296700653081:web:b6ef08c6fd953ea5980488"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+auth.onAuthStateChanged(async (user) => {
+  if(!user) { window.location.href = '/login.html'; return; }
+  
+  // Get parent profile
+  const snap = await getDoc(doc(db, 'parents', user.uid));
+  if(!snap.exists()) { window.location.href = '/login.html'; return; }
+  
+  const data = snap.data();
+  document.getElementById('user-name').textContent = data.name || 'Parent';
+  document.getElementById('welcome-name').textContent = data.name ? data.name.split(' ')[0] : 'Parent';
+
+  // Load enquiries from SheetDB by phone number
+  loadEnquiries(data.phone || user.phoneNumber || '');
+});
+
+async function loadEnquiries(phone) {
+  try {
+    const cleanPhone = phone.replace(/\D/g,'').slice(-10);
+    const res = await fetch('https://sheetdb.io/api/v1/qmklc1a104hli/search?WhatsApp%20Number=*' + cleanPhone + '*');
+    const data = await res.json();
+    
+    const list = document.getElementById('enquiries-list');
+    
+    if(!data || data.length === 0) {
+      list.innerHTML = '<div class="empty-state"><div class="ei">📭</div><p>No enquiries yet. <a href="/" style="color:var(--teal);font-weight:700">Find a tutor now!</a></p></div>';
+      return;
+    }
+
+    document.getElementById('total-enquiries').textContent = data.length;
+    document.getElementById('active-teachers').textContent = data.filter(d => d['Status'] === 'Admitted').length;
+    document.getElementById('demo-scheduled').textContent = data.filter(d => d['Status'] === 'Demo Scheduled').length;
+
+    list.innerHTML = data.map(d => {
+      const status = d['Status'] || 'New Enquiry';
+      const statusClass = status === 'Admitted' ? 'status-contacted' : status === 'Demo Scheduled' ? 'status-demo' : 'status-new';
+      return '<div class="enquiry-item">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">' +
+          '<h4>' + (d['Student Name'] || 'Student') + '</h4>' +
+          '<span class="status-badge ' + statusClass + '">' + status + '</span>' +
+        '</div>' +
+        '<div class="enquiry-meta">' +
+          '<span class="meta-tag">📚 Class ' + (d['Class / Grade'] || '—') + '</span>' +
+          '<span class="meta-tag">🎓 ' + (d['Board'] || '—') + '</span>' +
+          '<span class="meta-tag">📖 ' + (d['Subjects Required'] || '—') + '</span>' +
+          '<span class="meta-tag">🏠 ' + (d['Teaching Mode'] || '—') + '</span>' +
+          '<span class="meta-tag">📅 ' + (d['Date'] || '—') + '</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('enquiries-list').innerHTML = '<div class="empty-state"><p>Could not load enquiries. Please try again.</p></div>';
+  }
+}
+
+window.logout = async function() {
+  await signOut(auth);
+  localStorage.removeItem('mb_role');
+  window.location.href = '/login.html';
+};
+</script>
+</body>
+</html>
