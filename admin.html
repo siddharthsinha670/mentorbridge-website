@@ -513,7 +513,11 @@ function renderStudents() {
     const idx = allStudents.length - 1 - i;
     const id = 'STU' + String(idx + 1).padStart(4,'0');
     const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/\D/g,'');
-    const date = getVal(r,'Date','Submission Date','date');
+    let date = getVal(r,'Date','Submission Date','date');
+    if(date && !isNaN(date) && parseFloat(date) > 40000) {
+      var d = new Date((parseFloat(date) - 25569) * 86400 * 1000);
+      date = d.toLocaleString('en-IN', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    }
     // Find class field by scanning all keys
     const clsKey = Object.keys(r).find(k => k.toLowerCase().includes('class'));
     const cls = clsKey ? r[clsKey] : '—';
@@ -554,7 +558,12 @@ function renderTeachers() {
     const id = 'TCH' + String(idx + 1).padStart(4,'0');
     const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/\D/g,'');
     const dateKey = Object.keys(r).find(k => k.toLowerCase().includes('date'));
-    const date = dateKey ? r[dateKey] : '—';
+    let date = dateKey ? r[dateKey] : '—';
+    // Fix Excel serial number date (e.g. 46061.38152)
+    if(date && !isNaN(date) && parseFloat(date) > 40000) {
+      var excelDate = new Date((parseFloat(date) - 25569) * 86400 * 1000);
+      date = excelDate.toLocaleString('en-IN', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    }
     const status = getVal(r,'Status','status') === '—' ? 'New Application' : getVal(r,'Status','status');
     return `<tr id="trow-${idx}">
       <td><span class="id-badge">${id}</span></td>
