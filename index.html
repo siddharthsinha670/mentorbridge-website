@@ -968,23 +968,82 @@ footer{background:#060D18;padding:64px 0 28px}
   <div class="container form-outer"><div class="form-card">
     <h2>Teacher Application Form</h2>
     <p class="form-subtitle">Fill in your details and our team will contact you within 48 hours for verification.</p>
-    <div class="suc-box" id="s-teacher">✅ Application received! WhatsApp pe details ja rahi hain. Our team will review and contact you within 48 hours!</div>
+    <div class="suc-box" id="s-teacher">✅ Application received! Our team will review and contact you within 48 hours.</div>
     <form onsubmit="sub(event,'s-teacher')">
-      <div class="f2"><div class="fg"><label for="tf-fullname">Full Name <span class="req">*</span></label><input id="tf-fullname" type="text" placeholder="Your full name" required></div><div class="fg"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" required></div></div>
-      <div class="f2"><div class="fg"><label>Email Address <span class="req">*</span></label><input type="email" placeholder="your@email.com" required></div><div class="fg"><label for="t-city">City / Area <span class="req">*</span></label><input id="t-city" type="text" placeholder="Your city or locality" required></div></div>
-      <div class="f2"><div class="fg"><label>Highest Qualification <span class="req">*</span></label><select required><option value="">Select mode</option><option>12th Pass</option><option>Pursuing Graduation</option><option>B.A. / B.Sc. / B.Com</option><option>B.Tech / B.E.</option><option>B.Ed / D.El.Ed</option><option>M.A. / M.Sc. / M.Com</option><option>M.Tech</option><option>M.Ed</option><option>PhD / Research Scholar</option></select></div><div class="fg"><label>Teaching Experience <span class="req">*</span></label><select required><option value="">Select mode</option><option>Fresher (0 years)</option><option>Less than 1 year</option><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div></div>
-      <div class="fg"><label>Subjects Required You Can Teach <span class="req">*</span></label><input id="tf-tsubj" type="text" placeholder="e.g. Maths, Science, English, Hindi, Physics" required></div>
-      <div class="f2"><div class="fg"><label for="t-classes">Classes You Can Teach <span class="req">*</span></label><input id="t-classes" type="text" placeholder="e.g. Class 6 to Class 10" required></div><div class="fg"><label>Board Expertise</label><select><option value="">Select mode board</option><option>CBSE</option><option>ICSE</option><option>Bihar Board (BSEB)</option><option>All Boards</option></select></div></div>
-      <div class="f2"><div class="fg"><label>Teaching Mode Preferred</label><select><option value="">Select mode</option><option>Home Tuition (Visit Students)</option><option>Online Tuition</option><option>Both</option></select></div><div class="fg"><label>Medium of Instruction</label><select><option value="">Select mode</option><option>Hindi Medium</option><option>English Medium</option><option>Bilingual</option></select></div></div>
-      <div class="f2"><div class="fg"><label>Upload Resume / CV <span style="color:var(--muted);font-weight:600">(Optional)</span></label><input type="file" accept=".pdf,.doc,.docx"></div><div class="fg"><label>Upload Qualification Certificate</label><input type="file" accept=".pdf,.jpg,.jpeg,.png"></div></div>
-      <div class="fg"><label for="t-intro">Brief Introduction</label><textarea id="t-intro" placeholder="Tell us about your teaching experience, approach, and why you want to join MentorBridge..."></textarea></div>
+      <div class="f2">
+        <div class="fg"><label for="t-name">Full Name <span class="req">*</span></label><input id="t-name" name="Full Name" type="text" placeholder="Your full name" required></div>
+        <div class="fg"><label for="t-phone">WhatsApp Number <span class="req">*</span></label><input id="t-phone" name="WhatsApp Number" type="tel" placeholder="+91 XXXXX XXXXX" required></div>
+      </div>
+      <div class="f2">
+        <div class="fg"><label for="t-email">Email Address <span class="req">*</span></label><input id="t-email" name="Email Address" type="email" placeholder="your@email.com" required></div>
+        <div class="fg"><label for="t-city">City / Area <span class="req">*</span></label><input id="t-city" name="City / Area" type="text" placeholder="Your city or locality" required></div>
+      </div>
+      <div class="f2">
+        <div class="fg"><label for="t-qual">Highest Qualification <span class="req">*</span></label>
+          <select id="t-qual" name="Highest Qualification" required>
+            <option value="">Select</option>
+            <option>12th Pass</option><option>Pursuing Graduation</option>
+            <option>B.A. / B.Sc. / B.Com</option><option>B.Tech / B.E.</option>
+            <option>B.Ed / D.El.Ed</option><option>M.A. / M.Sc. / M.Com</option>
+            <option>M.Tech</option><option>M.Ed</option><option>PhD / Research Scholar</option>
+          </select>
+        </div>
+        <div class="fg"><label for="t-exp">Teaching Experience <span class="req">*</span></label>
+          <select id="t-exp" name="Teaching Experience" required>
+            <option value="">Select</option>
+            <option>Fresher (0 years)</option><option>Less than 1 year</option>
+            <option>1–2 years</option><option>3–5 years</option>
+            <option>5–10 years</option><option>10+ years</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label for="t-subj">Subjects You Can Teach <span class="req">*</span></label>
+        <input id="t-subj" name="Subjects You Can Teach" type="text" placeholder="e.g. Maths, Science, English, Hindi, Physics" required>
+      </div>
+      <div class="f2">
+        <div class="fg"><label for="t-classes">Classes You Can Teach <span class="req">*</span></label>
+          <input id="t-classes" name="Classes You Can Teach" type="text" placeholder="e.g. Class 6 to Class 10" required>
+        </div>
+        <div class="fg"><label for="t-board">Board Expertise</label>
+          <select id="t-board" name="Board Expertise">
+            <option value="">Select board</option>
+            <option>CBSE</option><option>ICSE</option>
+            <option>Bihar Board (BSEB)</option><option>All Boards</option>
+          </select>
+        </div>
+      </div>
+      <div class="f2">
+        <div class="fg"><label for="t-mode">Teaching Mode Preferred</label>
+          <select id="t-mode" name="Teaching Mode Preferred">
+            <option value="">Select</option>
+            <option>Home Tuition (Visit Students)</option>
+            <option>Online Tuition</option><option>Both</option>
+          </select>
+        </div>
+        <div class="fg"><label for="t-medium">Medium of Instruction</label>
+          <select id="t-medium" name="Medium of Instruction">
+            <option value="">Select</option>
+            <option>Hindi Medium</option><option>English Medium</option><option>Bilingual</option>
+          </select>
+        </div>
+      </div>
+      <div class="f2">
+        <div class="fg"><label for="t-cv">Upload Resume / CV <span style="color:var(--muted);font-weight:600">(Optional)</span></label>
+          <input id="t-cv" name="Resume CV" type="file" accept=".pdf,.doc,.docx">
+        </div>
+        <div class="fg"><label for="t-cert">Upload Qualification Certificate</label>
+          <input id="t-cert" name="Qualification Certificate" type="file" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+      <div class="fg"><label for="t-intro">Brief Introduction</label>
+        <textarea id="t-intro" name="Brief Introduction" placeholder="Tell us about your teaching experience, approach, and why you want to join MentorBridge..."></textarea>
+      </div>
       <button type="submit" class="btn btn-teal btn-lg form-sub">Submit Application — Join MentorBridge 🎓</button>
       <p class="form-note">🔒 Your information is secure. We'll review and contact you within 48 hours.</p>
     </form>
   </div></div>
 </div>
 
-<!-- ============ CONTACT ============ -->
 <div id="p-contact" class="page">
   <div class="page-hero"><div class="container"><h1>Get in <span style="color:var(--orange2)">Touch</span></h1><p>Question? Enquiry? We're here — reach us through WhatsApp, email, or the form below.</p></div></div>
   <section class="sec"><div class="container contact-layout">
@@ -1769,9 +1828,9 @@ function tfAddChild() {
     + '</div>'
     + '<div class="f2">'
       + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Student Name <span style="color:#E8601A">*</span></label>'
-        + '<input type="text" id="tfc' + n + '-name" placeholder="Child full name" style="' + inputStyle + '"></div>'
+        + '<input type="text" id="tfc' + n + '-name" name="Student Name ' + n + '" placeholder="Child full name" style="' + inputStyle + '"></div>'
       + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Teacher Gender Preference</label>'
-        + '<select id="tfc' + n + '-gender" style="' + selStyle + '"><option value="">No preference</option><option value="Male Teacher">Male Teacher</option><option value="Female Teacher">Female Teacher</option></select></div>'
+        + '<select id="tfc' + n + '-gender" name="Gender Pref ' + n + '" style="' + selStyle + '"><option value="">No preference</option><option value="Male Teacher">Male Teacher</option><option value="Female Teacher">Female Teacher</option></select></div>'
     + '</div>'
     + '<div class="f2">'
       + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Class / Grade <span style="color:#E8601A">*</span></label>'
