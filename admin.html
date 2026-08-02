@@ -457,7 +457,7 @@ function renderDashStudents() {
       <td><strong style="color:var(--orange)">${(()=>{const v=getVal(r,'Class / Grade','Class','class','grade');return v!=='—'&&!isNaN(v)?'Class '+v:v;})()}</strong></td>
       <td>${getVal(r,'Subjects Required','Subjects','subjects')}</td>
       <td><a href="https://wa.me/91${getVal(r,'WhatsApp Number','phone').replace(/\D/g,'')}" target="_blank" style="color:var(--teal)">${getVal(r,'WhatsApp Number','phone')}</a></td>
-      <td>${getVal(r,'Date','Submission Date','date')}</td>
+      <td>${formatDate(getVal(r,'Date','Submission Date','date'))}</td>
     </tr>`).join('');
 }
 
