@@ -639,6 +639,7 @@ footer{background:#060D18;padding:64px 0 28px}
     <div class="nav-ctas">
       <button class="btn btn-outline btn-sm" onclick="go('tutor-form')">🔍 Find a Tutor</button>
       <button class="btn btn-orange btn-sm" onclick="go('teacher-form')">Apply as Tutor ✏️</button>
+      <button class="btn btn-sm" id="nav-login-btn" onclick="go('login')" style="background:var(--navy);color:#fff;border-radius:50px;padding:9px 20px;font-size:14px;font-weight:700">Login</button>
     </div>
     <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
@@ -1488,7 +1489,7 @@ function go(id){
   const p=document.getElementById('p-'+id);
   if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',blog:'n-blog',contact:'n-contact'};
+  const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',blog:'n-blog',contact:'n-contact',login:'n-login'};
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
   // Update URL hash
   if(id==='home'){
@@ -2026,6 +2027,469 @@ window.addEventListener('load', function(){
     }
   }
 });
+</script>
+
+
+<!-- ============ LOGIN PAGE ============ -->
+<div id="p-login" class="page">
+  <div style="min-height:calc(100vh - 68px);background:linear-gradient(135deg,#081526 0%,#0D2B1E 100%);display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-80px;right:-60px;width:400px;height:400px;background:rgba(29,122,107,.2);border-radius:50%;filter:blur(60px)"></div>
+    <div style="position:absolute;bottom:-80px;left:-60px;width:300px;height:300px;background:rgba(232,96,26,.12);border-radius:50%;filter:blur(60px)"></div>
+
+    <!-- Login Card -->
+    <div id="login-card" style="background:#fff;border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3);position:relative;z-index:1">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;margin-bottom:4px">
+          <span style="color:#E8601A">Mentor</span><span style="color:#1D7A6B">Bridge</span>
+        </div>
+        <p style="font-size:13px;color:#888">Login to your account</p>
+      </div>
+
+      <!-- Role Selection -->
+      <div id="ls-role" class="ls-step" style="display:block">
+        <p style="font-size:13px;font-weight:700;color:#527060;text-align:center;margin-bottom:16px">Select your role to continue</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+          <div id="lrole-parent" onclick="lSelectRole('parent')" style="border:2px solid #D4EAE2;border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:.2s">
+            <div style="font-size:32px;margin-bottom:8px">👨‍👩‍👧</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#0B1E36">Parent</div>
+            <div style="font-size:11px;color:#888;margin-top:3px">Track your child</div>
+          </div>
+          <div id="lrole-teacher" onclick="lSelectRole('teacher')" style="border:2px solid #D4EAE2;border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:.2s">
+            <div style="font-size:32px;margin-bottom:8px">👩‍🏫</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#0B1E36">Teacher</div>
+            <div style="font-size:11px;color:#888;margin-top:3px">Manage students</div>
+          </div>
+        </div>
+        <button onclick="lGoToLogin()" style="width:100%;padding:13px;background:#1D7A6B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Continue →</button>
+      </div>
+
+      <!-- Phone/Email Login -->
+      <div id="ls-phone" class="ls-step" style="display:none">
+        <div id="l-role-badge" style="text-align:center;margin-bottom:18px"></div>
+        <div id="l-msg" style="display:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:14px"></div>
+
+        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Email</label>
+        <input type="email" id="l-email" placeholder="your@email.com" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+
+        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Password</label>
+        <input type="password" id="l-pass" placeholder="Enter password" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:16px">
+
+        <button onclick="lEmailLogin()" style="width:100%;padding:13px;background:#E8601A;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:10px">Login / Sign Up →</button>
+        <button onclick="lShowStep('ls-role')" style="width:100%;padding:11px;background:#fff;color:#1D7A6B;border:2px solid #1D7A6B;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">← Change Role</button>
+        <p style="text-align:center;font-size:12px;color:#888;margin-top:14px">New user? Enter email + password to create account automatically.</p>
+      </div>
+
+      <!-- Register -->
+      <div id="ls-register" class="ls-step" style="display:none">
+        <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:6px">Complete Your Profile</h3>
+        <p style="font-size:13px;color:#888;margin-bottom:20px">First time? Fill in your details.</p>
+        <div id="l-reg-msg" style="display:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:14px"></div>
+        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Full Name *</label>
+        <input type="text" id="l-reg-name" placeholder="Your full name" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">WhatsApp Number</label>
+        <input type="tel" id="l-reg-phone" placeholder="+91 XXXXX XXXXX" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+        <div id="l-teacher-extra" style="display:none">
+          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Subjects You Teach</label>
+          <input type="text" id="l-reg-subjects" placeholder="e.g. Maths, Science" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Classes You Teach</label>
+          <input type="text" id="l-reg-classes" placeholder="e.g. Class 6-10" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+        </div>
+        <button onclick="lSaveProfile()" style="width:100%;padding:13px;background:#1D7A6B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Save & Continue →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TEACHER DASHBOARD ============ -->
+<div id="p-teacher-dash" class="page">
+  <div style="display:flex;min-height:calc(100vh - 68px)">
+    <!-- Sidebar -->
+    <div style="width:200px;background:#0B1E36;display:flex;flex-direction:column;flex-shrink:0">
+      <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,.08)">
+        <div style="font-size:12px;color:rgba(255,255,255,.4);font-weight:700;margin-bottom:4px">TEACHER PORTAL</div>
+        <div id="td-name" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#fff">Loading...</div>
+        <div id="td-status" style="font-size:11px;color:#C9992A;margin-top:2px;font-weight:600">⏳ Pending</div>
+      </div>
+      <nav style="padding:10px 0;flex:1">
+        <div onclick="tdShow('overview')" class="td-nav active" style="display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:.15s">📊 Overview</div>
+        <div onclick="tdShow('profile')" class="td-nav" style="display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:.15s">👤 My Profile</div>
+        <div onclick="tdShow('schedule')" class="td-nav" style="display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:.15s">📅 Schedule</div>
+        <div onclick="tdShow('students')" class="td-nav" style="display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:.15s">🎓 Students</div>
+      </nav>
+      <div style="padding:16px 18px;border-top:1px solid rgba(255,255,255,.08)">
+        <button onclick="lLogout()" style="width:100%;padding:9px;background:rgba(255,0,0,.15);color:#ff6b6b;border:1px solid rgba(255,0,0,.2);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Logout</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div style="flex:1;background:#F4F7F6;overflow-y:auto;padding:24px">
+
+      <!-- Overview -->
+      <div id="td-overview" class="td-page" style="display:block">
+        <div style="background:linear-gradient(135deg,#1D7A6B,#25A090);border-radius:18px;padding:24px 28px;margin-bottom:20px;color:#fff">
+          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Welcome, <span id="td-welcome">Teacher</span>! 👋</h2>
+          <p style="color:rgba(255,255,255,.7);font-size:14px">Your teaching dashboard</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+          <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🎓</div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:#0B1E36">0</div><div style="font-size:12px;color:#527060;margin-top:3px">Students</div></div>
+          <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">⭐</div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:#0B1E36">—</div><div style="font-size:12px;color:#527060;margin-top:3px">Rating</div></div>
+          <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">💰</div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:#0B1E36">₹0</div><div style="font-size:12px;color:#527060;margin-top:3px">Earnings</div></div>
+        </div>
+        <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:20px">
+          <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#0B1E36;margin-bottom:14px">📢 Notice from MentorBridge</h3>
+          <div style="background:#E6F4F1;border-radius:10px;padding:14px">
+            <p style="font-weight:700;color:#1D7A6B;margin-bottom:4px">Welcome! 🎉</p>
+            <p style="font-size:13px;color:#527060">Your profile is under review. Our team will verify documents and contact you within 48 hours.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div id="td-profile" class="td-page" style="display:none">
+        <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:24px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #D4EAE2">
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36">👤 My Profile</h2>
+            <button onclick="tdSaveProfile()" style="padding:9px 18px;background:#1D7A6B;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">💾 Save</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">Full Name</label><input id="td-p-name" type="text" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif"></div>
+            <div><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">WhatsApp</label><input id="td-p-phone" type="tel" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif"></div>
+            <div><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">Subjects</label><input id="td-p-subjects" type="text" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif"></div>
+            <div><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">Classes</label><input id="td-p-classes" type="text" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif"></div>
+            <div style="grid-column:1/-1"><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">About Me</label><textarea id="td-p-about" rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;resize:vertical"></textarea></div>
+          </div>
+          <div id="td-profile-msg" style="display:none;margin-top:14px;padding:12px;border-radius:10px;font-size:14px;font-weight:600"></div>
+        </div>
+      </div>
+
+      <!-- Schedule -->
+      <div id="td-schedule" class="td-page" style="display:none">
+        <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:24px">
+          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:16px">📅 Weekly Availability</h2>
+          <div id="td-schedule-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px"></div>
+          <button onclick="tdSaveSchedule()" style="padding:10px 20px;background:#1D7A6B;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">💾 Save Schedule</button>
+        </div>
+      </div>
+
+      <!-- Students -->
+      <div id="td-students" class="td-page" style="display:none">
+        <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:24px">
+          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:16px">🎓 My Students</h2>
+          <div style="text-align:center;padding:40px;color:#888">
+            <div style="font-size:48px;margin-bottom:12px">👨‍🎓</div>
+            <p>No students assigned yet.</p>
+            <p style="font-size:13px;margin-top:6px">Students will appear here once assigned by MentorBridge.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ PARENT DASHBOARD ============ -->
+<div id="p-parent-dash" class="page">
+  <div style="background:linear-gradient(135deg,#081526,#0D2B1E);padding:32px 0;margin-bottom:24px">
+    <div class="container">
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:4px">Welcome, <span id="pd-name">Parent</span>! 👋</h2>
+      <p style="color:rgba(255,255,255,.6);font-size:14px">Track your child's tuition enquiries here</p>
+    </div>
+  </div>
+  <div class="container" style="padding-bottom:60px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+      <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📋</div><div id="pd-total" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#0B1E36">0</div><div style="font-size:12px;color:#527060;margin-top:3px">Enquiries</div></div>
+      <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">👩‍🏫</div><div id="pd-active" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#0B1E36">0</div><div style="font-size:12px;color:#527060;margin-top:3px">Active Teachers</div></div>
+      <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📅</div><div id="pd-demo" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#0B1E36">0</div><div style="font-size:12px;color:#527060;margin-top:3px">Demos Scheduled</div></div>
+    </div>
+
+    <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:24px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #D4EAE2">
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36">📋 My Enquiries</h2>
+        <button onclick="go('tutor-form')" style="padding:8px 16px;background:#E8601A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">+ New Enquiry</button>
+      </div>
+      <div id="pd-enquiries">
+        <div style="text-align:center;padding:32px;color:#888;font-size:14px">Loading enquiries...</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:20px">
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:14px">📞 Contact Support</h2>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="https://wa.me/918540016415" target="_blank" style="display:flex;align-items:center;gap:12px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:12px;padding:14px;text-decoration:none;color:#1B5E20;font-weight:700;font-size:14px">
+          <span style="font-size:22px">💬</span> WhatsApp Support
+        </a>
+        <a href="mailto:mentorbridgemuz@gmail.com" style="display:flex;align-items:center;gap:12px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:12px;padding:14px;text-decoration:none;color:#1565C0;font-weight:700;font-size:14px">
+          <span style="font-size:22px">📧</span> mentorbridgemuz@gmail.com
+        </a>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px">
+      <button onclick="lLogout()" style="padding:10px 24px;background:#FEE;color:#C00;border:1px solid #FCC;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Logout</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Firebase + Login/Dashboard JS -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCdom73tJcf33NURfDNRN_sFNjF4kBfQcI",
+  authDomain: "mentorbridge-c3f7e.firebaseapp.com",
+  projectId: "mentorbridge-c3f7e",
+  storageBucket: "mentorbridge-c3f7e.firebasestorage.app",
+  messagingSenderId: "296700653081",
+  appId: "1:296700653081:web:b6ef08c6fd953ea5980488"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let currentRole = '';
+let selectedRole = '';
+let teacherSchedule = {};
+
+// ── AUTH STATE ──
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+  if(user) {
+    const role = localStorage.getItem('mb_role') || '';
+    if(!role) return;
+    currentRole = role;
+    const snap = await getDoc(doc(db, role + 's', user.uid));
+    if(snap.exists()) {
+      const data = snap.data();
+      if(role === 'teacher') {
+        loadTeacherDash(data, user);
+      } else {
+        loadParentDash(data, user);
+      }
+      // Update navbar
+      const btn = document.getElementById('nav-login-btn');
+      if(btn) { btn.textContent = data.name ? data.name.split(' ')[0] : 'Account'; btn.onclick = () => go(role === 'teacher' ? 'teacher-dash' : 'parent-dash'); }
+    }
+  } else {
+    const btn = document.getElementById('nav-login-btn');
+    if(btn) { btn.textContent = 'Login'; btn.onclick = () => go('login'); }
+  }
+});
+
+// ── LOGIN FUNCTIONS ──
+window.lSelectRole = function(role) {
+  selectedRole = role;
+  document.querySelectorAll('[id^="lrole-"]').forEach(el => {
+    el.style.borderColor = '#D4EAE2';
+    el.style.background = '#fff';
+  });
+  const el = document.getElementById('lrole-' + role);
+  if(el) { el.style.borderColor = '#1D7A6B'; el.style.background = '#E6F4F1'; }
+};
+
+window.lGoToLogin = function() {
+  if(!selectedRole) { alert('Please select Parent or Teacher!'); return; }
+  document.getElementById('l-role-badge').innerHTML = 
+    '<span style="background:#E6F4F1;color:#1D7A6B;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' +
+    (selectedRole === 'teacher' ? '👩‍🏫 Teacher Login' : '👨‍👩‍👧 Parent Login') + '</span>';
+  lShowStep('ls-phone');
+};
+
+window.lShowStep = function(id) {
+  document.querySelectorAll('.ls-step').forEach(s => s.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+};
+
+window.lShowMsg = function(id, msg, type) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.background = type === 'error' ? '#FFEBEE' : '#E8F5E9';
+  el.style.border = '1px solid ' + (type === 'error' ? '#EF9A9A' : '#A5D6A7');
+  el.style.color = type === 'error' ? '#C62828' : '#2E7D32';
+  el.style.padding = '12px 16px';
+  el.style.borderRadius = '10px';
+};
+
+window.lEmailLogin = async function() {
+  const email = document.getElementById('l-email').value.trim();
+  const pass = document.getElementById('l-pass').value.trim();
+  if(!email || !pass) { lShowMsg('l-msg', 'Please enter email and password!', 'error'); return; }
+  if(pass.length < 6) { lShowMsg('l-msg', 'Password must be at least 6 characters!', 'error'); return; }
+
+  lShowMsg('l-msg', 'Logging in...', 'success');
+  localStorage.setItem('mb_role', selectedRole);
+
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, pass);
+    await lCheckProfile(result.user);
+  } catch(err) {
+    if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+      try {
+        const result = await createUserWithEmailAndPassword(auth, email, pass);
+        await lCheckProfile(result.user);
+      } catch(e) { lShowMsg('l-msg', 'Error: ' + e.message, 'error'); }
+    } else {
+      lShowMsg('l-msg', 'Error: ' + err.message, 'error');
+    }
+  }
+};
+
+async function lCheckProfile(user) {
+  const role = localStorage.getItem('mb_role') || selectedRole;
+  const snap = await getDoc(doc(db, role + 's', user.uid));
+  if(snap.exists()) {
+    currentRole = role;
+    if(role === 'teacher') { loadTeacherDash(snap.data(), user); go('teacher-dash'); }
+    else { loadParentDash(snap.data(), user); go('parent-dash'); }
+  } else {
+    window._pendingUser = user;
+    if(role === 'teacher') document.getElementById('l-teacher-extra').style.display = 'block';
+    lShowStep('ls-register');
+  }
+}
+
+window.lSaveProfile = async function() {
+  const name = document.getElementById('l-reg-name').value.trim();
+  if(!name) { lShowMsg('l-reg-msg', 'Name is required!', 'error'); return; }
+  const role = localStorage.getItem('mb_role') || selectedRole;
+  const user = window._pendingUser;
+  const data = {
+    name, role,
+    phone: document.getElementById('l-reg-phone').value.trim(),
+    email: user.email,
+    uid: user.uid,
+    createdAt: new Date().toISOString(),
+    status: role === 'teacher' ? 'pending' : 'active'
+  };
+  if(role === 'teacher') {
+    data.subjects = document.getElementById('l-reg-subjects').value.trim();
+    data.classes = document.getElementById('l-reg-classes').value.trim();
+  }
+  await setDoc(doc(db, role + 's', user.uid), data);
+  currentRole = role;
+  if(role === 'teacher') { loadTeacherDash(data, user); go('teacher-dash'); }
+  else { loadParentDash(data, user); go('parent-dash'); }
+};
+
+window.lLogout = async function() {
+  await signOut(auth);
+  localStorage.removeItem('mb_role');
+  currentUser = null; currentRole = '';
+  go('home');
+};
+
+// ── TEACHER DASHBOARD ──
+function loadTeacherDash(data, user) {
+  document.getElementById('td-name').textContent = data.name || 'Teacher';
+  document.getElementById('td-welcome').textContent = (data.name || 'Teacher').split(' ')[0];
+  document.getElementById('td-status').textContent = data.status === 'approved' ? '✅ Verified' : '⏳ Pending Verification';
+  document.getElementById('td-p-name').value = data.name || '';
+  document.getElementById('td-p-phone').value = data.phone || '';
+  document.getElementById('td-p-subjects').value = data.subjects || '';
+  document.getElementById('td-p-classes').value = data.classes || '';
+  document.getElementById('td-p-about').value = data.about || '';
+  if(data.schedule) { teacherSchedule = data.schedule; }
+  buildScheduleGrid();
+}
+
+window.tdShow = function(id) {
+  document.querySelectorAll('.td-page').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.td-nav').forEach(n => { n.style.color = 'rgba(255,255,255,.6)'; n.style.borderLeftColor = 'transparent'; n.style.background = 'none'; });
+  document.getElementById('td-' + id).style.display = 'block';
+  event.currentTarget.style.color = '#fff';
+  event.currentTarget.style.borderLeftColor = '#25A090';
+  event.currentTarget.style.background = 'rgba(37,160,144,.15)';
+};
+
+window.tdSaveProfile = async function() {
+  if(!currentUser) return;
+  await updateDoc(doc(db, 'teachers', currentUser.uid), {
+    name: document.getElementById('td-p-name').value,
+    phone: document.getElementById('td-p-phone').value,
+    subjects: document.getElementById('td-p-subjects').value,
+    classes: document.getElementById('td-p-classes').value,
+    about: document.getElementById('td-p-about').value,
+    updatedAt: new Date().toISOString()
+  });
+  const msg = document.getElementById('td-profile-msg');
+  msg.textContent = '✅ Profile saved!';
+  msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:14px';
+  setTimeout(() => msg.style.display = 'none', 3000);
+};
+
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TIMES = ['6-8 AM','8-10 AM','10-12 PM','12-2 PM','4-6 PM','6-8 PM'];
+
+function buildScheduleGrid() {
+  const grid = document.getElementById('td-schedule-grid');
+  if(!grid) return;
+  grid.innerHTML = DAYS.map(day =>
+    '<div><div style="font-size:11px;font-weight:800;color:#527060;text-align:center;margin-bottom:6px;font-family:Plus Jakarta Sans,sans-serif">' + day + '</div>' +
+    TIMES.map(time => {
+      const key = day + '-' + time;
+      const active = teacherSchedule[key];
+      return '<div onclick="tdToggleSlot(this,'' + key + '')" style="background:' + (active ? '#1D7A6B' : '#F4F7F6') + ';color:' + (active ? '#fff' : '#527060') + ';border:1px solid ' + (active ? '#1D7A6B' : '#D4EAE2') + ';border-radius:6px;padding:5px 3px;font-size:9px;text-align:center;cursor:pointer;margin-bottom:4px;font-weight:700">' + time.split(' ')[0] + '</div>';
+    }).join('') + '</div>'
+  ).join('');
+}
+
+window.tdToggleSlot = function(el, key) {
+  if(teacherSchedule[key]) {
+    delete teacherSchedule[key];
+    el.style.background = '#F4F7F6'; el.style.color = '#527060'; el.style.borderColor = '#D4EAE2';
+  } else {
+    teacherSchedule[key] = true;
+    el.style.background = '#1D7A6B'; el.style.color = '#fff'; el.style.borderColor = '#1D7A6B';
+  }
+};
+
+window.tdSaveSchedule = async function() {
+  if(!currentUser) return;
+  await updateDoc(doc(db, 'teachers', currentUser.uid), { schedule: teacherSchedule });
+  alert('✅ Schedule saved!');
+};
+
+// ── PARENT DASHBOARD ──
+async function loadParentDash(data, user) {
+  document.getElementById('pd-name').textContent = (data.name || 'Parent').split(' ')[0];
+  const phone = (data.phone || '').replace(/\D/g,'').slice(-10);
+  if(!phone) { document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries found. <button onclick="go('tutor-form')" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>'; return; }
+  try {
+    const res = await fetch('https://sheetdb.io/api/v1/qmklc1a104hli?limit=500');
+    const all = await res.json();
+    const mine = all.filter(r => (r['WhatsApp Number']||'').replace(/\D/g,'').includes(phone));
+    document.getElementById('pd-total').textContent = mine.length;
+    document.getElementById('pd-active').textContent = mine.filter(r=>r['Status']==='Admitted').length;
+    document.getElementById('pd-demo').textContent = mine.filter(r=>r['Status']==='Demo Scheduled').length;
+    if(!mine.length) {
+      document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries yet. <button onclick="go('tutor-form')" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>';
+      return;
+    }
+    document.getElementById('pd-enquiries').innerHTML = mine.map(d => {
+      const st = d['Status']||'New Enquiry';
+      const sc = st==='Admitted'?'#E8F5E9;color:#2E7D32':st==='Demo Scheduled'?'#E3F2FD;color:#1565C0':'#FFF3E0;color:#E65100';
+      return '<div style="background:#F4F7F6;border-radius:12px;padding:16px;margin-bottom:10px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">' +
+          '<strong style="font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:#0B1E36">' + (d['Student Name']||'Student') + '</strong>' +
+          '<span style="background:' + sc + ';padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' + st + '</span>' +
+        '</div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:6px">' +
+          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;font-weight:600;color:#527060">📚 Class ' + (d['Class / Grade']||'—') + '</span>' +
+          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;font-weight:600;color:#527060">🎓 ' + (d['Board']||'—') + '</span>' +
+          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;font-weight:600;color:#527060">📖 ' + (d['Subjects Required']||'—') + '</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888">Could not load enquiries.</div>';
+  }
+}
 </script>
 
 <!--Start of Tawk.to Script-->
