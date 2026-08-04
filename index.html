@@ -2231,24 +2231,12 @@ window.addEventListener('load', function(){
 </div>
 
 
-<!-- Firebase + Login/Dashboard JS -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCdom73tJcf33NURfDNRN_sFNjF4kBfQcI",
-  authDomain: "mentorbridge-c3f7e.firebaseapp.com",
-  projectId: "mentorbridge-c3f7e",
-  storageBucket: "mentorbridge-c3f7e.firebasestorage.app",
-  messagingSenderId: "296700653081",
-  appId: "1:296700653081:web:b6ef08c6fd953ea5980488"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+<!-- Supabase + Login/Dashboard JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPA_URL = 'https://xnsvuucqkdkwnblkmreh.supabase.co';
+const SUPA_KEY = 'sb_publishable_MdupIflfNv67oSLxrAOerg_kD_s42Ta';
+const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 let currentUser = null;
 let currentRole = '';
@@ -2256,23 +2244,22 @@ let selectedRole = '';
 let teacherSchedule = {};
 
 // ── AUTH STATE ──
-onAuthStateChanged(auth, async (user) => {
-  currentUser = user;
-  if(user) {
+supabase.auth.onAuthStateChange(async (event, session) => {
+  currentUser = session ? session.user : null;
+  if(currentUser) {
     const role = localStorage.getItem('mb_role') || '';
     if(!role) return;
     currentRole = role;
-    const snap = await getDoc(doc(db, role + 's', user.uid));
-    if(snap.exists()) {
-      const data = snap.data();
-      if(role === 'teacher') {
-        loadTeacherDash(data, user);
-      } else {
-        loadParentDash(data, user);
-      }
-      // Update navbar
+    const table = role === 'teacher' ? 'teachers' : 'parents';
+    const { data } = await supabase.from(table).select('*').eq('uid', currentUser.id).single();
+    if(data) {
+      if(role === 'teacher') loadTeacherDash(data);
+      else loadParentDash(data);
       const btn = document.getElementById('nav-login-btn');
-      if(btn) { btn.textContent = data.name ? data.name.split(' ')[0] : 'Account'; btn.onclick = () => go(role === 'teacher' ? 'teacher-dash' : 'parent-dash'); }
+      if(btn) {
+        btn.textContent = data.name ? data.name.split(' ')[0] : 'Account';
+        btn.onclick = () => go(role === 'teacher' ? 'teacher-dash' : 'parent-dash');
+      }
     }
   } else {
     const btn = document.getElementById('nav-login-btn');
@@ -2293,7 +2280,7 @@ window.lSelectRole = function(role) {
 
 window.lGoToLogin = function() {
   if(!selectedRole) { alert('Please select Parent or Teacher!'); return; }
-  document.getElementById('l-role-badge').innerHTML = 
+  document.getElementById('l-role-badge').innerHTML =
     '<span style="background:#E6F4F1;color:#1D7A6B;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' +
     (selectedRole === 'teacher' ? '👩‍🏫 Teacher Login' : '👨‍👩‍👧 Parent Login') + '</span>';
   lShowStep('ls-phone');
@@ -2322,31 +2309,34 @@ window.lEmailLogin = async function() {
   if(!email || !pass) { lShowMsg('l-msg', 'Please enter email and password!', 'error'); return; }
   if(pass.length < 6) { lShowMsg('l-msg', 'Password must be at least 6 characters!', 'error'); return; }
 
-  lShowMsg('l-msg', 'Logging in...', 'success');
+  lShowMsg('l-msg', 'Please wait...', 'success');
   localStorage.setItem('mb_role', selectedRole);
 
-  try {
-    const result = await signInWithEmailAndPassword(auth, email, pass);
-    await lCheckProfile(result.user);
-  } catch(err) {
-    if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
-      try {
-        const result = await createUserWithEmailAndPassword(auth, email, pass);
-        await lCheckProfile(result.user);
-      } catch(e) { lShowMsg('l-msg', 'Error: ' + e.message, 'error'); }
-    } else {
-      lShowMsg('l-msg', 'Error: ' + err.message, 'error');
+  // Try login first
+  const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({ email, password: pass });
+
+  if(signInErr) {
+    // Try signup
+    const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({ email, password: pass });
+    if(signUpErr) { lShowMsg('l-msg', 'Error: ' + signUpErr.message, 'error'); return; }
+    if(signUpData.user) {
+      window._pendingUser = signUpData.user;
+      if(selectedRole === 'teacher') document.getElementById('l-teacher-extra').style.display = 'block';
+      lShowStep('ls-register');
     }
+  } else {
+    if(signInData.user) await lCheckProfile(signInData.user);
   }
 };
 
 async function lCheckProfile(user) {
   const role = localStorage.getItem('mb_role') || selectedRole;
-  const snap = await getDoc(doc(db, role + 's', user.uid));
-  if(snap.exists()) {
+  const table = role === 'teacher' ? 'teachers' : 'parents';
+  const { data } = await supabase.from(table).select('*').eq('uid', user.id).single();
+  if(data) {
     currentRole = role;
-    if(role === 'teacher') { loadTeacherDash(snap.data(), user); go('teacher-dash'); }
-    else { loadParentDash(snap.data(), user); go('parent-dash'); }
+    if(role === 'teacher') { loadTeacherDash(data); go('teacher-dash'); }
+    else { loadParentDash(data); go('parent-dash'); }
   } else {
     window._pendingUser = user;
     if(role === 'teacher') document.getElementById('l-teacher-extra').style.display = 'block';
@@ -2359,33 +2349,39 @@ window.lSaveProfile = async function() {
   if(!name) { lShowMsg('l-reg-msg', 'Name is required!', 'error'); return; }
   const role = localStorage.getItem('mb_role') || selectedRole;
   const user = window._pendingUser;
+  const table = role === 'teacher' ? 'teachers' : 'parents';
+
   const data = {
-    name, role,
-    phone: document.getElementById('l-reg-phone').value.trim(),
+    uid: user.id,
+    name,
     email: user.email,
-    uid: user.uid,
-    createdAt: new Date().toISOString(),
-    status: role === 'teacher' ? 'pending' : 'active'
+    phone: document.getElementById('l-reg-phone').value.trim(),
+    role,
+    status: role === 'teacher' ? 'pending' : 'active',
+    created_at: new Date().toISOString()
   };
   if(role === 'teacher') {
     data.subjects = document.getElementById('l-reg-subjects').value.trim();
     data.classes = document.getElementById('l-reg-classes').value.trim();
   }
-  await setDoc(doc(db, role + 's', user.uid), data);
+
+  const { error } = await supabase.from(table).insert([data]);
+  if(error) { lShowMsg('l-reg-msg', 'Error: ' + error.message, 'error'); return; }
+
   currentRole = role;
-  if(role === 'teacher') { loadTeacherDash(data, user); go('teacher-dash'); }
-  else { loadParentDash(data, user); go('parent-dash'); }
+  if(role === 'teacher') { loadTeacherDash(data); go('teacher-dash'); }
+  else { loadParentDash(data); go('parent-dash'); }
 };
 
 window.lLogout = async function() {
-  await signOut(auth);
+  await supabase.auth.signOut();
   localStorage.removeItem('mb_role');
   currentUser = null; currentRole = '';
   go('home');
 };
 
 // ── TEACHER DASHBOARD ──
-function loadTeacherDash(data, user) {
+function loadTeacherDash(data) {
   document.getElementById('td-name').textContent = data.name || 'Teacher';
   document.getElementById('td-welcome').textContent = (data.name || 'Teacher').split(' ')[0];
   document.getElementById('td-status').textContent = data.status === 'approved' ? '✅ Verified' : '⏳ Pending Verification';
@@ -2394,33 +2390,45 @@ function loadTeacherDash(data, user) {
   document.getElementById('td-p-subjects').value = data.subjects || '';
   document.getElementById('td-p-classes').value = data.classes || '';
   document.getElementById('td-p-about').value = data.about || '';
-  if(data.schedule) { teacherSchedule = data.schedule; }
+  if(data.schedule) { teacherSchedule = typeof data.schedule === 'string' ? JSON.parse(data.schedule) : data.schedule; }
   buildScheduleGrid();
 }
 
 window.tdShow = function(id) {
   document.querySelectorAll('.td-page').forEach(p => p.style.display = 'none');
-  document.querySelectorAll('.td-nav').forEach(n => { n.style.color = 'rgba(255,255,255,.6)'; n.style.borderLeftColor = 'transparent'; n.style.background = 'none'; });
+  document.querySelectorAll('.td-nav').forEach(n => {
+    n.style.color = 'rgba(255,255,255,.6)';
+    n.style.borderLeftColor = 'transparent';
+    n.style.background = 'none';
+  });
   document.getElementById('td-' + id).style.display = 'block';
-  event.currentTarget.style.color = '#fff';
-  event.currentTarget.style.borderLeftColor = '#25A090';
-  event.currentTarget.style.background = 'rgba(37,160,144,.15)';
+  if(event && event.currentTarget) {
+    event.currentTarget.style.color = '#fff';
+    event.currentTarget.style.borderLeftColor = '#25A090';
+    event.currentTarget.style.background = 'rgba(37,160,144,.15)';
+  }
 };
 
 window.tdSaveProfile = async function() {
   if(!currentUser) return;
-  await updateDoc(doc(db, 'teachers', currentUser.uid), {
+  const { error } = await supabase.from('teachers').update({
     name: document.getElementById('td-p-name').value,
     phone: document.getElementById('td-p-phone').value,
     subjects: document.getElementById('td-p-subjects').value,
     classes: document.getElementById('td-p-classes').value,
     about: document.getElementById('td-p-about').value,
-    updatedAt: new Date().toISOString()
-  });
+    updated_at: new Date().toISOString()
+  }).eq('uid', currentUser.id);
+
   const msg = document.getElementById('td-profile-msg');
-  msg.textContent = '✅ Profile saved!';
-  msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:14px';
-  setTimeout(() => msg.style.display = 'none', 3000);
+  if(error) {
+    msg.textContent = 'Error: ' + error.message;
+    msg.style.cssText = 'display:block;background:#FFEBEE;border:1px solid #EF9A9A;border-radius:10px;padding:12px;color:#C62828;font-weight:700;font-size:14px;margin-top:14px';
+  } else {
+    msg.textContent = '✅ Profile saved successfully!';
+    msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:14px';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  }
 };
 
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -2451,15 +2459,18 @@ window.tdToggleSlot = function(el, key) {
 
 window.tdSaveSchedule = async function() {
   if(!currentUser) return;
-  await updateDoc(doc(db, 'teachers', currentUser.uid), { schedule: teacherSchedule });
+  await supabase.from('teachers').update({ schedule: teacherSchedule }).eq('uid', currentUser.id);
   alert('✅ Schedule saved!');
 };
 
 // ── PARENT DASHBOARD ──
-async function loadParentDash(data, user) {
+async function loadParentDash(data) {
   document.getElementById('pd-name').textContent = (data.name || 'Parent').split(' ')[0];
   const phone = (data.phone || '').replace(/\D/g,'').slice(-10);
-  if(!phone) { document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries found. <button onclick="go('tutor-form')" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>'; return; }
+  if(!phone) {
+    document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries found. <button onclick="go('tutor-form')" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>';
+    return;
+  }
   try {
     const res = await fetch('https://sheetdb.io/api/v1/qmklc1a104hli?limit=500');
     const all = await res.json();
