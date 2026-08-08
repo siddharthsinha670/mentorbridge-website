@@ -2030,6 +2030,107 @@ window.addEventListener('load', function(){
 </script>
 
 
+
+<script>
+// ── EARLY STUBS - ensure onclick works before Supabase loads ──
+var selectedRole = '';
+var currentTab = 'login';
+var currentUser = null;
+var currentRole = '';
+var teacherSchedule = {};
+
+window.lSelectRole = function(role) {
+  selectedRole = role;
+  document.querySelectorAll('[id^="lrole-"]').forEach(el => {
+    el.style.borderColor = '#D4EAE2';
+    el.style.background = '#fff';
+  });
+  var el = document.getElementById('lrole-' + role);
+  if(el) { el.style.borderColor = '#1D7A6B'; el.style.background = '#E6F4F1'; }
+};
+
+window.lGoToLogin = function() {
+  if(!selectedRole) { alert('Please select Parent or Teacher!'); return; }
+  var badge = document.getElementById('l-role-badge');
+  if(badge) badge.innerHTML = '<span style="background:#E6F4F1;color:#1D7A6B;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' + (selectedRole === 'teacher' ? '👩‍🏫 Teacher Login' : '👨‍👩‍👧 Parent Login') + '</span>';
+  lShowStep('ls-phone');
+};
+
+window.lShowStep = function(id) {
+  document.querySelectorAll('.ls-step').forEach(function(s) { s.style.display = 'none'; });
+  var el = document.getElementById(id);
+  if(el) el.style.display = 'block';
+};
+
+window.lShowMsg = function(id, msg, type) {
+  var el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.background = type === 'error' ? '#FFEBEE' : '#E8F5E9';
+  el.style.border = '1px solid ' + (type === 'error' ? '#EF9A9A' : '#A5D6A7');
+  el.style.color = type === 'error' ? '#C62828' : '#2E7D32';
+  el.style.padding = '12px 16px';
+  el.style.borderRadius = '10px';
+};
+
+window.lSwitchTab = function(tab) {
+  currentTab = tab;
+  var loginBtn = document.getElementById('tab-login');
+  var signupBtn = document.getElementById('tab-signup');
+  var confirmWrap = document.getElementById('l-confirm-wrap');
+  var submitBtn = document.getElementById('l-submit-btn');
+  if(!loginBtn) return;
+  if(tab === 'login') {
+    loginBtn.style.cssText = 'flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:#fff;color:#1D7A6B;box-shadow:0 2px 6px rgba(0,0,0,.08);font-family:Plus Jakarta Sans,sans-serif';
+    signupBtn.style.cssText = 'flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:none;color:#527060;font-family:Plus Jakarta Sans,sans-serif';
+    if(confirmWrap) confirmWrap.style.display = 'none';
+    if(submitBtn) { submitBtn.textContent = 'Login →'; submitBtn.style.background = '#E8601A'; }
+  } else {
+    signupBtn.style.cssText = 'flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:#fff;color:#1D7A6B;box-shadow:0 2px 6px rgba(0,0,0,.08);font-family:Plus Jakarta Sans,sans-serif';
+    loginBtn.style.cssText = 'flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:none;color:#527060;font-family:Plus Jakarta Sans,sans-serif';
+    if(confirmWrap) confirmWrap.style.display = 'block';
+    if(submitBtn) { submitBtn.textContent = 'Create Account →'; submitBtn.style.background = '#1D7A6B'; }
+  }
+};
+
+window.lEmailLogin = function() {
+  if(!window._supaReady) { lShowMsg('l-msg', 'Please wait, loading...', 'error'); setTimeout(function(){ if(window._supaReady) window._lEmailLogin(); }, 1500); return; }
+  window._lEmailLogin();
+};
+
+window.lSaveProfile = function() {
+  if(window._lSaveProfile) window._lSaveProfile();
+  else alert('Loading... please try again!');
+};
+
+window.lLogout = function() {
+  if(window._lLogout) window._lLogout();
+  else { localStorage.removeItem('mb_role'); go('home'); }
+};
+
+window.tdShow = function(id) {
+  document.querySelectorAll('.td-page').forEach(function(p){ p.style.display='none'; });
+  document.querySelectorAll('.td-nav').forEach(function(n){ n.style.color='rgba(255,255,255,.6)'; n.style.borderLeftColor='transparent'; n.style.background='none'; });
+  var el = document.getElementById('td-' + id);
+  if(el) el.style.display = 'block';
+  if(event && event.currentTarget) { event.currentTarget.style.color='#fff'; event.currentTarget.style.borderLeftColor='#25A090'; event.currentTarget.style.background='rgba(37,160,144,.15)'; }
+};
+
+window.tdToggleSlot = function(el, key) {
+  if(teacherSchedule[key]) {
+    delete teacherSchedule[key];
+    el.style.background='#F4F7F6'; el.style.color='#527060'; el.style.borderColor='#D4EAE2';
+  } else {
+    teacherSchedule[key] = true;
+    el.style.background='#1D7A6B'; el.style.color='#fff'; el.style.borderColor='#1D7A6B';
+  }
+};
+
+window.tdSaveProfile = function() { if(window._tdSaveProfile) window._tdSaveProfile(); };
+window.tdSaveSchedule = function() { if(window._tdSaveSchedule) window._tdSaveSchedule(); };
+</script>
+
 <!-- ============ LOGIN PAGE ============ -->
 <div id="p-login" class="page">
   <div style="min-height:calc(100vh - 68px);background:linear-gradient(135deg,#081526 0%,#0D2B1E 100%);display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden">
@@ -2289,7 +2390,7 @@ let teacherSchedule = {};
 // ── AUTH STATE handled in initSupabase ──
 
 // ── LOGIN FUNCTIONS ──
-window.lSelectRole = function(role) {
+window.__lSelectRole = function(role) {
   selectedRole = role;
   document.querySelectorAll('[id^="lrole-"]').forEach(el => {
     el.style.borderColor = '#D4EAE2';
@@ -2299,7 +2400,7 @@ window.lSelectRole = function(role) {
   if(el) { el.style.borderColor = '#1D7A6B'; el.style.background = '#E6F4F1'; }
 };
 
-window.lGoToLogin = function() {
+window.__lGoToLogin = function() {
   if(!selectedRole) { alert('Please select Parent or Teacher!'); return; }
   document.getElementById('l-role-badge').innerHTML =
     '<span style="background:#E6F4F1;color:#1D7A6B;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' +
@@ -2307,12 +2408,12 @@ window.lGoToLogin = function() {
   lShowStep('ls-phone');
 };
 
-window.lShowStep = function(id) {
+window.__lShowStep = function(id) {
   document.querySelectorAll('.ls-step').forEach(s => s.style.display = 'none');
   document.getElementById(id).style.display = 'block';
 };
 
-window.lShowMsg = function(id, msg, type) {
+window.__lShowMsg = function(id, msg, type) {
   const el = document.getElementById(id);
   if(!el) return;
   el.textContent = msg;
@@ -2326,7 +2427,7 @@ window.lShowMsg = function(id, msg, type) {
 
 let currentTab = 'login';
 
-window.lSwitchTab = function(tab) {
+window.__lSwitchTab = function(tab) {
   currentTab = tab;
   const loginBtn = document.getElementById('tab-login');
   const signupBtn = document.getElementById('tab-signup');
@@ -2348,7 +2449,7 @@ window.lSwitchTab = function(tab) {
   }
 };
 
-window.lEmailLogin = async function() {
+window._lEmailLogin = async function() {
   if(!supabase) { lShowMsg('l-msg', 'Loading... please try again!', 'error'); return; }
   const email = document.getElementById('l-email').value.trim();
   const pass = document.getElementById('l-pass').value.trim();
@@ -2392,7 +2493,7 @@ async function lCheckProfile(user) {
   }
 }
 
-window.lSaveProfile = async function() {
+window._lSaveProfile = async function() {
   const name = document.getElementById('l-reg-name').value.trim();
   if(!name) { lShowMsg('l-reg-msg', 'Name is required!', 'error'); return; }
   const role = localStorage.getItem('mb_role') || selectedRole;
@@ -2421,7 +2522,7 @@ window.lSaveProfile = async function() {
   else { loadParentDash(data); go('parent-dash'); }
 };
 
-window.lLogout = async function() {
+window._lLogout = async function() {
   await supabase.auth.signOut();
   localStorage.removeItem('mb_role');
   currentUser = null; currentRole = '';
@@ -2442,7 +2543,7 @@ function loadTeacherDash(data) {
   buildScheduleGrid();
 }
 
-window.tdShow = function(id) {
+window.__tdShow = function(id) {
   document.querySelectorAll('.td-page').forEach(p => p.style.display = 'none');
   document.querySelectorAll('.td-nav').forEach(n => {
     n.style.color = 'rgba(255,255,255,.6)';
@@ -2457,7 +2558,7 @@ window.tdShow = function(id) {
   }
 };
 
-window.tdSaveProfile = async function() {
+window._tdSaveProfile = async function() {
   if(!currentUser) return;
   const { error } = await supabase.from('teachers').update({
     name: document.getElementById('td-p-name').value,
@@ -2495,7 +2596,7 @@ function buildScheduleGrid() {
   ).join('');
 }
 
-window.tdToggleSlot = function(el, key) {
+window.__tdToggleSlot = function(el, key) {
   if(teacherSchedule[key]) {
     delete teacherSchedule[key];
     el.style.background = '#F4F7F6'; el.style.color = '#527060'; el.style.borderColor = '#D4EAE2';
@@ -2505,7 +2606,7 @@ window.tdToggleSlot = function(el, key) {
   }
 };
 
-window.tdSaveSchedule = async function() {
+window._tdSaveSchedule = async function() {
   if(!currentUser) return;
   await supabase.from('teachers').update({ schedule: teacherSchedule }).eq('uid', currentUser.id);
   alert('✅ Schedule saved!');
