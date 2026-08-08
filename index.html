@@ -2359,7 +2359,7 @@ window.tdSaveSchedule = function() { if(window._tdSaveSchedule) window._tdSaveSc
 
 
 <!-- Supabase + Login/Dashboard JS -->
-<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
 <script>
 const SUPA_URL = 'https://xnsvuucqkdkwnblkmreh.supabase.co';
 const SUPA_KEY = 'sb_publishable_MdupIflfNv67oSLxrAOerg_kD_s42Ta';
@@ -2461,9 +2461,8 @@ window.__lSwitchTab = function(tab) {
 };
 
 window._lEmailLogin = async function() {
-  if(!supabase) { lShowMsg('l-msg', 'Loading... please try again!', 'error'); return; }
-  const email = document.getElementById('l-email').value.trim();
-  const pass = document.getElementById('l-pass').value.trim();
+  var email = document.getElementById('l-email').value.trim();
+  var pass = document.getElementById('l-pass').value.trim();
   if(!email || !pass) { lShowMsg('l-msg', 'Please enter email and password!', 'error'); return; }
   if(pass.length < 6) { lShowMsg('l-msg', 'Password must be at least 6 characters!', 'error'); return; }
 
@@ -2471,21 +2470,27 @@ window._lEmailLogin = async function() {
   localStorage.setItem('mb_role', selectedRole);
 
   if(currentTab === 'signup') {
-    // Signup flow
-    const confirm = document.getElementById('l-confirm').value.trim();
+    var confirm = document.getElementById('l-confirm').value.trim();
     if(pass !== confirm) { lShowMsg('l-msg', 'Passwords do not match!', 'error'); return; }
-    const { data, error } = await supabase.auth.signUp({ email, password: pass });
-    if(error) { lShowMsg('l-msg', 'Error: ' + error.message, 'error'); return; }
-    if(data.user) {
-      window._pendingUser = data.user;
+    var res = await supaAuth.signUp(email, pass);
+    if(res.error) { lShowMsg('l-msg', 'Error: ' + res.error.message, 'error'); return; }
+    if(res.user || res.id) {
+      var user = res.user || res;
+      _token = res.access_token || '';
+      localStorage.setItem('mb_token', _token);
+      localStorage.setItem('mb_uid', user.id);
+      window._pendingUser = user;
       if(selectedRole === 'teacher') document.getElementById('l-teacher-extra').style.display = 'block';
       lShowStep('ls-register');
     }
   } else {
-    // Login flow
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
-    if(error) { lShowMsg('l-msg', 'Wrong email or password! Try signing up.', 'error'); return; }
-    if(data.user) await lCheckProfile(data.user);
+    var res = await supaAuth.signIn(email, pass);
+    if(res.error || !res.access_token) { lShowMsg('l-msg', 'Wrong email or password! Try Sign Up.', 'error'); return; }
+    _token = res.access_token;
+    localStorage.setItem('mb_token', _token);
+    localStorage.setItem('mb_uid', res.user.id);
+    currentUser = res.user;
+    await lCheckProfile(res.user);
   }
 };
 
@@ -2505,18 +2510,17 @@ async function lCheckProfile(user) {
 }
 
 window._lSaveProfile = async function() {
-  const name = document.getElementById('l-reg-name').value.trim();
+  var name = document.getElementById('l-reg-name').value.trim();
   if(!name) { lShowMsg('l-reg-msg', 'Name is required!', 'error'); return; }
-  const role = localStorage.getItem('mb_role') || selectedRole;
-  const user = window._pendingUser;
-  const table = role === 'teacher' ? 'teachers' : 'parents';
+  var role = localStorage.getItem('mb_role') || selectedRole;
+  var user = window._pendingUser;
 
-  const data = {
+  var data = {
     uid: user.id,
-    name,
+    name: name,
     email: user.email,
     phone: document.getElementById('l-reg-phone').value.trim(),
-    role,
+    role: role,
     status: role === 'teacher' ? 'pending' : 'active',
     created_at: new Date().toISOString()
   };
@@ -2525,8 +2529,8 @@ window._lSaveProfile = async function() {
     data.classes = document.getElementById('l-reg-classes').value.trim();
   }
 
-  const { error } = await supabase.from(table).insert([data]);
-  if(error) { lShowMsg('l-reg-msg', 'Error: ' + error.message, 'error'); return; }
+  var res = await supaDB.from(role + 's').insert([data]);
+  if(res && res.error) { lShowMsg('l-reg-msg', 'Error: ' + res.error.message, 'error'); return; }
 
   currentRole = role;
   if(role === 'teacher') { loadTeacherDash(data); go('teacher-dash'); }
@@ -2534,8 +2538,10 @@ window._lSaveProfile = async function() {
 };
 
 window._lLogout = async function() {
-  await supabase.auth.signOut();
+  await supaAuth.signOut();
   localStorage.removeItem('mb_role');
+  localStorage.removeItem('mb_token');
+  localStorage.removeItem('mb_uid');
   currentUser = null; currentRole = '';
   go('home');
 };
