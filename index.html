@@ -2563,7 +2563,7 @@ function buildScheduleGrid() {
 // ── PARENT DASHBOARD ──
 async function loadParentDash(data) {
   document.getElementById('pd-name').textContent = (data.name || 'Parent').split(' ')[0];
-  var phone = (data.phone || '').replace(/\D/g,'').slice(-10);
+  var phone = (data.phone || '').split('').filter(function(c){return c>='0'&&c<='9';}).join('').slice(-10);
   if(!phone) {
     document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888">No enquiries found.</div>';
     return;
@@ -2571,7 +2571,7 @@ async function loadParentDash(data) {
   try {
     var res = await fetch('https://sheetdb.io/api/v1/qmklc1a104hli?limit=500');
     var all = await res.json();
-    var mine = all.filter(function(r){ return (r['WhatsApp Number']||'').replace(/\D/g,'').includes(phone); });
+    var mine = all.filter(function(r){ var n=(r['WhatsApp Number']||'').split('').filter(function(c){return c>='0'&&c<='9';}).join(''); return n.includes(phone); });
     document.getElementById('pd-total').textContent = mine.length;
     document.getElementById('pd-active').textContent = mine.filter(function(r){ return r['Status']==='Admitted'; }).length;
     document.getElementById('pd-demo').textContent = mine.filter(function(r){ return r['Status']==='Demo Scheduled'; }).length;
