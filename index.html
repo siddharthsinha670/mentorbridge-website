@@ -2363,103 +2363,76 @@ window.tdSaveSchedule = function() { if(window._tdSaveSchedule) window._tdSaveSc
 <script>
 const SUPA_URL = 'https://xnsvuucqkdkwnblkmreh.supabase.co';
 const SUPA_KEY = 'sb_publishable_MdupIflfNv67oSLxrAOerg_kD_s42Ta';
-let supabase;
-function initSupabase() {
-  if(window.supabase) {
-    supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-    // Auth state listener
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      currentUser = session ? session.user : null;
-      if(currentUser) {
-        const role = localStorage.getItem('mb_role') || '';
-        if(!role) return;
-        currentRole = role;
-        const table = role === 'teacher' ? 'teachers' : 'parents';
-        const { data } = await supabase.from(table).select('*').eq('uid', currentUser.id).single();
-        if(data) {
-          if(role === 'teacher') loadTeacherDash(data);
-          else loadParentDash(data);
-          const btn = document.getElementById('nav-login-btn');
-          if(btn) {
-            btn.textContent = data.name ? data.name.split(' ')[0] : 'Account';
-            btn.onclick = () => go(role === 'teacher' ? 'teacher-dash' : 'parent-dash');
-          }
-        }
-      } else {
-        const btn = document.getElementById('nav-login-btn');
-        if(btn) { btn.textContent = 'Login'; btn.onclick = () => go('login'); }
-      }
-    });
-  } else {
-    setTimeout(initSupabase, 100);
-  }
-}
-window.addEventListener('load', initSupabase);
 
-// Variables defined in early stubs
+var _token = localStorage.getItem('mb_token') || '';
 
-// ── AUTH STATE handled in initSupabase ──
-
-// ── LOGIN FUNCTIONS ──
-window.__lSelectRole = function(role) {
-  selectedRole = role;
-  document.querySelectorAll('[id^="lrole-"]').forEach(el => {
-    el.style.borderColor = '#D4EAE2';
-    el.style.background = '#fff';
+// ── SUPABASE REST API ──
+async function supaFetch(path, method, body) {
+  var res = await fetch(SUPA_URL + path, {
+    method: method || 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + (_token || SUPA_KEY),
+      'Prefer': method === 'POST' ? 'return=representation' : ''
+    },
+    body: body ? JSON.stringify(body) : undefined
   });
-  const el = document.getElementById('lrole-' + role);
-  if(el) { el.style.borderColor = '#1D7A6B'; el.style.background = '#E6F4F1'; }
-};
+  try { return await res.json(); } catch(e) { return {}; }
+}
 
-window.__lGoToLogin = function() {
-  if(!selectedRole) { alert('Please select Parent or Teacher!'); return; }
-  document.getElementById('l-role-badge').innerHTML =
-    '<span style="background:#E6F4F1;color:#1D7A6B;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' +
-    (selectedRole === 'teacher' ? '👩‍🏫 Teacher Login' : '👨‍👩‍👧 Parent Login') + '</span>';
-  lShowStep('ls-phone');
-};
+// Auth
+async function supaSignUp(email, pass) {
+  return supaFetch('/auth/v1/signup', 'POST', {email: email, password: pass});
+}
+async function supaSignIn(email, pass) {
+  return supaFetch('/auth/v1/token?grant_type=password', 'POST', {email: email, password: pass});
+}
+async function supaSignOut() {
+  await supaFetch('/auth/v1/logout', 'POST', {});
+  _token = '';
+  localStorage.removeItem('mb_token');
+  localStorage.removeItem('mb_uid');
+}
 
-window.__lShowStep = function(id) {
-  document.querySelectorAll('.ls-step').forEach(s => s.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-};
+// DB
+async function supaGet(table, filter) {
+  return supaFetch('/rest/v1/' + table + '?select=*&' + filter, 'GET');
+}
+async function supaInsert(table, data) {
+  return supaFetch('/rest/v1/' + table, 'POST', data);
+}
+async function supaUpdate(table, data, filter) {
+  return supaFetch('/rest/v1/' + table + '?' + filter, 'PATCH', data);
+}
 
-window.__lShowMsg = function(id, msg, type) {
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.textContent = msg;
-  el.style.display = 'block';
-  el.style.background = type === 'error' ? '#FFEBEE' : '#E8F5E9';
-  el.style.border = '1px solid ' + (type === 'error' ? '#EF9A9A' : '#A5D6A7');
-  el.style.color = type === 'error' ? '#C62828' : '#2E7D32';
-  el.style.padding = '12px 16px';
-  el.style.borderRadius = '10px';
-};
+// ── INIT ──
+window._supaReady = true;
+console.log('Supabase REST API ready!');
 
-// currentTab defined in early stubs
-
-window.__lSwitchTab = function(tab) {
-  currentTab = tab;
-  const loginBtn = document.getElementById('tab-login');
-  const signupBtn = document.getElementById('tab-signup');
-  const confirmWrap = document.getElementById('l-confirm-wrap');
-  const submitBtn = document.getElementById('l-submit-btn');
-
-  if(tab === 'login') {
-    loginBtn.style.background = '#fff'; loginBtn.style.color = '#1D7A6B'; loginBtn.style.boxShadow = '0 2px 6px rgba(0,0,0,.08)';
-    signupBtn.style.background = 'none'; signupBtn.style.color = '#527060'; signupBtn.style.boxShadow = 'none';
-    confirmWrap.style.display = 'none';
-    submitBtn.textContent = 'Login →';
-    submitBtn.style.background = '#E8601A';
-  } else {
-    signupBtn.style.background = '#fff'; signupBtn.style.color = '#1D7A6B'; signupBtn.style.boxShadow = '0 2px 6px rgba(0,0,0,.08)';
-    loginBtn.style.background = 'none'; loginBtn.style.color = '#527060'; loginBtn.style.boxShadow = 'none';
-    confirmWrap.style.display = 'block';
-    submitBtn.textContent = 'Create Account →';
-    submitBtn.style.background = '#1D7A6B';
+// Check saved session
+window.addEventListener('DOMContentLoaded', async function() {
+  var savedToken = localStorage.getItem('mb_token');
+  var savedUid = localStorage.getItem('mb_uid');
+  var role = localStorage.getItem('mb_role') || '';
+  if(savedToken && savedUid && role) {
+    _token = savedToken;
+    currentUser = {id: savedUid};
+    var data = await supaGet(role + 's', 'uid=eq.' + savedUid);
+    if(data && data.length > 0) {
+      currentRole = role;
+      if(role === 'teacher') loadTeacherDash(data[0]);
+      else loadParentDash(data[0]);
+      var btn = document.getElementById('nav-login-btn');
+      if(btn) {
+        btn.textContent = data[0].name ? data[0].name.split(' ')[0] : 'Account';
+        btn.onclick = function(){ go(role === 'teacher' ? 'teacher-dash' : 'parent-dash'); };
+      }
+    }
   }
-};
+});
 
+// ── LOGIN ──
 window._lEmailLogin = async function() {
   var email = document.getElementById('l-email').value.trim();
   var pass = document.getElementById('l-pass').value.trim();
@@ -2472,20 +2445,20 @@ window._lEmailLogin = async function() {
   if(currentTab === 'signup') {
     var confirm = document.getElementById('l-confirm').value.trim();
     if(pass !== confirm) { lShowMsg('l-msg', 'Passwords do not match!', 'error'); return; }
-    var res = await supaAuth.signUp(email, pass);
+    var res = await supaSignUp(email, pass);
     if(res.error) { lShowMsg('l-msg', 'Error: ' + res.error.message, 'error'); return; }
-    if(res.user || res.id) {
-      var user = res.user || res;
-      _token = res.access_token || '';
-      localStorage.setItem('mb_token', _token);
-      localStorage.setItem('mb_uid', user.id);
-      window._pendingUser = user;
-      if(selectedRole === 'teacher') document.getElementById('l-teacher-extra').style.display = 'block';
-      lShowStep('ls-register');
-    }
+    var user = res.user || res;
+    if(!user || !user.id) { lShowMsg('l-msg', 'Signup failed. Try again!', 'error'); return; }
+    _token = res.access_token || '';
+    localStorage.setItem('mb_token', _token);
+    localStorage.setItem('mb_uid', user.id);
+    currentUser = user;
+    window._pendingUser = user;
+    if(selectedRole === 'teacher') document.getElementById('l-teacher-extra').style.display = 'block';
+    lShowStep('ls-register');
   } else {
-    var res = await supaAuth.signIn(email, pass);
-    if(res.error || !res.access_token) { lShowMsg('l-msg', 'Wrong email or password! Try Sign Up.', 'error'); return; }
+    var res = await supaSignIn(email, pass);
+    if(!res.access_token) { lShowMsg('l-msg', res.error_description || 'Wrong email or password!', 'error'); return; }
     _token = res.access_token;
     localStorage.setItem('mb_token', _token);
     localStorage.setItem('mb_uid', res.user.id);
@@ -2495,13 +2468,12 @@ window._lEmailLogin = async function() {
 };
 
 async function lCheckProfile(user) {
-  const role = localStorage.getItem('mb_role') || selectedRole;
-  const table = role === 'teacher' ? 'teachers' : 'parents';
-  const { data } = await supabase.from(table).select('*').eq('uid', user.id).single();
-  if(data) {
+  var role = localStorage.getItem('mb_role') || selectedRole;
+  var data = await supaGet(role + 's', 'uid=eq.' + user.id);
+  if(data && data.length > 0) {
     currentRole = role;
-    if(role === 'teacher') { loadTeacherDash(data); go('teacher-dash'); }
-    else { loadParentDash(data); go('parent-dash'); }
+    if(role === 'teacher') { loadTeacherDash(data[0]); go('teacher-dash'); }
+    else { loadParentDash(data[0]); go('parent-dash'); }
   } else {
     window._pendingUser = user;
     if(role === 'teacher') document.getElementById('l-teacher-extra').style.display = 'block';
@@ -2514,34 +2486,25 @@ window._lSaveProfile = async function() {
   if(!name) { lShowMsg('l-reg-msg', 'Name is required!', 'error'); return; }
   var role = localStorage.getItem('mb_role') || selectedRole;
   var user = window._pendingUser;
-
   var data = {
-    uid: user.id,
-    name: name,
-    email: user.email,
+    uid: user.id, name: name, email: user.email,
     phone: document.getElementById('l-reg-phone').value.trim(),
-    role: role,
-    status: role === 'teacher' ? 'pending' : 'active',
+    role: role, status: role === 'teacher' ? 'pending' : 'active',
     created_at: new Date().toISOString()
   };
   if(role === 'teacher') {
     data.subjects = document.getElementById('l-reg-subjects').value.trim();
     data.classes = document.getElementById('l-reg-classes').value.trim();
   }
-
-  var res = await supaDB.from(role + 's').insert([data]);
-  if(res && res.error) { lShowMsg('l-reg-msg', 'Error: ' + res.error.message, 'error'); return; }
-
+  await supaInsert(role + 's', data);
   currentRole = role;
   if(role === 'teacher') { loadTeacherDash(data); go('teacher-dash'); }
   else { loadParentDash(data); go('parent-dash'); }
 };
 
 window._lLogout = async function() {
-  await supaAuth.signOut();
+  await supaSignOut();
   localStorage.removeItem('mb_role');
-  localStorage.removeItem('mb_token');
-  localStorage.removeItem('mb_uid');
   currentUser = null; currentRole = '';
   go('home');
 };
@@ -2550,7 +2513,7 @@ window._lLogout = async function() {
 function loadTeacherDash(data) {
   document.getElementById('td-name').textContent = data.name || 'Teacher';
   document.getElementById('td-welcome').textContent = (data.name || 'Teacher').split(' ')[0];
-  document.getElementById('td-status').textContent = data.status === 'approved' ? '✅ Verified' : '⏳ Pending Verification';
+  document.getElementById('td-status').textContent = data.status === 'approved' ? 'Verified' : 'Pending Verification';
   document.getElementById('td-p-name').value = data.name || '';
   document.getElementById('td-p-phone').value = data.phone || '';
   document.getElementById('td-p-subjects').value = data.subjects || '';
@@ -2560,108 +2523,74 @@ function loadTeacherDash(data) {
   buildScheduleGrid();
 }
 
-window.__tdShow = function(id) {
-  document.querySelectorAll('.td-page').forEach(p => p.style.display = 'none');
-  document.querySelectorAll('.td-nav').forEach(n => {
-    n.style.color = 'rgba(255,255,255,.6)';
-    n.style.borderLeftColor = 'transparent';
-    n.style.background = 'none';
-  });
-  document.getElementById('td-' + id).style.display = 'block';
-  if(event && event.currentTarget) {
-    event.currentTarget.style.color = '#fff';
-    event.currentTarget.style.borderLeftColor = '#25A090';
-    event.currentTarget.style.background = 'rgba(37,160,144,.15)';
-  }
-};
-
 window._tdSaveProfile = async function() {
   if(!currentUser) return;
-  const { error } = await supabase.from('teachers').update({
+  await supaUpdate('teachers', {
     name: document.getElementById('td-p-name').value,
     phone: document.getElementById('td-p-phone').value,
     subjects: document.getElementById('td-p-subjects').value,
     classes: document.getElementById('td-p-classes').value,
-    about: document.getElementById('td-p-about').value,
-    updated_at: new Date().toISOString()
-  }).eq('uid', currentUser.id);
-
-  const msg = document.getElementById('td-profile-msg');
-  if(error) {
-    msg.textContent = 'Error: ' + error.message;
-    msg.style.cssText = 'display:block;background:#FFEBEE;border:1px solid #EF9A9A;border-radius:10px;padding:12px;color:#C62828;font-weight:700;font-size:14px;margin-top:14px';
-  } else {
-    msg.textContent = '✅ Profile saved successfully!';
-    msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:14px';
-    setTimeout(() => msg.style.display = 'none', 3000);
-  }
-};
-
-const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const TIMES = ['6-8 AM','8-10 AM','10-12 PM','12-2 PM','4-6 PM','6-8 PM'];
-
-function buildScheduleGrid() {
-  const grid = document.getElementById('td-schedule-grid');
-  if(!grid) return;
-  grid.innerHTML = DAYS.map(day =>
-    '<div><div style="font-size:11px;font-weight:800;color:#527060;text-align:center;margin-bottom:6px;font-family:Plus Jakarta Sans,sans-serif">' + day + '</div>' +
-    TIMES.map(time => {
-      const key = day + '-' + time;
-      const active = teacherSchedule[key];
-      return '<div onclick="tdToggleSlot(this,\'' + key + '\')" style="background:' + (active ? '#1D7A6B' : '#F4F7F6') + ';color:' + (active ? '#fff' : '#527060') + ';border:1px solid ' + (active ? '#1D7A6B' : '#D4EAE2') + ';border-radius:6px;padding:5px 3px;font-size:9px;text-align:center;cursor:pointer;margin-bottom:4px;font-weight:700">' + time.split(' ')[0] + '</div>';
-    }).join('') + '</div>'
-  ).join('');
-}
-
-window.__tdToggleSlot = function(el, key) {
-  if(teacherSchedule[key]) {
-    delete teacherSchedule[key];
-    el.style.background = '#F4F7F6'; el.style.color = '#527060'; el.style.borderColor = '#D4EAE2';
-  } else {
-    teacherSchedule[key] = true;
-    el.style.background = '#1D7A6B'; el.style.color = '#fff'; el.style.borderColor = '#1D7A6B';
-  }
+    about: document.getElementById('td-p-about').value
+  }, 'uid=eq.' + currentUser.id);
+  var msg = document.getElementById('td-profile-msg');
+  msg.textContent = 'Profile saved!';
+  msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:14px';
+  setTimeout(function(){ msg.style.display='none'; }, 3000);
 };
 
 window._tdSaveSchedule = async function() {
   if(!currentUser) return;
-  await supabase.from('teachers').update({ schedule: teacherSchedule }).eq('uid', currentUser.id);
-  alert('✅ Schedule saved!');
+  await supaUpdate('teachers', {schedule: teacherSchedule}, 'uid=eq.' + currentUser.id);
+  alert('Schedule saved!');
 };
+
+var DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+var TIMES = ['6-8 AM','8-10 AM','10-12 PM','12-2 PM','4-6 PM','6-8 PM'];
+
+function buildScheduleGrid() {
+  var grid = document.getElementById('td-schedule-grid');
+  if(!grid) return;
+  grid.innerHTML = DAYS.map(function(day) {
+    return '<div><div style="font-size:11px;font-weight:800;color:#527060;text-align:center;margin-bottom:6px;font-family:Plus Jakarta Sans,sans-serif">' + day + '</div>' +
+    TIMES.map(function(time) {
+      var key = day + '-' + time;
+      var active = teacherSchedule[key];
+      return '<div onclick="tdToggleSlot(this,'' + key + '')" style="background:' + (active ? '#1D7A6B' : '#F4F7F6') + ';color:' + (active ? '#fff' : '#527060') + ';border:1px solid ' + (active ? '#1D7A6B' : '#D4EAE2') + ';border-radius:6px;padding:5px 3px;font-size:9px;text-align:center;cursor:pointer;margin-bottom:4px;font-weight:700">' + time.split(' ')[0] + '</div>';
+    }).join('') + '</div>';
+  }).join('');
+}
 
 // ── PARENT DASHBOARD ──
 async function loadParentDash(data) {
   document.getElementById('pd-name').textContent = (data.name || 'Parent').split(' ')[0];
-  const phone = (data.phone || '').replace(/\D/g,'').slice(-10);
+  var phone = (data.phone || '').replace(/\D/g,'').slice(-10);
   if(!phone) {
-    document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries found. <button onclick="go(&quot;tutor-form&quot;)" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>';
+    document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888">No enquiries found.</div>';
     return;
   }
   try {
-    const res = await fetch('https://sheetdb.io/api/v1/qmklc1a104hli?limit=500');
-    const all = await res.json();
-    const mine = all.filter(r => (r['WhatsApp Number']||'').replace(/\D/g,'').includes(phone));
+    var res = await fetch('https://sheetdb.io/api/v1/qmklc1a104hli?limit=500');
+    var all = await res.json();
+    var mine = all.filter(function(r){ return (r['WhatsApp Number']||'').replace(/\D/g,'').includes(phone); });
     document.getElementById('pd-total').textContent = mine.length;
-    document.getElementById('pd-active').textContent = mine.filter(r=>r['Status']==='Admitted').length;
-    document.getElementById('pd-demo').textContent = mine.filter(r=>r['Status']==='Demo Scheduled').length;
+    document.getElementById('pd-active').textContent = mine.filter(function(r){ return r['Status']==='Admitted'; }).length;
+    document.getElementById('pd-demo').textContent = mine.filter(function(r){ return r['Status']==='Demo Scheduled'; }).length;
     if(!mine.length) {
-      document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries yet. <button onclick="go(&quot;tutor-form&quot;)" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>';
+      document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888">No enquiries yet.</div>';
       return;
     }
-    document.getElementById('pd-enquiries').innerHTML = mine.map(d => {
-      const st = d['Status']||'New Enquiry';
-      const sc = st==='Admitted'?'#E8F5E9;color:#2E7D32':st==='Demo Scheduled'?'#E3F2FD;color:#1565C0':'#FFF3E0;color:#E65100';
+    document.getElementById('pd-enquiries').innerHTML = mine.map(function(d) {
+      var st = d['Status']||'New Enquiry';
       return '<div style="background:#F4F7F6;border-radius:12px;padding:16px;margin-bottom:10px">' +
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">' +
-          '<strong style="font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:#0B1E36">' + (d['Student Name']||'Student') + '</strong>' +
-          '<span style="background:' + sc + ';padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' + st + '</span>' +
+          '<strong style="font-size:14px;color:#0B1E36">' + (d['Student Name']||'Student') + '</strong>' +
+          '<span style="background:#FFF3E0;color:#E65100;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800">' + st + '</span>' +
         '</div>' +
         '<div style="display:flex;flex-wrap:wrap;gap:6px">' +
-          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;font-weight:600;color:#527060">📚 Class ' + (d['Class / Grade']||'—') + '</span>' +
-          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;font-weight:600;color:#527060">🎓 ' + (d['Board']||'—') + '</span>' +
-          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;font-weight:600;color:#527060">📖 ' + (d['Subjects Required']||'—') + '</span>' +
-        '</div>' +
-      '</div>';
+          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;color:#527060">Class ' + (d['Class / Grade']||'?') + '</span>' +
+          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;color:#527060">' + (d['Board']||'?') + '</span>' +
+          '<span style="background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;color:#527060">' + (d['Subjects Required']||'?') + '</span>' +
+        '</div></div>';
     }).join('');
   } catch(e) {
     document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888">Could not load enquiries.</div>';
