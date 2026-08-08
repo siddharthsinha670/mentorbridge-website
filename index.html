@@ -2555,7 +2555,7 @@ function buildScheduleGrid() {
     TIMES.map(function(time) {
       var key = day + '-' + time;
       var active = teacherSchedule[key];
-      return '<div onclick="tdToggleSlot(this,'' + key + '')" style="background:' + (active ? '#1D7A6B' : '#F4F7F6') + ';color:' + (active ? '#fff' : '#527060') + ';border:1px solid ' + (active ? '#1D7A6B' : '#D4EAE2') + ';border-radius:6px;padding:5px 3px;font-size:9px;text-align:center;cursor:pointer;margin-bottom:4px;font-weight:700">' + time.split(' ')[0] + '</div>';
+      return '<div onclick="tdToggleSlot(this,\''+key+'\')" style="background:' + (active ? '#1D7A6B' : '#F4F7F6') + ';color:' + (active ? '#fff' : '#527060') + ';border:1px solid ' + (active ? '#1D7A6B' : '#D4EAE2') + ';border-radius:6px;padding:5px 3px;font-size:9px;text-align:center;cursor:pointer;margin-bottom:4px;font-weight:700">' + time.split(' ')[0] + '</div>';
     }).join('') + '</div>';
   }).join('');
 }
