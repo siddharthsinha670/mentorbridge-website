@@ -2095,7 +2095,21 @@ window.lSwitchTab = function(tab) {
 };
 
 window.lEmailLogin = function() {
-  if(!window._supaReady) { lShowMsg('l-msg', 'Please wait, loading...', 'error'); setTimeout(function(){ if(window._supaReady) window._lEmailLogin(); }, 1500); return; }
+  if(!window._supaReady) {
+    lShowMsg('l-msg', 'Loading... retrying...', 'error');
+    var tries = 0;
+    var wait = setInterval(function() {
+      tries++;
+      if(window._supaReady) {
+        clearInterval(wait);
+        window._lEmailLogin();
+      } else if(tries > 10) {
+        clearInterval(wait);
+        lShowMsg('l-msg', 'Failed to load. Please refresh page!', 'error');
+      }
+    }, 500);
+    return;
+  }
   window._lEmailLogin();
 };
 
