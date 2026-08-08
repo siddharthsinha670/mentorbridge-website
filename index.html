@@ -1487,7 +1487,12 @@ footer{background:#060D18;padding:64px 0 28px}
 function go(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const p=document.getElementById('p-'+id);
-  if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+  if(p){
+    p.classList.add('active');
+    window.scrollTo({top:0,behavior:'instant'});
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   const m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',blog:'n-blog',contact:'n-contact',login:'n-login'};
   if(m[id]){const e=document.getElementById(m[id]);if(e)e.classList.add('active');}
