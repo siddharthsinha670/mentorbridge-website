@@ -2065,18 +2065,30 @@ window.addEventListener('load', function(){
 
       <!-- Phone/Email Login -->
       <div id="ls-phone" class="ls-step" style="display:none">
-        <div id="l-role-badge" style="text-align:center;margin-bottom:18px"></div>
+        <div id="l-role-badge" style="text-align:center;margin-bottom:16px"></div>
+
+        <!-- Login/Signup Tabs -->
+        <div style="display:flex;background:#F4F7F6;border-radius:10px;padding:4px;margin-bottom:18px;gap:4px">
+          <button id="tab-login" onclick="lSwitchTab('login')" style="flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:#fff;color:#1D7A6B;box-shadow:0 2px 6px rgba(0,0,0,.08);font-family:'Plus Jakarta Sans',sans-serif">Login</button>
+          <button id="tab-signup" onclick="lSwitchTab('signup')" style="flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:none;color:#527060;font-family:'Plus Jakarta Sans',sans-serif">Sign Up</button>
+        </div>
+
         <div id="l-msg" style="display:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:14px"></div>
 
         <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Email</label>
         <input type="email" id="l-email" placeholder="your@email.com" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
 
         <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Password</label>
-        <input type="password" id="l-pass" placeholder="Enter password" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:16px">
+        <input type="password" id="l-pass" placeholder="Enter password (min 6 chars)" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
 
-        <button onclick="lEmailLogin()" style="width:100%;padding:13px;background:#E8601A;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:10px">Login / Sign Up →</button>
+        <!-- Confirm password only for signup -->
+        <div id="l-confirm-wrap" style="display:none">
+          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Confirm Password</label>
+          <input type="password" id="l-confirm" placeholder="Re-enter password" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+        </div>
+
+        <button id="l-submit-btn" onclick="lEmailLogin()" style="width:100%;padding:13px;background:#E8601A;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:10px">Login →</button>
         <button onclick="lShowStep('ls-role')" style="width:100%;padding:11px;background:#fff;color:#1D7A6B;border:2px solid #1D7A6B;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">← Change Role</button>
-        <p style="text-align:center;font-size:12px;color:#888;margin-top:14px">New user? Enter email + password to create account automatically.</p>
       </div>
 
       <!-- Register -->
@@ -2312,6 +2324,30 @@ window.lShowMsg = function(id, msg, type) {
   el.style.borderRadius = '10px';
 };
 
+let currentTab = 'login';
+
+window.lSwitchTab = function(tab) {
+  currentTab = tab;
+  const loginBtn = document.getElementById('tab-login');
+  const signupBtn = document.getElementById('tab-signup');
+  const confirmWrap = document.getElementById('l-confirm-wrap');
+  const submitBtn = document.getElementById('l-submit-btn');
+
+  if(tab === 'login') {
+    loginBtn.style.background = '#fff'; loginBtn.style.color = '#1D7A6B'; loginBtn.style.boxShadow = '0 2px 6px rgba(0,0,0,.08)';
+    signupBtn.style.background = 'none'; signupBtn.style.color = '#527060'; signupBtn.style.boxShadow = 'none';
+    confirmWrap.style.display = 'none';
+    submitBtn.textContent = 'Login →';
+    submitBtn.style.background = '#E8601A';
+  } else {
+    signupBtn.style.background = '#fff'; signupBtn.style.color = '#1D7A6B'; signupBtn.style.boxShadow = '0 2px 6px rgba(0,0,0,.08)';
+    loginBtn.style.background = 'none'; loginBtn.style.color = '#527060'; loginBtn.style.boxShadow = 'none';
+    confirmWrap.style.display = 'block';
+    submitBtn.textContent = 'Create Account →';
+    submitBtn.style.background = '#1D7A6B';
+  }
+};
+
 window.lEmailLogin = async function() {
   if(!supabase) { lShowMsg('l-msg', 'Loading... please try again!', 'error'); return; }
   const email = document.getElementById('l-email').value.trim();
@@ -2322,20 +2358,22 @@ window.lEmailLogin = async function() {
   lShowMsg('l-msg', 'Please wait...', 'success');
   localStorage.setItem('mb_role', selectedRole);
 
-  // Try login first
-  const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({ email, password: pass });
-
-  if(signInErr) {
-    // Try signup
-    const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({ email, password: pass });
-    if(signUpErr) { lShowMsg('l-msg', 'Error: ' + signUpErr.message, 'error'); return; }
-    if(signUpData.user) {
-      window._pendingUser = signUpData.user;
+  if(currentTab === 'signup') {
+    // Signup flow
+    const confirm = document.getElementById('l-confirm').value.trim();
+    if(pass !== confirm) { lShowMsg('l-msg', 'Passwords do not match!', 'error'); return; }
+    const { data, error } = await supabase.auth.signUp({ email, password: pass });
+    if(error) { lShowMsg('l-msg', 'Error: ' + error.message, 'error'); return; }
+    if(data.user) {
+      window._pendingUser = data.user;
       if(selectedRole === 'teacher') document.getElementById('l-teacher-extra').style.display = 'block';
       lShowStep('ls-register');
     }
   } else {
-    if(signInData.user) await lCheckProfile(signInData.user);
+    // Login flow
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if(error) { lShowMsg('l-msg', 'Wrong email or password! Try signing up.', 'error'); return; }
+    if(data.user) await lCheckProfile(data.user);
   }
 };
 
