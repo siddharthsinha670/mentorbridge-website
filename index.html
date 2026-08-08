@@ -2634,7 +2634,7 @@ async function loadParentDash(data) {
   document.getElementById('pd-name').textContent = (data.name || 'Parent').split(' ')[0];
   const phone = (data.phone || '').replace(/\D/g,'').slice(-10);
   if(!phone) {
-    document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries found. <button onclick="go('tutor-form')" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>';
+    document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries found. <button onclick="go(&quot;tutor-form&quot;)" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>';
     return;
   }
   try {
@@ -2645,7 +2645,7 @@ async function loadParentDash(data) {
     document.getElementById('pd-active').textContent = mine.filter(r=>r['Status']==='Admitted').length;
     document.getElementById('pd-demo').textContent = mine.filter(r=>r['Status']==='Demo Scheduled').length;
     if(!mine.length) {
-      document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries yet. <button onclick="go('tutor-form')" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>';
+      document.getElementById('pd-enquiries').innerHTML = '<div style="text-align:center;padding:24px;color:#888;font-size:14px">No enquiries yet. <button onclick="go(&quot;tutor-form&quot;)" style="color:#1D7A6B;font-weight:700;background:none;border:none;cursor:pointer">Find a Tutor!</button></div>';
       return;
     }
     document.getElementById('pd-enquiries').innerHTML = mine.map(d => {
