@@ -2236,36 +2236,45 @@ window.addEventListener('load', function(){
 <script>
 const SUPA_URL = 'https://xnsvuucqkdkwnblkmreh.supabase.co';
 const SUPA_KEY = 'sb_publishable_MdupIflfNv67oSLxrAOerg_kD_s42Ta';
-const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+let supabase;
+function initSupabase() {
+  if(window.supabase) {
+    supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+    // Auth state listener
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      currentUser = session ? session.user : null;
+      if(currentUser) {
+        const role = localStorage.getItem('mb_role') || '';
+        if(!role) return;
+        currentRole = role;
+        const table = role === 'teacher' ? 'teachers' : 'parents';
+        const { data } = await supabase.from(table).select('*').eq('uid', currentUser.id).single();
+        if(data) {
+          if(role === 'teacher') loadTeacherDash(data);
+          else loadParentDash(data);
+          const btn = document.getElementById('nav-login-btn');
+          if(btn) {
+            btn.textContent = data.name ? data.name.split(' ')[0] : 'Account';
+            btn.onclick = () => go(role === 'teacher' ? 'teacher-dash' : 'parent-dash');
+          }
+        }
+      } else {
+        const btn = document.getElementById('nav-login-btn');
+        if(btn) { btn.textContent = 'Login'; btn.onclick = () => go('login'); }
+      }
+    });
+  } else {
+    setTimeout(initSupabase, 100);
+  }
+}
+window.addEventListener('load', initSupabase);
 
 let currentUser = null;
 let currentRole = '';
 let selectedRole = '';
 let teacherSchedule = {};
 
-// ── AUTH STATE ──
-supabase.auth.onAuthStateChange(async (event, session) => {
-  currentUser = session ? session.user : null;
-  if(currentUser) {
-    const role = localStorage.getItem('mb_role') || '';
-    if(!role) return;
-    currentRole = role;
-    const table = role === 'teacher' ? 'teachers' : 'parents';
-    const { data } = await supabase.from(table).select('*').eq('uid', currentUser.id).single();
-    if(data) {
-      if(role === 'teacher') loadTeacherDash(data);
-      else loadParentDash(data);
-      const btn = document.getElementById('nav-login-btn');
-      if(btn) {
-        btn.textContent = data.name ? data.name.split(' ')[0] : 'Account';
-        btn.onclick = () => go(role === 'teacher' ? 'teacher-dash' : 'parent-dash');
-      }
-    }
-  } else {
-    const btn = document.getElementById('nav-login-btn');
-    if(btn) { btn.textContent = 'Login'; btn.onclick = () => go('login'); }
-  }
-});
+// ── AUTH STATE handled in initSupabase ──
 
 // ── LOGIN FUNCTIONS ──
 window.lSelectRole = function(role) {
@@ -2304,6 +2313,7 @@ window.lShowMsg = function(id, msg, type) {
 };
 
 window.lEmailLogin = async function() {
+  if(!supabase) { lShowMsg('l-msg', 'Loading... please try again!', 'error'); return; }
   const email = document.getElementById('l-email').value.trim();
   const pass = document.getElementById('l-pass').value.trim();
   if(!email || !pass) { lShowMsg('l-msg', 'Please enter email and password!', 'error'); return; }
