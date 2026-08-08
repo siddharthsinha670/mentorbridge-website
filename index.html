@@ -807,6 +807,89 @@ footer{background:#060D18;padding:64px 0 28px}
 </div>
 
 <!-- ============ ABOUT ============ -->
+
+<!-- ============ LOGIN PAGE ============ -->
+<div id="p-login" class="page">
+  <div style="min-height:calc(100vh - 68px);background:linear-gradient(135deg,#081526 0%,#0D2B1E 100%);display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-80px;right:-60px;width:400px;height:400px;background:rgba(29,122,107,.2);border-radius:50%;filter:blur(60px)"></div>
+    <div style="position:absolute;bottom:-80px;left:-60px;width:300px;height:300px;background:rgba(232,96,26,.12);border-radius:50%;filter:blur(60px)"></div>
+
+    <!-- Login Card -->
+    <div id="login-card" style="background:#fff;border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3);position:relative;z-index:1">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;margin-bottom:4px">
+          <span style="color:#E8601A">Mentor</span><span style="color:#1D7A6B">Bridge</span>
+        </div>
+        <p style="font-size:13px;color:#888">Login to your account</p>
+      </div>
+
+      <!-- Role Selection -->
+      <div id="ls-role" class="ls-step" style="display:block">
+        <p style="font-size:13px;font-weight:700;color:#527060;text-align:center;margin-bottom:16px">Select your role to continue</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+          <div id="lrole-parent" onclick="lSelectRole('parent')" style="border:2px solid #D4EAE2;border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:.2s">
+            <div style="font-size:32px;margin-bottom:8px">👨‍👩‍👧</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#0B1E36">Parent</div>
+            <div style="font-size:11px;color:#888;margin-top:3px">Track your child</div>
+          </div>
+          <div id="lrole-teacher" onclick="lSelectRole('teacher')" style="border:2px solid #D4EAE2;border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:.2s">
+            <div style="font-size:32px;margin-bottom:8px">👩‍🏫</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#0B1E36">Teacher</div>
+            <div style="font-size:11px;color:#888;margin-top:3px">Manage students</div>
+          </div>
+        </div>
+        <button onclick="lGoToLogin()" style="width:100%;padding:13px;background:#1D7A6B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Continue →</button>
+      </div>
+
+      <!-- Phone/Email Login -->
+      <div id="ls-phone" class="ls-step" style="display:none">
+        <div id="l-role-badge" style="text-align:center;margin-bottom:16px"></div>
+
+        <!-- Login/Signup Tabs -->
+        <div style="display:flex;background:#F4F7F6;border-radius:10px;padding:4px;margin-bottom:18px;gap:4px">
+          <button id="tab-login" onclick="lSwitchTab('login')" style="flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:#fff;color:#1D7A6B;box-shadow:0 2px 6px rgba(0,0,0,.08);font-family:'Plus Jakarta Sans',sans-serif">Login</button>
+          <button id="tab-signup" onclick="lSwitchTab('signup')" style="flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:none;color:#527060;font-family:'Plus Jakarta Sans',sans-serif">Sign Up</button>
+        </div>
+
+        <div id="l-msg" style="display:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:14px"></div>
+
+        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Email</label>
+        <input type="email" id="l-email" placeholder="your@email.com" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+
+        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Password</label>
+        <input type="password" id="l-pass" placeholder="Enter password (min 6 chars)" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+
+        <!-- Confirm password only for signup -->
+        <div id="l-confirm-wrap" style="display:none">
+          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Confirm Password</label>
+          <input type="password" id="l-confirm" placeholder="Re-enter password" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+        </div>
+
+        <button id="l-submit-btn" onclick="lEmailLogin()" style="width:100%;padding:13px;background:#E8601A;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:10px">Login →</button>
+        <button onclick="lShowStep('ls-role')" style="width:100%;padding:11px;background:#fff;color:#1D7A6B;border:2px solid #1D7A6B;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">← Change Role</button>
+      </div>
+
+      <!-- Register -->
+      <div id="ls-register" class="ls-step" style="display:none">
+        <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:6px">Complete Your Profile</h3>
+        <p style="font-size:13px;color:#888;margin-bottom:20px">First time? Fill in your details.</p>
+        <div id="l-reg-msg" style="display:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:14px"></div>
+        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Full Name *</label>
+        <input type="text" id="l-reg-name" placeholder="Your full name" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">WhatsApp Number</label>
+        <input type="tel" id="l-reg-phone" placeholder="+91 XXXXX XXXXX" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+        <div id="l-teacher-extra" style="display:none">
+          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Subjects You Teach</label>
+          <input type="text" id="l-reg-subjects" placeholder="e.g. Maths, Science" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Classes You Teach</label>
+          <input type="text" id="l-reg-classes" placeholder="e.g. Class 6-10" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
+        </div>
+        <button onclick="lSaveProfile()" style="width:100%;padding:13px;background:#1D7A6B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Save & Continue →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="p-about" class="page">
   <div class="page-hero"><div class="container"><h1>Changing How <span style="color:var(--orange2)">Bihar Learns</span></h1><p>Started with one belief — every child in Bihar deserves a verified, caring, qualified teacher — not just a random tutor.</p></div></div>
   <section class="sec"><div class="container">
@@ -2149,88 +2232,6 @@ window.tdToggleSlot = function(el, key) {
 window.tdSaveProfile = function() { if(window._tdSaveProfile) window._tdSaveProfile(); };
 window.tdSaveSchedule = function() { if(window._tdSaveSchedule) window._tdSaveSchedule(); };
 </script>
-
-<!-- ============ LOGIN PAGE ============ -->
-<div id="p-login" class="page">
-  <div style="min-height:calc(100vh - 68px);background:linear-gradient(135deg,#081526 0%,#0D2B1E 100%);display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:-80px;right:-60px;width:400px;height:400px;background:rgba(29,122,107,.2);border-radius:50%;filter:blur(60px)"></div>
-    <div style="position:absolute;bottom:-80px;left:-60px;width:300px;height:300px;background:rgba(232,96,26,.12);border-radius:50%;filter:blur(60px)"></div>
-
-    <!-- Login Card -->
-    <div id="login-card" style="background:#fff;border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3);position:relative;z-index:1">
-      <div style="text-align:center;margin-bottom:28px">
-        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;margin-bottom:4px">
-          <span style="color:#E8601A">Mentor</span><span style="color:#1D7A6B">Bridge</span>
-        </div>
-        <p style="font-size:13px;color:#888">Login to your account</p>
-      </div>
-
-      <!-- Role Selection -->
-      <div id="ls-role" class="ls-step" style="display:block">
-        <p style="font-size:13px;font-weight:700;color:#527060;text-align:center;margin-bottom:16px">Select your role to continue</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
-          <div id="lrole-parent" onclick="lSelectRole('parent')" style="border:2px solid #D4EAE2;border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:.2s">
-            <div style="font-size:32px;margin-bottom:8px">👨‍👩‍👧</div>
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#0B1E36">Parent</div>
-            <div style="font-size:11px;color:#888;margin-top:3px">Track your child</div>
-          </div>
-          <div id="lrole-teacher" onclick="lSelectRole('teacher')" style="border:2px solid #D4EAE2;border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:.2s">
-            <div style="font-size:32px;margin-bottom:8px">👩‍🏫</div>
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#0B1E36">Teacher</div>
-            <div style="font-size:11px;color:#888;margin-top:3px">Manage students</div>
-          </div>
-        </div>
-        <button onclick="lGoToLogin()" style="width:100%;padding:13px;background:#1D7A6B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Continue →</button>
-      </div>
-
-      <!-- Phone/Email Login -->
-      <div id="ls-phone" class="ls-step" style="display:none">
-        <div id="l-role-badge" style="text-align:center;margin-bottom:16px"></div>
-
-        <!-- Login/Signup Tabs -->
-        <div style="display:flex;background:#F4F7F6;border-radius:10px;padding:4px;margin-bottom:18px;gap:4px">
-          <button id="tab-login" onclick="lSwitchTab('login')" style="flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:#fff;color:#1D7A6B;box-shadow:0 2px 6px rgba(0,0,0,.08);font-family:'Plus Jakarta Sans',sans-serif">Login</button>
-          <button id="tab-signup" onclick="lSwitchTab('signup')" style="flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:none;color:#527060;font-family:'Plus Jakarta Sans',sans-serif">Sign Up</button>
-        </div>
-
-        <div id="l-msg" style="display:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:14px"></div>
-
-        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Email</label>
-        <input type="email" id="l-email" placeholder="your@email.com" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
-
-        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Password</label>
-        <input type="password" id="l-pass" placeholder="Enter password (min 6 chars)" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
-
-        <!-- Confirm password only for signup -->
-        <div id="l-confirm-wrap" style="display:none">
-          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Confirm Password</label>
-          <input type="password" id="l-confirm" placeholder="Re-enter password" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
-        </div>
-
-        <button id="l-submit-btn" onclick="lEmailLogin()" style="width:100%;padding:13px;background:#E8601A;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:10px">Login →</button>
-        <button onclick="lShowStep('ls-role')" style="width:100%;padding:11px;background:#fff;color:#1D7A6B;border:2px solid #1D7A6B;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">← Change Role</button>
-      </div>
-
-      <!-- Register -->
-      <div id="ls-register" class="ls-step" style="display:none">
-        <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:6px">Complete Your Profile</h3>
-        <p style="font-size:13px;color:#888;margin-bottom:20px">First time? Fill in your details.</p>
-        <div id="l-reg-msg" style="display:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;margin-bottom:14px"></div>
-        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Full Name *</label>
-        <input type="text" id="l-reg-name" placeholder="Your full name" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
-        <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">WhatsApp Number</label>
-        <input type="tel" id="l-reg-phone" placeholder="+91 XXXXX XXXXX" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
-        <div id="l-teacher-extra" style="display:none">
-          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Subjects You Teach</label>
-          <input type="text" id="l-reg-subjects" placeholder="e.g. Maths, Science" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
-          <label style="display:block;font-size:11px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Classes You Teach</label>
-          <input type="text" id="l-reg-classes" placeholder="e.g. Class 6-10" style="width:100%;padding:12px 16px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;margin-bottom:14px">
-        </div>
-        <button onclick="lSaveProfile()" style="width:100%;padding:13px;background:#1D7A6B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Save & Continue →</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ============ TEACHER DASHBOARD ============ -->
 <div id="p-teacher-dash" class="page">
