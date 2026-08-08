@@ -2052,7 +2052,7 @@ window.lSelectRole = function(role) {
 window.lGoToLogin = function() {
   if(!selectedRole) { alert('Please select Parent or Teacher!'); return; }
   var badge = document.getElementById('l-role-badge');
-  if(badge) badge.innerHTML = '<span style="background:#E6F4F1;color:#1D7A6B;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' + (selectedRole === 'teacher' ? '👩‍🏫 Teacher Login' : '👨‍👩‍👧 Parent Login') + '</span>';
+  if(badge) badge.innerHTML = '<span style="background:#E6F4F1;color:#1D7A6B;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:800;font-family:Plus Jakarta Sans,sans-serif">' + (selectedRole === 'teacher' ? 'Teacher Login' : 'Parent Login') + '</span>';
   lShowStep('ls-phone');
 };
 
@@ -2085,12 +2085,12 @@ window.lSwitchTab = function(tab) {
     loginBtn.style.cssText = 'flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:#fff;color:#1D7A6B;box-shadow:0 2px 6px rgba(0,0,0,.08);font-family:Plus Jakarta Sans,sans-serif';
     signupBtn.style.cssText = 'flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:none;color:#527060;font-family:Plus Jakarta Sans,sans-serif';
     if(confirmWrap) confirmWrap.style.display = 'none';
-    if(submitBtn) { submitBtn.textContent = 'Login →'; submitBtn.style.background = '#E8601A'; }
+    if(submitBtn) { submitBtn.textContent = 'Login &rarr;'; submitBtn.style.background = '#E8601A'; }
   } else {
     signupBtn.style.cssText = 'flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:#fff;color:#1D7A6B;box-shadow:0 2px 6px rgba(0,0,0,.08);font-family:Plus Jakarta Sans,sans-serif';
     loginBtn.style.cssText = 'flex:1;padding:9px;border-radius:7px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:none;color:#527060;font-family:Plus Jakarta Sans,sans-serif';
     if(confirmWrap) confirmWrap.style.display = 'block';
-    if(submitBtn) { submitBtn.textContent = 'Create Account →'; submitBtn.style.background = '#1D7A6B'; }
+    if(submitBtn) { submitBtn.textContent = 'Create Account &rarr;'; submitBtn.style.background = '#1D7A6B'; }
   }
 };
 
@@ -2382,10 +2382,7 @@ function initSupabase() {
 }
 window.addEventListener('load', initSupabase);
 
-let currentUser = null;
-let currentRole = '';
-let selectedRole = '';
-let teacherSchedule = {};
+// Variables defined in early stubs
 
 // ── AUTH STATE handled in initSupabase ──
 
@@ -2425,7 +2422,7 @@ window.__lShowMsg = function(id, msg, type) {
   el.style.borderRadius = '10px';
 };
 
-let currentTab = 'login';
+// currentTab defined in early stubs
 
 window.__lSwitchTab = function(tab) {
   currentTab = tab;
