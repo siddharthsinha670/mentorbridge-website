@@ -710,7 +710,7 @@ async function loadPortalTeachers() {
         '<td>' + (t.created_at ? new Date(t.created_at).toLocaleDateString('en-IN') : '—') + '</td>' +
         '<td>' +
           (t.status !== 'approved' ?
-            '<button onclick="approveTeacher('' + t.uid + '')" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">✅ Approve</button>' :
+            '<button onclick="approveTeacher(\'' + t.uid + '\')" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">Approve</button>' :
             '<span style="color:var(--teal);font-weight:700;font-size:12px">✅ Approved</span>') +
         '</td>' +
       '</tr>';
