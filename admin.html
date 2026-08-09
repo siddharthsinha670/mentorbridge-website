@@ -520,7 +520,7 @@ function renderDashStudents() {
       <td><strong>${getVal(r,'Student Name','student name','name')}</strong></td>
       <td><strong style="color:var(--orange)">${(()=>{const v=getVal(r,'Class / Grade','Class','class','grade');return v!=='—'&&!isNaN(v)?'Class '+v:v;})()}</strong></td>
       <td>${getVal(r,'Subjects Required','Subjects','subjects')}</td>
-      <td><a href="https://wa.me/91${getVal(r,'WhatsApp Number','phone').replace(/\D/g,'')}" target="_blank" style="color:var(--teal)">${getVal(r,'WhatsApp Number','phone')}</a></td>
+      <td><a href="https://wa.me/91${getVal(r,'WhatsApp Number','phone').replace(/[^0-9]/g,'')}" target="_blank" style="color:var(--teal)">${getVal(r,'WhatsApp Number','phone')}</a></td>
       <td>${formatDate(getVal(r,'Date','Submission Date','date'))}</td>
     </tr>`).join('');
 }
@@ -535,7 +535,7 @@ function renderDashTeachers() {
       <td><strong>${r['Full Name']||r['name']||'—'}</strong></td>
       <td>${r['Subjects You Can Teach']||r['subjects']||'—'}</td>
       <td>${r['Teaching Experience']||r['experience']||'—'}</td>
-      <td><a href="https://wa.me/91${(r['WhatsApp Number']||'').replace(/\D/g,'')}" target="_blank" style="color:var(--teal)">${r['WhatsApp Number']||'—'}</a></td>
+      <td><a href="https://wa.me/91${(r['WhatsApp Number']||'').replace(/[^0-9]/g,'')}" target="_blank" style="color:var(--teal)">${r['WhatsApp Number']||'—'}</a></td>
       <td>${r['Date']||r['Submission Date']||'—'}</td>
     </tr>`).join('');
 }
@@ -589,7 +589,7 @@ function renderStudents() {
   tbody.innerHTML = allStudents.slice().reverse().map((r,i) => {
     const idx = allStudents.length - 1 - i;
     const id = 'STU' + String(idx + 1).padStart(4,'0');
-    const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/\D/g,'');
+    const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/[^0-9]/g,'');
     let date = getVal(r,'Date','Submission Date','date');
     date = formatDate(date);
     // Find class field by scanning all keys
@@ -630,7 +630,7 @@ function renderTeachers() {
   tbody.innerHTML = allTeachers.slice().reverse().map((r,i) => {
     const idx = allTeachers.length - 1 - i;
     const id = 'TCH' + String(idx + 1).padStart(4,'0');
-    const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/\D/g,'');
+    const phone = getVal(r,'WhatsApp Number','phone','mobile').replace(/[^0-9]/g,'');
     const dateKey = Object.keys(r).find(k => k.toLowerCase().includes('date'));
     let date = dateKey ? r[dateKey] : '—';
     date = formatDate(date);
@@ -703,7 +703,7 @@ async function loadPortalTeachers() {
         '<td><span class="id-badge">T' + String(i+1).padStart(3,'0') + '</span></td>' +
         '<td><strong>' + (t.name||'—') + '</strong></td>' +
         '<td>' + (t.email||'—') + '</td>' +
-        '<td><a href="https://wa.me/91' + (t.phone||'').replace(/\D/g,'') + '" target="_blank" style="color:var(--teal)">' + (t.phone||'—') + '</a></td>' +
+        '<td><a href="https://wa.me/91' + (t.phone||'').replace(/[^0-9]/g,'') + '" target="_blank" style="color:var(--teal)">' + (t.phone||'—') + '</a></td>' +
         '<td>' + (t.subjects||'—') + '</td>' +
         '<td>' + (t.classes||'—') + '</td>' +
         '<td><span class="status-badge ' + (t.status==='approved'?'status-active':'status-new') + '">' + (t.status||'pending') + '</span></td>' +
@@ -740,7 +740,7 @@ async function loadPortalParents() {
         '<td><span class="id-badge">P' + String(i+1).padStart(3,'0') + '</span></td>' +
         '<td><strong>' + (p.name||'—') + '</strong></td>' +
         '<td>' + (p.email||'—') + '</td>' +
-        '<td><a href="https://wa.me/91' + (p.phone||'').replace(/\D/g,'') + '" target="_blank" style="color:var(--teal)">' + (p.phone||'—') + '</a></td>' +
+        '<td><a href="https://wa.me/91' + (p.phone||'').replace(/[^0-9]/g,'') + '" target="_blank" style="color:var(--teal)">' + (p.phone||'—') + '</a></td>' +
         '<td><span class="status-badge status-active">' + (p.status||'active') + '</span></td>' +
         '<td>' + (p.created_at ? new Date(p.created_at).toLocaleDateString('en-IN') : '—') + '</td>' +
       '</tr>';
