@@ -179,6 +179,9 @@ tr:hover td{background:rgba(29,122,107,.03)}
       <div class="nav-item" onclick="showSection('teachers')"><span class="ni">👩‍🏫</span> Teacher Applications</div>
       <div class="nav-section">Content</div>
       <div class="nav-item" onclick="showSection('blog')"><span class="ni">📝</span> Blog Management</div>
+      <div class="nav-section">Portal Users</div>
+      <div class="nav-item" onclick="showSection('portal-teachers')"><span class="ni">👩‍🏫</span> Portal Teachers</div>
+      <div class="nav-item" onclick="showSection('portal-parents')"><span class="ni">👨‍👩‍👧</span> Portal Parents</div>
       <div class="nav-section">Quick Links</div>
       <div class="nav-item" onclick="window.open('https://mentorbridge.info','_blank')"><span class="ni">🌐</span> View Website</div>
       <div class="nav-item" onclick="window.open('https://docs.google.com/spreadsheets/d/1bik2jK6ezneD9KwKWUHMHaQObMt0JVaxaDrJ7DP4Qhs','_blank')"><span class="ni">📋</span> Student Sheet</div>
@@ -297,6 +300,39 @@ tr:hover td{background:rgba(29,122,107,.03)}
         </div>
       </div>
 
+
+      <!-- PORTAL TEACHERS -->
+      <div id="sec-portal-teachers" style="display:none">
+        <div class="table-card">
+          <div class="table-head">
+            <h2>👩‍🏫 Registered Teachers (Portal)</h2>
+            <button class="export-btn" onclick="loadPortalTeachers()">🔄 Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Subjects</th><th>Classes</th><th>Status</th><th>Joined</th><th>Action</th></tr></thead>
+              <tbody id="portal-teachers-tbody"><tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">Click Refresh to load</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PORTAL PARENTS -->
+      <div id="sec-portal-parents" style="display:none">
+        <div class="table-card">
+          <div class="table-head">
+            <h2>👨‍👩‍👧 Registered Parents (Portal)</h2>
+            <button class="export-btn" onclick="loadPortalParents()">🔄 Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Joined</th></tr></thead>
+              <tbody id="portal-parents-tbody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted)">Click Refresh to load</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- STUDENTS -->
       <div id="sec-students" style="display:none">
 
@@ -350,6 +386,32 @@ const APIS = {
   teachers: 'https://sheetdb.io/api/v1/m266lnrseyl2u'
 };
 
+// Supabase config
+const SUPA_URL = 'https://xnsvuucqkdkwnblkmreh.supabase.co';
+const SUPA_KEY = 'sb_publishable_MdupIflfNv67oSLxrAOerg_kD_s42Ta';
+
+async function supaGet(table, filter) {
+  var url = SUPA_URL + '/rest/v1/' + table + '?select=*';
+  if(filter) url += '&' + filter;
+  var res = await fetch(url, {
+    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+  });
+  return res.json();
+}
+
+async function supaUpdate(table, data, filter) {
+  var res = await fetch(SUPA_URL + '/rest/v1/' + table + '?' + filter, {
+    method: 'PATCH',
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  return res.json();
+}
+
 let allStudents = [];
 let allTeachers = [];
 
@@ -376,13 +438,13 @@ function logout() {
 
 // ── NAVIGATION ──
 function showSection(id) {
-  ['dashboard','students','teachers','blog'].forEach(s => {
+  ['dashboard','students','teachers','blog','portal-teachers','portal-parents'].forEach(s => {
     var el = document.getElementById('sec-'+s);
     if(el) el.style.display = s===id ? 'block' : 'none';
   });
   if(id === 'blog') renderBlogTable();
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const titles = {dashboard:'📊 Dashboard', students:'🎓 Student Enquiries', teachers:'👩‍🏫 Teacher Applications', blog:'📝 Blog Management'};
+  const titles = {dashboard:'📊 Dashboard', students:'🎓 Student Enquiries', teachers:'👩‍🏫 Teacher Applications', blog:'📝 Blog Management', 'portal-teachers':'👩‍🏫 Registered Teachers (Portal)', 'portal-parents':'👨‍👩‍👧 Registered Parents (Portal)'};
   document.getElementById('pageTitle').textContent = titles[id] || 'Dashboard';
   event.currentTarget && event.currentTarget.classList.add('active');
 }
@@ -622,6 +684,77 @@ document.addEventListener('keydown', e => {
   if(e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') login();
 });
 
+
+
+// ── PORTAL USERS ──
+async function loadPortalTeachers() {
+  var tbody = document.getElementById('portal-teachers-tbody');
+  tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px">Loading...</td></tr>';
+  try {
+    var data = await supaGet('teachers', 'order=created_at.desc');
+    if(!data || !data.length) {
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">No registered teachers yet</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(function(t, i) {
+      return '<tr>' +
+        '<td><span class="id-badge">T' + String(i+1).padStart(3,'0') + '</span></td>' +
+        '<td><strong>' + (t.name||'—') + '</strong></td>' +
+        '<td>' + (t.email||'—') + '</td>' +
+        '<td><a href="https://wa.me/91' + (t.phone||'').replace(/\D/g,'') + '" target="_blank" style="color:var(--teal)">' + (t.phone||'—') + '</a></td>' +
+        '<td>' + (t.subjects||'—') + '</td>' +
+        '<td>' + (t.classes||'—') + '</td>' +
+        '<td><span class="status-badge ' + (t.status==='approved'?'status-active':'status-new') + '">' + (t.status||'pending') + '</span></td>' +
+        '<td>' + (t.created_at ? new Date(t.created_at).toLocaleDateString('en-IN') : '—') + '</td>' +
+        '<td>' +
+          (t.status !== 'approved' ?
+            '<button onclick="approveTeacher('' + t.uid + '')" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">✅ Approve</button>' :
+            '<span style="color:var(--teal);font-weight:700;font-size:12px">✅ Approved</span>') +
+        '</td>' +
+      '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:red">Error loading data</td></tr>';
+  }
+}
+
+async function approveTeacher(uid) {
+  await supaUpdate('teachers', {status: 'approved'}, 'uid=eq.' + uid);
+  showToast('✅ Teacher approved!');
+  loadPortalTeachers();
+}
+
+async function loadPortalParents() {
+  var tbody = document.getElementById('portal-parents-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px">Loading...</td></tr>';
+  try {
+    var data = await supaGet('parents', 'order=created_at.desc');
+    if(!data || !data.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted)">No registered parents yet</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(function(p, i) {
+      return '<tr>' +
+        '<td><span class="id-badge">P' + String(i+1).padStart(3,'0') + '</span></td>' +
+        '<td><strong>' + (p.name||'—') + '</strong></td>' +
+        '<td>' + (p.email||'—') + '</td>' +
+        '<td><a href="https://wa.me/91' + (p.phone||'').replace(/\D/g,'') + '" target="_blank" style="color:var(--teal)">' + (p.phone||'—') + '</a></td>' +
+        '<td><span class="status-badge status-active">' + (p.status||'active') + '</span></td>' +
+        '<td>' + (p.created_at ? new Date(p.created_at).toLocaleDateString('en-IN') : '—') + '</td>' +
+      '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:red">Error loading data</td></tr>';
+  }
+}
+
+// Auto load when section shown
+var _origShowSection = showSection;
+showSection = function(id) {
+  _origShowSection(id);
+  if(id === 'portal-teachers') loadPortalTeachers();
+  if(id === 'portal-parents') loadPortalParents();
+};
 
 // ── BLOG MANAGEMENT ──
 var blogArticles = [{"id": "best-home-tutor-muzaffarpur", "title": "How to Find the Best Home Tutor in Muzaffarpur Bihar", "category": "Parent Guide", "date": "July 2025", "read": "5 min read", "intro": "Finding a reliable home tutor in Muzaffarpur can be challenging. With hundreds of options available, parents often struggle to identify qualified, trustworthy teachers for their children.", "content": "\n<h2>Why Home Tuition is Important in Muzaffarpur</h2>\n<p>With the growing competition in academics, home tuition has become essential for students in Muzaffarpur. A good home tutor provides personalised attention that classroom teaching cannot always offer. Whether your child is in Class 5 or preparing for Class 10 board exams, one-on-one teaching makes a significant difference.</p>\n\n<h2>5 Key Things to Check Before Hiring a Home Tutor</h2>\n<h3>1. Educational Qualification</h3>\n<p>Always verify the tutor's degree certificates and B.Ed qualification. A tutor with proper educational background understands pedagogy \u2014 the science of teaching \u2014 and can explain concepts in multiple ways until the child understands.</p>\n\n<h3>2. Background Verification</h3>\n<p>This is non-negotiable. When you invite a tutor into your home, you must verify their identity and background. Always ask for Aadhaar card and police verification certificate. MentorBridge conducts triple verification \u2014 ID, qualification, and police background check \u2014 for every teacher on our platform.</p>\n\n<h3>3. Subject Expertise</h3>\n<p>A good Maths tutor may not be a good English tutor. Always hire subject-specific tutors, especially for Class 8 and above. Ask them to explain a sample concept before finalising.</p>\n\n<h3>4. Teaching Style</h3>\n<p>Every child learns differently. Some are visual learners, others are auditory. A good tutor assesses your child's learning style in the first session and adapts accordingly.</p>\n\n<h3>5. Consistency and Accountability</h3>\n<p>Ask if the tutor provides monthly progress reports. A committed tutor tracks attendance, homework completion, and test scores \u2014 giving you complete visibility into your child's academic progress.</p>\n\n<h2>Red Flags to Avoid</h2>\n<ul>\n<li>Tutors who cannot show qualification certificates</li>\n<li>No police verification or background check</li>\n<li>Unwilling to give a demo class</li>\n<li>No clear fee structure</li>\n<li>No accountability or progress updates</li>\n</ul>\n\n<h2>How MentorBridge Makes It Easy</h2>\n<p>MentorBridge is Muzaffarpur's most trusted home tutoring platform. We do all the hard work for you \u2014 verifying teachers, matching them with your child's requirements, and providing ongoing support. Our free demo class lets you evaluate the teacher before committing to anything.</p>\n\n<p>We serve students from Nursery to Class 10 across CBSE, ICSE, and Bihar State Board in Muzaffarpur, Patna, Darbhanga, Sitamarhi, and across Bihar.</p>\n"}, {"id": "cbse-vs-bihar-board", "title": "CBSE vs Bihar Board \u2014 Which is Better for Your Child?", "category": "Education Guide", "date": "July 2025", "read": "6 min read", "intro": "One of the most common questions Bihar parents ask is: Should my child study under CBSE or Bihar State Board (BSEB)? Both have their advantages and the right choice depends on your child's goals.", "content": "\n<h2>Understanding the Two Boards</h2>\n<h3>Bihar State Board (BSEB)</h3>\n<p>The Bihar School Examination Board conducts Matric (Class 10) and Inter (Class 12) examinations. BSEB follows the NCERT syllabus with some Bihar-specific additions. It is the most widely followed board in Bihar and the medium of instruction is primarily Hindi.</p>\n\n<h3>CBSE (Central Board of Secondary Education)</h3>\n<p>CBSE is a national level board recognised across India. The syllabus is standardised, competitive exam-oriented (JEE, NEET, UPSC), and instruction is primarily in English. Most private schools in urban Bihar follow CBSE.</p>\n\n<h2>Key Differences</h2>\n<h3>Syllabus & Difficulty</h3>\n<p>CBSE syllabus is designed to prepare students for national competitive exams. It is more conceptual and application-based. Bihar Board follows a similar NCERT pattern but the exam pattern focuses more on memorisation and theory.</p>\n\n<h3>Medium of Instruction</h3>\n<p>Bihar Board: Hindi medium primarily. CBSE: English medium primarily. If your child aims to pursue higher education in English-medium colleges or engineering/medical entrance exams, CBSE gives a stronger foundation.</p>\n\n<h3>Career Goals</h3>\n<p>For JEE, NEET, UPSC, and other national competitive exams \u2014 CBSE is more aligned. For Bihar state government jobs and Bihar-specific competitive exams \u2014 BSEB can be advantageous as the exam patterns are familiar.</p>\n\n<h2>Which Should You Choose?</h2>\n<p>Choose CBSE if your child aims for IIT, NEET, national universities, or plans to move out of Bihar for higher studies. Choose Bihar Board if your family has a Hindi-medium background, if your child is more comfortable in Hindi, or if you are targeting Bihar-specific government jobs.</p>\n\n<h2>How Home Tuition Helps Both Board Students</h2>\n<p>Regardless of the board, a good home tutor makes a huge difference. MentorBridge has verified tutors experienced in both CBSE and Bihar Board. Our tutors are trained to teach the specific exam patterns of each board and help students score maximum marks.</p>\n"}, {"id": "improve-childs-marks", "title": "How to Improve Your Child's Marks in 3 Months", "category": "Study Tips", "date": "June 2025", "read": "5 min read", "intro": "Are your child's marks not up to expectations? Don't worry \u2014 with the right approach and consistent effort, significant improvement is possible in just 3 months.", "content": "\n<h2>Why Do Students Struggle?</h2>\n<p>Before finding solutions, it is important to understand why a child may be struggling academically. Common reasons include weak foundation in basic concepts, lack of personalised attention in school, ineffective study habits, fear of certain subjects, and lack of consistent practice.</p>\n\n<h2>Month 1 \u2014 Identify and Strengthen Weak Areas</h2>\n<h3>Step 1: Assessment</h3>\n<p>Start with a proper assessment of your child's current level. A good tutor will identify exactly which chapters and concepts are weak. This targeted approach is far more effective than revising everything from scratch.</p>\n\n<h3>Step 2: Build the Foundation</h3>\n<p>Many students struggle in Class 9-10 because their Class 6-7 foundation is weak. A skilled home tutor revisits fundamentals without making the child feel embarrassed, building confidence gradually.</p>\n\n<h3>Step 3: Daily Practice Routine</h3>\n<p>Establish a fixed study schedule \u2014 minimum 2 hours of focused study daily. Break it into 45-minute sessions with 10-minute breaks. Consistency matters more than duration.</p>\n\n<h2>Month 2 \u2014 Intensive Practice</h2>\n<p>Once the foundation is clear, move to chapter-wise practice tests. Solve previous year question papers. This phase builds speed and accuracy \u2014 both critical for exam performance.</p>\n\n<h2>Month 3 \u2014 Exam Strategy</h2>\n<p>The final month is about exam strategy \u2014 time management, question selection, presentation, and revision. A good tutor teaches these skills explicitly, which schools often overlook.</p>\n\n<h2>The Role of a Home Tutor</h2>\n<p>A qualified home tutor provides what schools cannot \u2014 personalised attention, customised pace, and one-on-one doubt clearing. At MentorBridge, our tutors create a personalised learning plan for every child and provide monthly progress reports so parents can see the improvement clearly.</p>\n"}, {"id": "home-tuition-vs-coaching", "title": "Home Tuition vs Coaching Centre \u2014 Which is Better for Bihar Students?", "category": "Parent Guide", "date": "June 2025", "read": "5 min read", "intro": "Parents in Muzaffarpur and across Bihar often debate between home tuition and coaching centres. Both have their place \u2014 but which is better for your child?", "content": "\n<h2>Coaching Centres in Bihar \u2014 The Reality</h2>\n<p>Coaching centres are popular in Bihar, especially for competitive exam preparation. However, for school-level students (Class 1-10), large batch coaching centres often have major drawbacks.</p>\n\n<h3>Problems with Coaching Centres</h3>\n<ul>\n<li><strong>Large batches:</strong> 30-50 students per teacher \u2014 individual attention is impossible</li>\n<li><strong>Fixed pace:</strong> Weak students fall behind; strong students feel held back</li>\n<li><strong>Travel time:</strong> Children spend 1-2 hours daily in travel, adding fatigue</li>\n<li><strong>Safety concerns:</strong> Especially for younger children and girls</li>\n<li><strong>No parent visibility:</strong> Parents rarely know what is being taught daily</li>\n</ul>\n\n<h2>Home Tuition \u2014 The Advantages</h2>\n<ul>\n<li><strong>One-on-one attention:</strong> Teacher focuses entirely on your child</li>\n<li><strong>Personalised pace:</strong> Teaching matches your child's speed</li>\n<li><strong>Convenience:</strong> No travel, study at home in comfort</li>\n<li><strong>Safety:</strong> Child stays at home, parents can observe sessions</li>\n<li><strong>Flexibility:</strong> Timings adjusted to your schedule</li>\n<li><strong>Progress tracking:</strong> Monthly reports give full visibility</li>\n</ul>\n\n<h2>When is Coaching Better?</h2>\n<p>Coaching centres are better for competitive exam preparation like JEE, NEET, and UPSC where peer competition and expert faculty are important. For school-level academic improvement (Class 1-10), home tuition consistently delivers better results.</p>\n\n<h2>The MentorBridge Difference</h2>\n<p>MentorBridge brings the best of both worlds \u2014 expert, verified teachers who come to your home with a structured curriculum, regular assessments, and monthly progress reports. Our tutors are selected through a rigorous 3-step verification process to ensure only qualified, trustworthy teachers enter your home.</p>\n"}, {"id": "board-exam-preparation-class10", "title": "Complete Board Exam Preparation Guide for Class 10 Bihar Students", "category": "Exam Tips", "date": "May 2025", "read": "7 min read", "intro": "Class 10 board exams are one of the most important milestones in a student's life. Whether you are appearing for BSEB Matric or CBSE Class 10, this guide will help you prepare effectively.", "content": "\n<h2>Understanding the Class 10 Board Exam Pattern</h2>\n<h3>Bihar Board (BSEB) Matric</h3>\n<p>The BSEB Matric exam tests students on Science, Mathematics, Social Science, Hindi, and English. The exam is held in February-March. Total marks: 500. Minimum passing marks: 33% in each subject. The paper pattern includes objective (MCQ) and subjective questions.</p>\n\n<h3>CBSE Class 10</h3>\n<p>CBSE follows NCERT curriculum. The exam includes internal assessment (20%) and board exam (80%). The pattern emphasises application, analysis, and higher-order thinking skills over memorisation.</p>\n\n<h2>Subject-wise Preparation Strategy</h2>\n<h3>Mathematics</h3>\n<p>Mathematics requires consistent daily practice. Focus on: Algebra, Geometry, Trigonometry, Statistics. Solve at least 10 problems daily. Practice previous year papers from the last 5 years. Learn all formulas by heart and understand their applications.</p>\n\n<h3>Science</h3>\n<p>Divide Science into Physics, Chemistry, and Biology. Physics requires formula application and numerical practice. Chemistry needs understanding of reactions and equations. Biology is memory-based \u2014 use diagrams and flowcharts for retention.</p>\n\n<h3>Social Science</h3>\n<p>History, Geography, Economics, and Political Science. Create chapter-wise notes with important dates, names, and concepts. Practice map work for Geography. Focus on NCERT thoroughly \u2014 most questions come directly from it.</p>\n\n<h3>English</h3>\n<p>Focus on: Literature (prose and poetry), Grammar, and Writing skills. Practice letter writing, essay writing, and comprehension passages daily. Grammar \u2014 tenses, active/passive voice, reported speech \u2014 are high-scoring areas.</p>\n\n<h3>Hindi</h3>\n<p>For BSEB students, Hindi is crucial. Learn all poems and prose by heart. Practice essay writing and letter writing. Grammar \u2014 Sandhi, Samas, Alankar \u2014 carry significant marks.</p>\n\n<h2>Time Table for Last 3 Months</h2>\n<p><strong>3 months before exam:</strong> Complete syllabus revision, chapter by chapter.</p>\n<p><strong>2 months before exam:</strong> Previous year paper practice, topic-wise tests.</p>\n<p><strong>1 month before exam:</strong> Full mock tests, revision of weak areas, formula revision.</p>\n<p><strong>Last week:</strong> Light revision only, focus on sleep and health.</p>\n\n<h2>How a Home Tutor Helps in Board Exam Prep</h2>\n<p>A dedicated home tutor creates a personalised revision schedule, conducts regular mock tests, provides immediate doubt-clearing, and tracks your progress weekly. At MentorBridge, our board exam specialist tutors in Muzaffarpur and Bihar have helped hundreds of students improve their scores significantly.</p>\n"}];
