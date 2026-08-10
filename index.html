@@ -1529,133 +1529,244 @@ footer{background:#060D18;padding:64px 0 28px}
 
 <!-- ============ TEACHER DASHBOARD ============ -->
 <div id="p-teacher-dash" class="page">
-  <div style="display:flex;min-height:calc(100vh - 68px)">
-    <!-- Sidebar -->
-    <div style="width:200px;background:#0B1E36;display:flex;flex-direction:column;flex-shrink:0">
-      <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,.08)">
-        <div style="font-size:12px;color:rgba(255,255,255,.4);font-weight:700;margin-bottom:4px">TEACHER PORTAL</div>
-        <div id="td-name" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#fff">Loading...</div>
-        <div id="td-status" style="font-size:11px;color:#C9992A;margin-top:2px;font-weight:600">⏳ Pending</div>
-      </div>
-      <nav style="padding:10px 0;flex:1">
-        <div onclick="tdShow('overview')" class="td-nav active" style="display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:.15s">📊 Overview</div>
-        <div onclick="tdShow('profile')" class="td-nav" style="display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:.15s">👤 My Profile</div>
-        <div onclick="tdShow('schedule')" class="td-nav" style="display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:.15s">📅 Schedule</div>
-        <div onclick="tdShow('students')" class="td-nav" style="display:flex;align-items:center;gap:10px;padding:12px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);cursor:pointer;border-left:3px solid transparent;transition:.15s">🎓 Students</div>
-      </nav>
-      <div style="padding:16px 18px;border-top:1px solid rgba(255,255,255,.08)">
-        <button onclick="lLogout()" style="width:100%;padding:9px;background:rgba(255,0,0,.15);color:#ff6b6b;border:1px solid rgba(255,0,0,.2);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Logout</button>
-      </div>
+<style>
+.td-wrap{display:flex;min-height:calc(100vh - 68px)}
+.td-sidebar{width:220px;background:#0B1E36;flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto}
+.td-sidebar-top{padding:20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.td-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#E8601A,#FF9559);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;font-family:"Plus Jakarta Sans",sans-serif;margin-bottom:10px}
+.td-sidebar-name{font-family:"Plus Jakarta Sans",sans-serif;font-size:14px;font-weight:800;color:#fff}
+.td-sidebar-status{font-size:11px;color:#C9992A;margin-top:3px;font-weight:600}
+.td-nav-item{display:flex;align-items:center;gap:10px;padding:13px 20px;font-size:13px;font-weight:700;color:rgba(255,255,255,.55);cursor:pointer;border-left:3px solid transparent;transition:.15s;user-select:none}
+.td-nav-item:hover{color:#fff;background:rgba(255,255,255,.06)}
+.td-nav-item.active{color:#fff;background:rgba(37,160,144,.2);border-left-color:#25A090}
+.td-main{flex:1;background:#F4F7F6;overflow-y:auto;padding:24px}
+.td-page{display:none}.td-page.active{display:block}
+.td-card{background:#fff;border:1.5px solid #D4EAE2;border-radius:16px;padding:22px;margin-bottom:18px}
+.td-card h2{font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:800;color:#0B1E36;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #D4EAE2;display:flex;align-items:center;justify-content:space-between}
+.td-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.td-stat{background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:16px;text-align:center}
+.td-stat .icon{font-size:26px;margin-bottom:6px}
+.td-stat h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:22px;font-weight:800;color:#0B1E36}
+.td-stat p{font-size:11px;color:#527060;margin-top:2px}
+.td-welcome{background:linear-gradient(135deg,#1D7A6B,#25A090);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.td-welcome h2{font-family:"Plus Jakarta Sans",sans-serif;font-size:20px;font-weight:800;margin-bottom:4px}
+.td-welcome p{color:rgba(255,255,255,.7);font-size:13px}
+.td-verified{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:5px 14px;border-radius:50px;font-size:12px;font-weight:800;font-family:"Plus Jakarta Sans",sans-serif}
+.td-field{margin-bottom:14px}
+.td-field label{display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;font-family:"Plus Jakarta Sans",sans-serif}
+.td-field input,.td-field select,.td-field textarea{width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif;transition:.2s}
+.td-field input:focus,.td-field select:focus,.td-field textarea:focus{outline:none;border-color:#1D7A6B}
+.td-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.td-full{grid-column:1/-1}
+.td-btn{padding:10px 20px;background:#1D7A6B;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;transition:.2s}
+.td-btn:hover{background:#14614e}
+.td-btn-orange{background:#E8601A}.td-btn-orange:hover{background:#c94d10}
+.td-msg{margin-top:12px;padding:12px;border-radius:10px;font-size:14px;font-weight:600;display:none}
+.td-msg.success{display:block;background:#E8F5E9;border:1px solid #A5D6A7;color:#2E7D32}
+.td-msg.error{display:block;background:#FFEBEE;border:1px solid #EF9A9A;color:#C62828}
+.slot{background:#F4F7F6;border:1px solid #D4EAE2;border-radius:6px;padding:5px 3px;font-size:9px;text-align:center;cursor:pointer;margin-bottom:4px;font-weight:700;transition:.15s}
+.slot.on{background:#1D7A6B;color:#fff;border-color:#1D7A6B}
+.empty-state{text-align:center;padding:40px;color:#888}
+.empty-state .ei{font-size:48px;margin-bottom:12px}
+@media(max-width:768px){.td-sidebar{display:none}.td-stats{grid-template-columns:repeat(2,1fr)}.td-grid2{grid-template-columns:1fr}}
+</style>
+
+<div class="td-wrap">
+  <!-- Sidebar -->
+  <div class="td-sidebar">
+    <div class="td-sidebar-top">
+      <div class="td-avatar" id="td-av">T</div>
+      <div class="td-sidebar-name" id="td-name">Loading...</div>
+      <div class="td-sidebar-status" id="td-status">⏳ Pending</div>
     </div>
-
-    <!-- Main Content -->
-    <div style="flex:1;background:#F4F7F6;overflow-y:auto;padding:24px">
-
-      <!-- Overview -->
-      <div id="td-overview" class="td-page" style="display:block">
-        <div style="background:linear-gradient(135deg,#1D7A6B,#25A090);border-radius:18px;padding:24px 28px;margin-bottom:20px;color:#fff">
-          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px">Welcome, <span id="td-welcome">Teacher</span>! 👋</h2>
-          <p style="color:rgba(255,255,255,.7);font-size:14px">Your teaching dashboard</p>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
-          <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🎓</div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:#0B1E36">0</div><div style="font-size:12px;color:#527060;margin-top:3px">Students</div></div>
-          <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">⭐</div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:#0B1E36">—</div><div style="font-size:12px;color:#527060;margin-top:3px">Rating</div></div>
-          <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">💰</div><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:#0B1E36">₹0</div><div style="font-size:12px;color:#527060;margin-top:3px">Earnings</div></div>
-        </div>
-        <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:20px">
-          <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#0B1E36;margin-bottom:14px">📢 Notice from MentorBridge</h3>
-          <div style="background:#E6F4F1;border-radius:10px;padding:14px">
-            <p style="font-weight:700;color:#1D7A6B;margin-bottom:4px">Welcome! 🎉</p>
-            <p style="font-size:13px;color:#527060">Your profile is under review. Our team will verify documents and contact you within 48 hours.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Profile -->
-      <div id="td-profile" class="td-page" style="display:none">
-        <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:24px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #D4EAE2">
-            <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36">👤 My Profile</h2>
-            <button onclick="tdSaveProfile()" style="padding:9px 18px;background:#1D7A6B;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">💾 Save</button>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-            <div><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">Full Name</label><input id="td-p-name" type="text" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif"></div>
-            <div><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">WhatsApp</label><input id="td-p-phone" type="tel" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif"></div>
-            <div><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">Subjects</label><input id="td-p-subjects" type="text" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif"></div>
-            <div><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">Classes</label><input id="td-p-classes" type="text" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif"></div>
-            <div style="grid-column:1/-1"><label style="display:block;font-size:11px;font-weight:800;color:#527060;margin-bottom:5px;text-transform:uppercase">About Me</label><textarea id="td-p-about" rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:'Nunito',sans-serif;resize:vertical"></textarea></div>
-          </div>
-          <div id="td-profile-msg" style="display:none;margin-top:14px;padding:12px;border-radius:10px;font-size:14px;font-weight:600"></div>
-        </div>
-      </div>
-
-      <!-- Schedule -->
-      <div id="td-schedule" class="td-page" style="display:none">
-        <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:24px">
-          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:16px">📅 Weekly Availability</h2>
-          <div id="td-schedule-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px"></div>
-          <button onclick="tdSaveSchedule()" style="padding:10px 20px;background:#1D7A6B;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">💾 Save Schedule</button>
-        </div>
-      </div>
-
-      <!-- Students -->
-      <div id="td-students" class="td-page" style="display:none">
-        <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:24px">
-          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:16px">🎓 My Students</h2>
-          <div style="text-align:center;padding:40px;color:#888">
-            <div style="font-size:48px;margin-bottom:12px">👨‍🎓</div>
-            <p>No students assigned yet.</p>
-            <p style="font-size:13px;margin-top:6px">Students will appear here once assigned by MentorBridge.</p>
-          </div>
-        </div>
-      </div>
-
+    <nav style="padding:8px 0;flex:1">
+      <div class="td-nav-item active" onclick="tdShow(this,'overview')">📊 Overview</div>
+      <div class="td-nav-item" onclick="tdShow(this,'profile')">👤 My Profile</div>
+      <div class="td-nav-item" onclick="tdShow(this,'schedule')">📅 Schedule</div>
+      <div class="td-nav-item" onclick="tdShow(this,'students')">🎓 Students</div>
+      <div class="td-nav-item" onclick="tdShow(this,'earnings')">💰 Earnings</div>
+    </nav>
+    <div style="padding:14px 16px;border-top:1px solid rgba(255,255,255,.08)">
+      <button onclick="lLogout()" style="width:100%;padding:9px;background:rgba(220,50,50,.15);color:#ff7b7b;border:1px solid rgba(220,50,50,.2);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">🚪 Logout</button>
     </div>
   </div>
+
+  <!-- Main -->
+  <div class="td-main">
+
+    <!-- Overview -->
+    <div id="td-overview" class="td-page active">
+      <div class="td-welcome">
+        <div>
+          <h2>Welcome, <span id="td-welcome-name">Teacher</span>! 👋</h2>
+          <p>Here is your teaching overview for today.</p>
+        </div>
+        <span class="td-verified" id="td-badge">⏳ Pending Verification</span>
+      </div>
+      <div class="td-stats">
+        <div class="td-stat"><div class="icon">🎓</div><h3 id="td-st-students">0</h3><p>Students</p></div>
+        <div class="td-stat"><div class="icon">⭐</div><h3 id="td-st-rating">—</h3><p>Rating</p></div>
+        <div class="td-stat"><div class="icon">📅</div><h3 id="td-st-classes">0</h3><p>Classes/Week</p></div>
+        <div class="td-stat"><div class="icon">💰</div><h3 id="td-st-earn">₹0</h3><p>This Month</p></div>
+      </div>
+      <div class="td-card">
+        <h2>📢 Notice</h2>
+        <div style="background:#E6F4F1;border-radius:10px;padding:14px">
+          <p style="font-weight:700;color:#1D7A6B;margin-bottom:4px">Welcome to MentorBridge! 🎉</p>
+          <p style="font-size:13px;color:#527060;line-height:1.7">Your profile is under review. Our team will verify your documents and contact you within 48 hours. Please keep your qualification certificates ready.</p>
+        </div>
+      </div>
+      <div class="td-card">
+        <h2>📞 Quick Support</h2>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a href="https://wa.me/918540016415" target="_blank" style="display:flex;align-items:center;gap:12px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:12px;padding:14px;text-decoration:none;color:#1B5E20;font-weight:700;font-size:14px">
+            <span style="font-size:22px">💬</span> WhatsApp Support — +91 85400 16415
+          </a>
+          <a href="mailto:mentorbridgemuz@gmail.com" style="display:flex;align-items:center;gap:12px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:12px;padding:14px;text-decoration:none;color:#1565C0;font-weight:700;font-size:14px">
+            <span style="font-size:22px">📧</span> mentorbridgemuz@gmail.com
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div id="td-profile" class="td-page">
+      <div class="td-card">
+        <h2>👤 My Profile
+          <button class="td-btn" onclick="tdSaveProfile()">💾 Save Changes</button>
+        </h2>
+        <div class="td-grid2">
+          <div class="td-field"><label>Full Name</label><input id="td-p-name" type="text" placeholder="Your full name"></div>
+          <div class="td-field"><label>WhatsApp Number</label><input id="td-p-phone" type="tel" placeholder="+91 XXXXX XXXXX"></div>
+          <div class="td-field"><label>City / Area</label><input id="td-p-city" type="text" placeholder="Your city"></div>
+          <div class="td-field"><label>Experience</label>
+            <select id="td-p-exp">
+              <option>Fresher</option><option>1-2 years</option><option>3-5 years</option><option>5-10 years</option><option>10+ years</option>
+            </select>
+          </div>
+          <div class="td-field"><label>Subjects You Teach</label><input id="td-p-subjects" type="text" placeholder="e.g. Maths, Science, English"></div>
+          <div class="td-field"><label>Classes You Teach</label><input id="td-p-classes" type="text" placeholder="e.g. Class 6 to Class 10"></div>
+          <div class="td-field"><label>Board Expertise</label>
+            <select id="td-p-board">
+              <option>CBSE</option><option>ICSE</option><option>Bihar Board (BSEB)</option><option>All Boards</option>
+            </select>
+          </div>
+          <div class="td-field"><label>Teaching Mode</label>
+            <select id="td-p-mode">
+              <option>Home Tuition</option><option>Online Tuition</option><option>Both</option>
+            </select>
+          </div>
+          <div class="td-field td-full"><label>About Me</label>
+            <textarea id="td-p-about" rows="3" placeholder="Tell parents about your teaching style..."></textarea>
+          </div>
+        </div>
+        <div id="td-profile-msg" class="td-msg"></div>
+      </div>
+    </div>
+
+    <!-- Schedule -->
+    <div id="td-schedule" class="td-page">
+      <div class="td-card">
+        <h2>📅 Weekly Availability
+          <button class="td-btn" onclick="tdSaveSchedule()">💾 Save</button>
+        </h2>
+        <p style="font-size:13px;color:#527060;margin-bottom:16px">Click on time slots to mark your availability. Green = Available.</p>
+        <div id="td-sched-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px"></div>
+      </div>
+    </div>
+
+    <!-- Students -->
+    <div id="td-students" class="td-page">
+      <div class="td-card">
+        <h2>🎓 My Students</h2>
+        <div class="empty-state">
+          <div class="ei">👨‍🎓</div>
+          <p style="font-weight:700;color:#0B1E36">No students assigned yet</p>
+          <p style="font-size:13px;margin-top:6px">Students will appear here once MentorBridge assigns them to you.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Earnings -->
+    <div id="td-earnings" class="td-page">
+      <div style="background:linear-gradient(135deg,#0B1E36,#162B48);border-radius:16px;padding:24px;margin-bottom:18px;color:#fff">
+        <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:6px">Total Earnings This Month</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:42px;font-weight:800;letter-spacing:-2px">₹0</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:8px">Updated monthly by MentorBridge team</div>
+      </div>
+      <div class="td-card">
+        <h2>💳 Payment History</h2>
+        <div class="empty-state"><div class="ei">💳</div><p>No payment records yet.</p></div>
+      </div>
+    </div>
+
+  </div>
+</div>
 </div>
 
 <!-- ============ PARENT DASHBOARD ============ -->
 <div id="p-parent-dash" class="page">
-  <div style="background:linear-gradient(135deg,#081526,#0D2B1E);padding:32px 0;margin-bottom:24px">
-    <div class="container">
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:4px">Welcome, <span id="pd-name">Parent</span>! 👋</h2>
-      <p style="color:rgba(255,255,255,.6);font-size:14px">Track your child's tuition enquiries here</p>
-    </div>
-  </div>
-  <div class="container" style="padding-bottom:60px">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
-      <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📋</div><div id="pd-total" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#0B1E36">0</div><div style="font-size:12px;color:#527060;margin-top:3px">Enquiries</div></div>
-      <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">👩‍🏫</div><div id="pd-active" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#0B1E36">0</div><div style="font-size:12px;color:#527060;margin-top:3px">Active Teachers</div></div>
-      <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📅</div><div id="pd-demo" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#0B1E36">0</div><div style="font-size:12px;color:#527060;margin-top:3px">Demos Scheduled</div></div>
-    </div>
+<style>
+.pd-hero{background:linear-gradient(135deg,#081526,#0D2B1E);padding:28px 0}
+.pd-hero h2{font-family:"Plus Jakarta Sans",sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+.pd-hero p{color:rgba(255,255,255,.6);font-size:14px}
+.pd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.pd-stat{background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:18px;text-align:center}
+.pd-stat .icon{font-size:28px;margin-bottom:8px}
+.pd-stat h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:26px;font-weight:800;color:#0B1E36}
+.pd-stat p{font-size:12px;color:#527060;margin-top:3px}
+.pd-card{background:#fff;border:1.5px solid #D4EAE2;border-radius:16px;padding:22px;margin-bottom:18px}
+.pd-card h2{font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:800;color:#0B1E36;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #D4EAE2;display:flex;align-items:center;justify-content:space-between}
+.pd-enquiry{background:#F4F7F6;border-radius:12px;padding:16px;margin-bottom:10px}
+.pd-tag{background:#fff;border:1px solid #D4EAE2;border-radius:50px;padding:3px 10px;font-size:12px;font-weight:600;color:#527060;display:inline-block;margin:3px}
+.pd-status-new{background:#FFF3E0;color:#E65100;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800;font-family:"Plus Jakarta Sans",sans-serif}
+.pd-status-active{background:#E8F5E9;color:#2E7D32;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800;font-family:"Plus Jakarta Sans",sans-serif}
+.pd-status-demo{background:#E3F2FD;color:#1565C0;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800;font-family:"Plus Jakarta Sans",sans-serif}
+@media(max-width:600px){.pd-stats{grid-template-columns:1fr 1fr}}
+</style>
 
-    <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:24px;margin-bottom:20px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #D4EAE2">
-        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36">📋 My Enquiries</h2>
-        <button onclick="go('tutor-form')" style="padding:8px 16px;background:#E8601A;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">+ New Enquiry</button>
+<div class="pd-hero">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <h2>Welcome, <span id="pd-name">Parent</span>! 👋</h2>
+        <p>Track your child's tuition enquiries and progress</p>
       </div>
-      <div id="pd-enquiries">
-        <div style="text-align:center;padding:32px;color:#888;font-size:14px">Loading enquiries...</div>
-      </div>
-    </div>
-
-    <div style="background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:20px">
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#0B1E36;margin-bottom:14px">📞 Contact Support</h2>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <a href="https://wa.me/918540016415" target="_blank" style="display:flex;align-items:center;gap:12px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:12px;padding:14px;text-decoration:none;color:#1B5E20;font-weight:700;font-size:14px">
-          <span style="font-size:22px">💬</span> WhatsApp Support
-        </a>
-        <a href="mailto:mentorbridgemuz@gmail.com" style="display:flex;align-items:center;gap:12px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:12px;padding:14px;text-decoration:none;color:#1565C0;font-weight:700;font-size:14px">
-          <span style="font-size:22px">📧</span> mentorbridgemuz@gmail.com
-        </a>
-      </div>
-    </div>
-
-    <div style="text-align:center;margin-top:20px">
-      <button onclick="lLogout()" style="padding:10px 24px;background:#FEE;color:#C00;border:1px solid #FCC;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Logout</button>
+      <button onclick="lLogout()" style="padding:8px 18px;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">🚪 Logout</button>
     </div>
   </div>
 </div>
+
+<div class="container" style="padding:24px 20px 60px">
+  <div class="pd-stats">
+    <div class="pd-stat"><div class="icon">📋</div><h3 id="pd-total">0</h3><p>Total Enquiries</p></div>
+    <div class="pd-stat"><div class="icon">👩‍🏫</div><h3 id="pd-active">0</h3><p>Active Teachers</p></div>
+    <div class="pd-stat"><div class="icon">📅</div><h3 id="pd-demo">0</h3><p>Demos Scheduled</p></div>
+  </div>
+
+  <div class="pd-card">
+    <h2>📋 My Enquiries
+      <button onclick="go('tutor-form')" style="padding:7px 14px;background:#E8601A;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">+ New Enquiry</button>
+    </h2>
+    <div id="pd-enquiries">
+      <div style="text-align:center;padding:32px;color:#888;font-size:14px">Loading your enquiries...</div>
+    </div>
+  </div>
+
+  <div class="pd-card">
+    <h2>📞 Contact MentorBridge</h2>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a href="https://wa.me/918540016415" target="_blank" style="display:flex;align-items:center;gap:12px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:12px;padding:14px;text-decoration:none;color:#1B5E20;font-weight:700;font-size:14px">
+        <span style="font-size:22px">💬</span> WhatsApp — Quick Response
+      </a>
+      <a href="mailto:mentorbridgemuz@gmail.com" style="display:flex;align-items:center;gap:12px;background:#E3F2FD;border:1px solid #90CAF9;border-radius:12px;padding:14px;text-decoration:none;color:#1565C0;font-weight:700;font-size:14px">
+        <span style="font-size:22px">📧</span> mentorbridgemuz@gmail.com
+      </a>
+    </div>
+  </div>
+</div>
+</div>
+
 
 <footer>
   <div class="container">
@@ -2519,15 +2630,35 @@ window._lLogout = async function() {
 
 // ── TEACHER DASHBOARD ──
 function loadTeacherDash(data) {
-  document.getElementById('td-name').textContent = data.name || 'Teacher';
-  document.getElementById('td-welcome').textContent = (data.name || 'Teacher').split(' ')[0];
-  document.getElementById('td-status').textContent = data.status === 'approved' ? 'Verified' : 'Pending Verification';
-  document.getElementById('td-p-name').value = data.name || '';
-  document.getElementById('td-p-phone').value = data.phone || '';
-  document.getElementById('td-p-subjects').value = data.subjects || '';
-  document.getElementById('td-p-classes').value = data.classes || '';
-  document.getElementById('td-p-about').value = data.about || '';
-  if(data.schedule) { teacherSchedule = typeof data.schedule === 'string' ? JSON.parse(data.schedule) : data.schedule; }
+  var name = data.name || 'Teacher';
+  var initials = name.split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,2);
+  
+  var av = document.getElementById('td-av');
+  var tn = document.getElementById('td-name');
+  var ts = document.getElementById('td-status');
+  var tw = document.getElementById('td-welcome-name');
+  var tb = document.getElementById('td-badge');
+  
+  if(av) av.textContent = initials || 'T';
+  if(tn) tn.textContent = name;
+  if(tw) tw.textContent = name.split(' ')[0];
+  if(ts) ts.textContent = data.status === 'approved' ? '✅ Verified' : '⏳ Pending';
+  if(tb) {
+    tb.textContent = data.status === 'approved' ? '✅ Verified Teacher' : '⏳ Pending Verification';
+    if(data.status === 'approved') { tb.style.background = 'rgba(76,175,80,.2)'; tb.style.borderColor = 'rgba(76,175,80,.4)'; }
+  }
+  
+  var fields = {
+    'td-p-name': data.name, 'td-p-phone': data.phone,
+    'td-p-subjects': data.subjects, 'td-p-classes': data.classes,
+    'td-p-about': data.about, 'td-p-city': data.city,
+  };
+  Object.keys(fields).forEach(function(id) {
+    var el = document.getElementById(id);
+    if(el) el.value = fields[id] || '';
+  });
+  
+  if(data.schedule) teacherSchedule = typeof data.schedule === 'string' ? JSON.parse(data.schedule) : data.schedule;
   buildScheduleGrid();
 }
 
