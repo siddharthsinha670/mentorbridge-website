@@ -2702,11 +2702,9 @@ window.tdUploadPhoto = async function(input) {
   if(!file) return;
   
   var msgEl = document.getElementById('td-photo-msg');
-  var preview = document.getElementById('td-photo-preview');
   var img = document.getElementById('td-photo-img');
   var initials = document.getElementById('td-photo-initials');
   
-  // Validate size (2MB)
   if(file.size > 2 * 1024 * 1024) {
     msgEl.textContent = 'File too large! Max 2MB.';
     msgEl.style.color = '#C62828';
@@ -2715,38 +2713,47 @@ window.tdUploadPhoto = async function(input) {
   
   msgEl.textContent = 'Uploading...';
   msgEl.style.color = '#1D7A6B';
-  
-  // Convert to base64 and store
-  var reader = new FileReader();
-  reader.onload = async function(e) {
-    var base64 = e.target.result;
-    
+
+  try {
+    // Upload to Supabase Storage
+    var fileName = 'teacher-' + currentUser.id + '.' + file.name.split('.').pop();
+    var formData = new FormData();
+    formData.append('file', file);
+
+    var uploadRes = await fetch(SUPA_URL + '/storage/v1/object/teacher-photos/' + fileName, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + (_token || SUPA_KEY),
+        'x-upsert': 'true'
+      },
+      body: formData
+    });
+
+    if(!uploadRes.ok) throw new Error('Upload failed');
+
+    // Get public URL
+    var photoUrl = SUPA_URL + '/storage/v1/object/public/teacher-photos/' + fileName;
+
     // Show preview
-    if(img) {
-      img.src = base64;
-      img.style.display = 'block';
-      if(initials) initials.style.display = 'none';
-    }
-    
-    // Save to Supabase
-    if(currentUser) {
-      try {
-        await supaUpdate('teachers', { photo: base64 }, 'uid=eq.' + currentUser.id);
-        msgEl.textContent = '✅ Photo saved!';
-        msgEl.style.color = '#2E7D32';
-        // Update sidebar avatar
-        var av = document.getElementById('td-av');
-        if(av) {
-          av.innerHTML = '<img src="' + base64 + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
-        }
-      } catch(e) {
-        msgEl.textContent = '✅ Photo saved locally!';
-        msgEl.style.color = '#2E7D32';
-      }
-    }
-    setTimeout(function(){ msgEl.textContent = ''; }, 3000);
-  };
-  reader.readAsDataURL(file);
+    if(img) { img.src = photoUrl; img.style.display = 'block'; }
+    if(initials) initials.style.display = 'none';
+
+    // Save URL to database
+    await supaUpdate('teachers', { photo: photoUrl }, 'uid=eq.' + currentUser.id);
+
+    // Update sidebar avatar
+    var av = document.getElementById('td-av');
+    if(av) av.innerHTML = '<img src="' + photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+
+    msgEl.textContent = '✅ Photo uploaded!';
+    msgEl.style.color = '#2E7D32';
+  } catch(e) {
+    msgEl.textContent = 'Upload failed. Try again!';
+    msgEl.style.color = '#C62828';
+    console.error('Photo upload error:', e);
+  }
+  setTimeout(function(){ msgEl.textContent = ''; }, 3000);
 };
 window._tdSaveProfile = async function() {
   if(!currentUser) return;
