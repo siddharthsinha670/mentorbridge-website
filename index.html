@@ -1830,13 +1830,11 @@ function go(id){
   // Init student form
   if(id==='tutor-form'){
     setTimeout(function(){
-      if(typeof tfInit === 'function'){
-        tfInit();
-      } else {
-        console.error('tfInit not found!');
-      }
+      if(typeof tfInit === 'function') tfInit();
     }, 100);
   }
+  // Init dashboards
+  if(id==='teacher-dash') buildScheduleGrid();
 }
 
 // Handle browser back/forward
@@ -2453,12 +2451,12 @@ window.lLogout = function() {
   else { localStorage.removeItem('mb_role'); go('home'); }
 };
 
-window.tdShow = function(id) {
-  document.querySelectorAll('.td-page').forEach(function(p){ p.style.display='none'; });
-  document.querySelectorAll('.td-nav').forEach(function(n){ n.style.color='rgba(255,255,255,.6)'; n.style.borderLeftColor='transparent'; n.style.background='none'; });
-  var el = document.getElementById('td-' + id);
-  if(el) el.style.display = 'block';
-  if(event && event.currentTarget) { event.currentTarget.style.color='#fff'; event.currentTarget.style.borderLeftColor='#25A090'; event.currentTarget.style.background='rgba(37,160,144,.15)'; }
+window.tdShow = function(el, id) {
+  document.querySelectorAll('.td-page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.td-nav-item').forEach(function(n){ n.classList.remove('active'); });
+  var page = document.getElementById('td-' + id);
+  if(page) page.classList.add('active');
+  if(el) el.classList.add('active');
 };
 
 window.tdToggleSlot = function(el, key) {
@@ -2660,6 +2658,13 @@ function loadTeacherDash(data) {
   
   if(data.schedule) teacherSchedule = typeof data.schedule === 'string' ? JSON.parse(data.schedule) : data.schedule;
   buildScheduleGrid();
+  // Show overview tab by default
+  document.querySelectorAll('.td-page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.td-nav-item').forEach(function(n){ n.classList.remove('active'); });
+  var ov = document.getElementById('td-overview');
+  if(ov) ov.classList.add('active');
+  var firstNav = document.querySelector('.td-nav-item');
+  if(firstNav) firstNav.classList.add('active');
 }
 
 window._tdSaveProfile = async function() {
