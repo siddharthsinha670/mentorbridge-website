@@ -1850,8 +1850,8 @@ function go(id){
       if(typeof tfInit === 'function') tfInit();
     }, 100);
   }
-  // Init dashboards
   if(id==='teacher-dash') buildScheduleGrid();
+  if(id==='teachers') setTimeout(function(){ if(typeof loadTeacherCards==='function') loadTeacherCards(); }, 200);
 }
 
 // Handle browser back/forward
@@ -2033,16 +2033,7 @@ async function loadTeacherCards() {
   }
 }
 
-// Load teacher cards when teachers page opens
-var _tcLoaded = false;
-var _origGoBase = window.go;
-window.go = function(id) {
-  _origGoBase(id);
-  if(id === 'teachers' && !_tcLoaded) {
-    _tcLoaded = false; // always reload
-    setTimeout(loadTeacherCards, 200);
-  }
-};
+// Teacher cards loaded via go() function directly
 
 // ── BLOG FUNCTIONS ──
 function showArticle(id) {
