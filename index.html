@@ -1975,19 +1975,74 @@ window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('scrolled',window.scrollY>20);
 });
 // Teachers
-const TD=[
-  {i:'PK',n:'Priya Kumari',q:'B.Sc. Maths, B.Ed',e:'5 Yrs',s:'Maths, Science',c:'Class 6–10',b:'CBSE / BSEB',m:'Hindi & English',r:'4.9',bg:'#FFF2EA',col:'#E8601A',bc:'#FFD4B8'},
-  {i:'RS',n:'Rahul Sharma',q:'M.A. English, B.Ed',e:'7 Yrs',s:'English, Social Studies',c:'Class 1–8',b:'CBSE / ICSE',m:'English',r:'4.8',bg:'#E6F4F1',col:'#1D7A6B',bc:'#B2E0D8'},
-  {i:'SK',n:'Suman Kumari',q:'B.A. Hindi, B.Ed',e:'4 Yrs',s:'Hindi, EVS, GK',c:'Class 1–5',b:'BSEB / CBSE',m:'Hindi',r:'5.0',bg:'#FFF8E6',col:'#C9992A',bc:'#FAE0A0'},
-  {i:'MV',n:'Mohit Verma',q:'B.Sc. Physics, B.Ed',e:'6 Yrs',s:'Physics, Maths',c:'Class 8–10',b:'CBSE / BSEB',m:'Hindi & English',r:'4.9',bg:'#F3E8FF',col:'#7B2D8B',bc:'#DCBAFF'},
-  {i:'NJ',n:'Neha Jha',q:'B.Com, B.Ed',e:'3 Yrs',s:'Social Studies, Economics',c:'Class 6–10',b:'CBSE',m:'English',r:'4.7',bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},
-  {i:'AK',n:'Arun Kumar',q:'M.Sc. Chemistry, B.Ed',e:'8 Yrs',s:'Chemistry, Science',c:'Class 7–10',b:'CBSE / BSEB',m:'Hindi & English',r:'4.8',bg:'#FFF2EA',col:'#E8601A',bc:'#FFD4B8'},
-  {i:'SP',n:'Smita Pandey',q:'B.A. (Hons) English',e:'2 Yrs',s:'English, Spoken English',c:'Class 1–8',b:'All Boards',m:'English',r:'4.9',bg:'#E6F4F1',col:'#1D7A6B',bc:'#B2E0D8'},
-  {i:'RK',n:'Ravi Kumar',q:'B.Tech CSE',e:'3 Yrs',s:'Computer Science, Coding',c:'Class 5–10',b:'CBSE / ICSE',m:'English & Hindi',r:'4.8',bg:'#FFF8E6',col:'#C9992A',bc:'#FAE0A0'},
-  {i:'DY',n:'Divya Yadav',q:'B.Sc. Biology, B.Ed',e:'5 Yrs',s:'Biology, Science, EVS',c:'Class 1–10',b:'CBSE / BSEB',m:'Hindi & English',r:'5.0',bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},
-];
-const g=document.getElementById('all-tc');
-if(g)g.innerHTML=TD.map(t=>`<div class="tc-card"><div class="tc-top"><div class="tc-ava-wrap"><div class="tc-ava" style="background:${t.bg};color:${t.col};border-color:${t.bc}">${t.i}</div><div class="tc-vbadge">✓ Verified</div></div><div class="tc-name">${t.n}</div><div class="tc-qual">${t.q} · ${t.e} Exp</div><div class="tc-stars">★ ${t.r}</div></div><div class="tc-bot"><div class="tc-row"><span class="tc-label">Subjects Required</span><span class="tc-val">${t.s}</span></div><div class="tc-row"><span class="tc-label">Classes</span><span class="tc-val">${t.c}</span></div><div class="tc-row"><span class="tc-label">Board</span><span class="tc-val">${t.b}</span></div><div class="tc-row"><span class="tc-label">Medium</span><span class="tc-val">${t.m}</span></div><button class="btn btn-orange btn-sm" onclick="go('tutor-form')">Book Free Demo</button></div></div>`).join('');
+// ── TEACHER CARDS - Load from Supabase ──
+async function loadTeacherCards() {
+  var g = document.getElementById('all-tc');
+  if(!g) return;
+  g.innerHTML = '<div style="text-align:center;padding:40px;color:#888">Loading verified teachers...</div>';
+  
+  try {
+    var data = await supaGet('teachers', 'status=eq.approved&order=created_at.asc');
+    
+    if(!data || data.length === 0) {
+      g.innerHTML = '<div style="text-align:center;padding:60px;color:#888"><div style="font-size:48px;margin-bottom:16px">👩‍🏫</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon — we are adding verified teachers in Muzaffarpur!</p></div>';
+      return;
+    }
+
+    var colors = [
+      {bg:'#FFF2EA',col:'#E8601A',bc:'#FFD4B8'},
+      {bg:'#E6F4F1',col:'#1D7A6B',bc:'#B2E0D8'},
+      {bg:'#FFF8E6',col:'#C9992A',bc:'#FAE0A0'},
+      {bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},
+      {bg:'#EDE7F6',col:'#5E35B1',bc:'#CE93D8'},
+    ];
+
+    g.innerHTML = data.map(function(t, i) {
+      var c = colors[i % colors.length];
+      var initials = (t.name || 'T').split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,2);
+      var avatar = t.photo 
+        ? '<img src="' + t.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
+        : initials;
+      var avatarStyle = t.photo ? 'overflow:hidden' : 'background:' + c.bg + ';color:' + c.col + ';border-color:' + c.bc;
+      
+      return '<div class="tc-card">' +
+        '<div class="tc-top">' +
+          '<div class="tc-ava-wrap">' +
+            '<div class="tc-ava" style="' + avatarStyle + '">' + avatar + '</div>' +
+            '<div class="tc-vbadge">✓ Verified</div>' +
+          '</div>' +
+          '<div class="tc-name">' + (t.name || 'Teacher') + '</div>' +
+          '<div class="tc-qual">' + (t.qualification || 'Graduate') + ' · ' + (t.experience || 'Experienced') + '</div>' +
+          '<div class="tc-stars">★ 5.0</div>' +
+        '</div>' +
+        '<div class="tc-bot">' +
+          '<div class="tc-row"><span class="tc-label">Subjects</span><span class="tc-val">' + (t.subjects || '—') + '</span></div>' +
+          '<div class="tc-row"><span class="tc-label">Classes</span><span class="tc-val">' + (t.classes || '—') + '</span></div>' +
+          '<div class="tc-row"><span class="tc-label">Board</span><span class="tc-val">' + (t.board || 'All Boards') + '</span></div>' +
+          '<div class="tc-row"><span class="tc-label">Mode</span><span class="tc-val">' + (t.mode || 'Home Tuition') + '</span></div>' +
+        '</div>' +
+        '<div class="tc-footer">' +
+          '<button class="btn btn-orange btn-sm" onclick="go('tutor-form')">Book Free Demo</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+  } catch(e) {
+    g.innerHTML = '<div style="text-align:center;padding:40px;color:#888">Could not load teachers. Please try again.</div>';
+    console.error('Teacher load error:', e);
+  }
+}
+
+// Load teacher cards when teachers page opens
+var _tcLoaded = false;
+var _origGoBase = window.go;
+window.go = function(id) {
+  _origGoBase(id);
+  if(id === 'teachers' && !_tcLoaded) {
+    _tcLoaded = false; // always reload
+    setTimeout(loadTeacherCards, 200);
+  }
+};
 
 // ── BLOG FUNCTIONS ──
 function showArticle(id) {
