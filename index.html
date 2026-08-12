@@ -1985,7 +1985,7 @@ async function loadTeacherCards() {
     var data = await supaGet('teachers', 'status=eq.approved&order=created_at.asc');
     
     if(!data || data.length === 0) {
-      g.innerHTML = '<div style="text-align:center;padding:60px;color:#888"><div style="font-size:48px;margin-bottom:16px">👩‍🏫</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon — we are adding verified teachers in Muzaffarpur!</p></div>';
+      g.innerHTML = '<div style="text-align:center;padding:60px;color:#888"><div style="font-size:48px;margin-bottom:16px">teacher</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon - we are adding verified teachers in Muzaffarpur!</p></div>';
       return;
     }
 
@@ -2009,15 +2009,15 @@ async function loadTeacherCards() {
         '<div class="tc-top">' +
           '<div class="tc-ava-wrap">' +
             '<div class="tc-ava" style="' + avatarStyle + '">' + avatar + '</div>' +
-            '<div class="tc-vbadge">✓ Verified</div>' +
+            '<div class="tc-vbadge">V Verified</div>' +
           '</div>' +
           '<div class="tc-name">' + (t.name || 'Teacher') + '</div>' +
           '<div class="tc-qual">' + (t.qualification || 'Graduate') + ' · ' + (t.experience || 'Experienced') + '</div>' +
-          '<div class="tc-stars">★ 5.0</div>' +
+          '<div class="tc-stars">* 5.0</div>' +
         '</div>' +
         '<div class="tc-bot">' +
-          '<div class="tc-row"><span class="tc-label">Subjects</span><span class="tc-val">' + (t.subjects || '—') + '</span></div>' +
-          '<div class="tc-row"><span class="tc-label">Classes</span><span class="tc-val">' + (t.classes || '—') + '</span></div>' +
+          '<div class="tc-row"><span class="tc-label">Subjects</span><span class="tc-val">' + (t.subjects || '-') + '</span></div>' +
+          '<div class="tc-row"><span class="tc-label">Classes</span><span class="tc-val">' + (t.classes || '-') + '</span></div>' +
           '<div class="tc-row"><span class="tc-label">Board</span><span class="tc-val">' + (t.board || 'All Boards') + '</span></div>' +
           '<div class="tc-row"><span class="tc-label">Mode</span><span class="tc-val">' + (t.mode || 'Home Tuition') + '</span></div>' +
         '</div>' +
@@ -2703,9 +2703,9 @@ function loadTeacherDash(data) {
   if(av) av.textContent = initials || 'T';
   if(tn) tn.textContent = name;
   if(tw) tw.textContent = name.split(' ')[0];
-  if(ts) ts.textContent = data.status === 'approved' ? '✅ Verified' : '⏳ Pending';
+  if(ts) ts.textContent = data.status === 'approved' ? '[OK] Verified' : '[...] Pending';
   if(tb) {
-    tb.textContent = data.status === 'approved' ? '✅ Verified Teacher' : '⏳ Pending Verification';
+    tb.textContent = data.status === 'approved' ? '[OK] Verified Teacher' : '[...] Pending Verification';
     if(data.status === 'approved') { tb.style.background = 'rgba(76,175,80,.2)'; tb.style.borderColor = 'rgba(76,175,80,.4)'; }
   }
   
@@ -2792,7 +2792,7 @@ window.tdUploadPhoto = async function(input) {
     var av = document.getElementById('td-av');
     if(av) av.innerHTML = '<img src="' + photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
 
-    msgEl.textContent = '✅ Photo uploaded!';
+    msgEl.textContent = '[OK] Photo uploaded!';
     msgEl.style.color = '#2E7D32';
   } catch(e) {
     msgEl.textContent = 'Upload failed. Try again!';
