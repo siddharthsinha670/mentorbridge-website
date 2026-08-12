@@ -643,6 +643,13 @@ function go(id){
   if(id==='blog'){if(typeof showBlogList==='function')showBlogList();}
 }
 
+
+// Security: Sanitize user data before inserting into DOM
+function sanitize(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str || ''));
+  return div.innerHTML;
+}
 // toggleMenu stub
 function toggleMenu(){
   var m=document.getElementById('mobileMenu');
@@ -2034,7 +2041,7 @@ async function loadTeacherCards() {
 
     g.innerHTML = data.map(function(t, i) {
       var c = colors[i % colors.length];
-      var initials = (t.name || 'T').split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,2);
+      var initials = sanitize((t.name || 'T').split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,2));
       var avatar = t.photo 
         ? '<img src="' + t.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
         : initials;
@@ -2764,7 +2771,13 @@ function loadTeacherDash(data) {
     var av = document.getElementById('td-av');
     if(img) { img.src = data.photo; img.style.display = 'block'; }
     if(ini) ini.style.display = 'none';
-    if(av) av.innerHTML = '<img src="' + data.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    if(av && data.photo && data.photo.startsWith('http')) {
+      var loadAvImg = document.createElement('img');
+      loadAvImg.src = data.photo;
+      loadAvImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%';
+      av.innerHTML = '';
+      av.appendChild(loadAvImg);
+    }
   }
   
   // Show overview tab by default
@@ -2817,7 +2830,13 @@ window.tdUploadPhoto = async function(input) {
     var photoUrl = SUPA_URL + '/storage/v1/object/public/teacher-photos/' + fileName;
 
     // Show preview
-    if(img) { img.src = photoUrl; img.style.display = 'block'; }
+    if(img) { 
+      // Sanitize - only allow Supabase storage URLs
+      if(photoUrl && photoUrl.startsWith(SUPA_URL)) {
+        img.src = photoUrl; 
+        img.style.display = 'block'; 
+      }
+    }
     if(initials) initials.style.display = 'none';
 
     // Save URL to database
@@ -2825,7 +2844,13 @@ window.tdUploadPhoto = async function(input) {
 
     // Update sidebar avatar
     var av = document.getElementById('td-av');
-    if(av) av.innerHTML = '<img src="' + photoUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    if(av) {
+      var avImg = document.createElement('img');
+      avImg.src = photoUrl;
+      avImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%';
+      av.innerHTML = '';
+      av.appendChild(avImg);
+    }
 
     msgEl.textContent = '[OK] Photo uploaded!';
     msgEl.style.color = '#2E7D32';
