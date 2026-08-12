@@ -616,6 +616,41 @@ footer{background:#060D18;padding:64px 0 28px}
   .subj-chip:hover{border-color:var(--teal);background:var(--teal-bg)}
   .subj-chip.checked{border-color:var(--teal);background:var(--teal-bg);font-weight:700}
 </style>
+
+<script>
+// Early go() stub - full version loads later
+function go(id){
+  // Remove active from all pages
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  var p = document.getElementById('p-'+id);
+  if(p){
+    p.classList.add('active');
+    window.scrollTo({top:0,behavior:'instant'});
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+  }
+  // Nav active
+  document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active');});
+  var m={home:'n-home',about:'n-about',services:'n-services',teachers:'n-teachers',blog:'n-blog',contact:'n-contact',login:'n-login'};
+  if(m[id]){var e=document.getElementById(m[id]);if(e)e.classList.add('active');}
+  // Hash
+  if(id==='home'){history.pushState(null,null,window.location.pathname);}
+  else{history.pushState(null,null,'#'+id);}
+  // Special inits
+  if(id==='tutor-form'){setTimeout(function(){if(typeof tfInit==='function')tfInit();},100);}
+  if(id==='teacher-dash'){if(typeof buildScheduleGrid==='function')buildScheduleGrid();}
+  if(id==='teachers'){setTimeout(function(){if(typeof loadTeacherCards==='function')loadTeacherCards();},200);}
+  if(id==='blog'){if(typeof showBlogList==='function')showBlogList();}
+}
+
+// toggleMenu stub
+function toggleMenu(){
+  var m=document.getElementById('mobileMenu');
+  var h=document.getElementById('hamburger');
+  if(m){m.classList.toggle('open');}
+  if(h){h.classList.toggle('open');}
+}
+</script>
 </head>
 <body>
 
