@@ -734,8 +734,8 @@ function sanitize(str) {
 }
 // toggleMenu stub
 function toggleMenu(){
-  var m=document.getElementById('mobileMenu');
-  var h=document.getElementById('hamburger');
+  var m=document.getElementById('mob');
+  var h=document.querySelector('.hamburger');
   if(m){m.classList.toggle('open');}
   if(h){h.classList.toggle('open');}
 }
@@ -3032,24 +3032,7 @@ window.addEventListener('scroll', function() {
   }
 }, {passive: true});
 
-// Intersection Observer for scroll animations
-var observer = new IntersectionObserver(function(entries) {
-  entries.forEach(function(entry) {
-    if(entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1 });
-
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.sec-title, .tc-card, .blog-card, .stat-card, .faq-item').forEach(function(el) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity .4s ease, transform .4s ease';
-    observer.observe(el);
-  });
-});
+// Scroll animations handled by existing CSS reveal
 </script>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
