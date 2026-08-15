@@ -603,7 +603,12 @@ function renderStudents() {
       <td style="white-space:nowrap;font-size:12px">${date}</td>
       <td><strong>${getVal(r,'Student Name','student name','name')}</strong></td>
       <td>${getVal(r,'Parent / Guardian Name','Parent Name','parent name')}</td>
-      <td><a href="https://wa.me/91${phone}" target="_blank" style="color:var(--teal);font-weight:700">${getVal(r,'WhatsApp Number','phone')}</a></td>
+      <td>
+        <a href="https://wa.me/91${phone}" target="_blank" style="color:var(--teal);font-weight:700">${getVal(r,'WhatsApp Number','phone')}</a>
+        <a href="https://wa.me/91${phone}?text=Hello%20ji!%20Main%20MentorBridge%20se%20bol%20raha%20hoon.%20Aapki%20tutor%20enquiry%20ke%20baare%20mein%20baat%20karni%20thi." target="_blank" style="display:inline-flex;align-items:center;gap:3px;margin-left:6px;background:#25D366;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;vertical-align:middle">
+          💬 Chat
+        </a>
+      </td>
       <td><strong style="color:var(--orange)">${cls !== '—' && !isNaN(cls) ? 'Class '+cls : cls}</strong></td>
       <td><strong style="color:var(--teal)">${board}</strong></td>
       <td>${getVal(r,'Subjects Required','Subjects','subjects')}</td>
@@ -703,7 +708,7 @@ async function loadPortalTeachers() {
         '<td><span class="id-badge">T' + String(i+1).padStart(3,'0') + '</span></td>' +
         '<td><strong>' + (t.name||'—') + '</strong></td>' +
         '<td>' + (t.email||'—') + '</td>' +
-        '<td><a href="https://wa.me/91' + (t.phone||'').replace(/[^0-9]/g,'') + '" target="_blank" style="color:var(--teal)">' + (t.phone||'—') + '</a></td>' +
+        '<td><a href="https://wa.me/91' + (t.phone||'').replace(/[^0-9]/g,'') + '" target="_blank" style="color:var(--teal)">' + (t.phone||'—') + '</a> <a href="https://wa.me/91' + (t.phone||'').replace(/[^0-9]/g,'') + '?text=Hello!%20MentorBridge%20se%20bol%20raha%20hoon." target="_blank" style="background:#25D366;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none">💬 WA</a></td>' +
         '<td>' + (t.subjects||'—') + '</td>' +
         '<td>' + (t.classes||'—') + '</td>' +
         '<td><span class="status-badge ' + (t.status==='approved'?'status-active':'status-new') + '">' + (t.status||'pending') + '</span></td>' +
