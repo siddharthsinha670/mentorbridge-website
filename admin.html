@@ -182,6 +182,8 @@ tr:hover td{background:rgba(29,122,107,.03)}
       <div class="nav-section">Portal Users</div>
       <div class="nav-item" onclick="showSection('portal-teachers')"><span class="ni">👩‍🏫</span> Portal Teachers</div>
       <div class="nav-item" onclick="showSection('portal-parents')"><span class="ni">👨‍👩‍👧</span> Portal Parents</div>
+      <div class="nav-section">Settings</div>
+      <div class="nav-item" onclick="showSection('wa-templates')"><span class="ni">💬</span> WA Templates</div>
       <div class="nav-section">Quick Links</div>
       <div class="nav-item" onclick="window.open('https://mentorbridge.info','_blank')"><span class="ni">🌐</span> View Website</div>
       <div class="nav-item" onclick="window.open('https://docs.google.com/spreadsheets/d/1bik2jK6ezneD9KwKWUHMHaQObMt0JVaxaDrJ7DP4Qhs','_blank')"><span class="ni">📋</span> Student Sheet</div>
@@ -333,6 +335,118 @@ tr:hover td{background:rgba(29,122,107,.03)}
         </div>
       </div>
 
+
+      <!-- WA TEMPLATES -->
+      <div id="sec-wa-templates" style="display:none">
+        <div class="table-card">
+          <div class="table-head">
+            <h2>💬 WhatsApp Message Templates</h2>
+            <button class="export-btn" onclick="saveWATemplates()" style="background:var(--teal)">💾 Save All</button>
+          </div>
+          <div style="padding:0 24px 24px">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:20px">
+              Customize your WhatsApp quick reply messages. Use <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px">{name}</code> for parent name, <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px">{student}</code> for student name.
+            </p>
+
+            <div style="display:grid;gap:20px">
+              <!-- Template 1 -->
+              <div style="background:#F8FFFE;border:1.5px solid var(--border);border-radius:12px;padding:20px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                  <div>
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy)">First Contact — Student Enquiry</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:3px">Sent when contacting a new enquiry</div>
+                  </div>
+                  <button onclick="testWA('wa-t1')" style="padding:6px 14px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">Test 💬</button>
+                </div>
+                <textarea id="wa-t1" rows="4" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:Nunito,sans-serif;resize:vertical">Hello {name} ji! 🙏
+
+Main MentorBridge se Siddharth bol raha hoon. Aapne hamare platform pe home tutor ke liye enquiry ki thi.
+
+Hum aapke bacche ke liye ek verified aur qualified teacher dhundh rahe hain. Kya aap 5 minutes baat kar sakte hain?
+
+Thank you! 😊</textarea>
+              </div>
+
+              <!-- Template 2 -->
+              <div style="background:#F8FFFE;border:1.5px solid var(--border);border-radius:12px;padding:20px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                  <div>
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy)">Demo Scheduled Confirmation</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:3px">After fixing demo class date/time</div>
+                  </div>
+                  <button onclick="testWA('wa-t2')" style="padding:6px 14px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">Test 💬</button>
+                </div>
+                <textarea id="wa-t2" rows="4" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:Nunito,sans-serif;resize:vertical">Hello {name} ji! 🙏
+
+Aapke bacche {student} ke liye demo class confirm ho gayi hai!
+
+📅 Date: [DATE]
+⏰ Time: [TIME]
+👩‍🏫 Teacher: [TEACHER NAME]
+
+Demo class bilkul FREE hai. Teacher ghar aayenge aur {student} ko padhayenge.
+
+Koi sawaal ho toh batayein! 😊</textarea>
+              </div>
+
+              <!-- Template 3 -->
+              <div style="background:#F8FFFE;border:1.5px solid var(--border);border-radius:12px;padding:20px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                  <div>
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy)">Follow Up — No Response</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:3px">When parent hasn't responded in 2 days</div>
+                  </div>
+                  <button onclick="testWA('wa-t3')" style="padding:6px 14px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">Test 💬</button>
+                </div>
+                <textarea id="wa-t3" rows="3" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:Nunito,sans-serif;resize:vertical">Hello {name} ji! 🙏
+
+MentorBridge se bol raha hoon. Aapne home tutor ke liye enquiry ki thi.
+
+Kya aap abhi bhi tutor dhundh rahe hain? Hum aapki madad kar sakte hain! 😊</textarea>
+              </div>
+
+              <!-- Template 4 -->
+              <div style="background:#F8FFFE;border:1.5px solid var(--border);border-radius:12px;padding:20px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                  <div>
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy)">Teacher Welcome Message</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:3px">After approving a new teacher</div>
+                  </div>
+                  <button onclick="testWA('wa-t4')" style="padding:6px 14px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">Test 💬</button>
+                </div>
+                <textarea id="wa-t4" rows="4" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:Nunito,sans-serif;resize:vertical">Hello {name} ji! 🙏
+
+Congratulations! Aap MentorBridge ke verified teacher ban gaye hain! ✅
+
+Aapka profile ab website pe live hai. Jab bhi koi student aapke subjects match karega, hum aapko contact karenge.
+
+Login karke apna profile complete karein: mentorbridge.info/#login
+
+Dhanyawad! 🙏</textarea>
+              </div>
+
+              <!-- Template 5 -->
+              <div style="background:#F8FFFE;border:1.5px solid var(--border);border-radius:12px;padding:20px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                  <div>
+                    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy)">Fee Reminder</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:3px">Monthly fee reminder to parents</div>
+                  </div>
+                  <button onclick="testWA('wa-t5')" style="padding:6px 14px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">Test 💬</button>
+                </div>
+                <textarea id="wa-t5" rows="3" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:Nunito,sans-serif;resize:vertical">Hello {name} ji! 🙏
+
+Is mahine ki tuition fee abhi tak received nahi hui. Kripya jaldi payment karein taaki sessions continue ho sakein.
+
+Dhanyawad! 🙏</textarea>
+              </div>
+            </div>
+
+            <div id="wa-save-msg" style="display:none;margin-top:16px;padding:12px;border-radius:10px;font-size:14px;font-weight:600"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- STUDENTS -->
       <div id="sec-students" style="display:none">
 
@@ -438,7 +552,7 @@ function logout() {
 
 // ── NAVIGATION ──
 function showSection(id) {
-  ['dashboard','students','teachers','blog','portal-teachers','portal-parents'].forEach(s => {
+  ['dashboard','students','teachers','blog','portal-teachers','portal-parents','wa-templates'].forEach(s => {
     var el = document.getElementById('sec-'+s);
     if(el) el.style.display = s===id ? 'block' : 'none';
   });
@@ -446,7 +560,7 @@ function showSection(id) {
   if(id === 'portal-teachers') loadPortalTeachers();
   if(id === 'portal-parents') loadPortalParents();
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const titles = {dashboard:'📊 Dashboard', students:'🎓 Student Enquiries', teachers:'👩‍🏫 Teacher Applications', blog:'📝 Blog Management', 'portal-teachers':'👩‍🏫 Registered Teachers (Portal)', 'portal-parents':'👨‍👩‍👧 Registered Parents (Portal)'};
+  const titles = {dashboard:'📊 Dashboard', students:'🎓 Student Enquiries', teachers:'👩‍🏫 Teacher Applications', blog:'📝 Blog Management', 'portal-teachers':'👩‍🏫 Registered Teachers (Portal)', 'portal-parents':'👨‍👩‍👧 Registered Parents (Portal)', 'wa-templates':'💬 WA Templates'};
   document.getElementById('pageTitle').textContent = titles[id] || 'Dashboard';
   event.currentTarget && event.currentTarget.classList.add('active');
 }
@@ -605,9 +719,9 @@ function renderStudents() {
       <td>${getVal(r,'Parent / Guardian Name','Parent Name','parent name')}</td>
       <td>
         <a href="https://wa.me/91${phone}" target="_blank" style="color:var(--teal);font-weight:700">${getVal(r,'WhatsApp Number','phone')}</a>
-        <a href="https://wa.me/91${phone}?text=Hello%20ji!%20Main%20MentorBridge%20se%20bol%20raha%20hoon.%20Aapki%20tutor%20enquiry%20ke%20baare%20mein%20baat%20karni%20thi." target="_blank" style="display:inline-flex;align-items:center;gap:3px;margin-left:6px;background:#25D366;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;vertical-align:middle">
+        <button onclick="(function(){var t=getWATemplate('wa-t1','${getVal(r,'Parent / Guardian Name','parent name')}','${getVal(r,'Student Name','student name')}');window.open('https://wa.me/91${phone}?text='+encodeURIComponent(t),'_blank');})()" style="display:inline-flex;align-items:center;gap:3px;margin-left:6px;background:#25D366;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;border:none;cursor:pointer;vertical-align:middle">
           💬 Chat
-        </a>
+        </button>
       </td>
       <td><strong style="color:var(--orange)">${cls !== '—' && !isNaN(cls) ? 'Class '+cls : cls}</strong></td>
       <td><strong style="color:var(--teal)">${board}</strong></td>
@@ -855,6 +969,57 @@ function updateTime() {
 }
 updateTime();
 setInterval(updateTime, 60000);
+
+
+// ── WA TEMPLATES ──
+var WA_TEMPLATES_KEY = 'mb_wa_templates';
+
+function loadWATemplates() {
+  var saved = localStorage.getItem(WA_TEMPLATES_KEY);
+  if(!saved) return;
+  try {
+    var templates = JSON.parse(saved);
+    if(templates.t1) document.getElementById('wa-t1').value = templates.t1;
+    if(templates.t2) document.getElementById('wa-t2').value = templates.t2;
+    if(templates.t3) document.getElementById('wa-t3').value = templates.t3;
+    if(templates.t4) document.getElementById('wa-t4').value = templates.t4;
+    if(templates.t5) document.getElementById('wa-t5').value = templates.t5;
+  } catch(e) {}
+}
+
+function saveWATemplates() {
+  var templates = {
+    t1: document.getElementById('wa-t1').value,
+    t2: document.getElementById('wa-t2').value,
+    t3: document.getElementById('wa-t3').value,
+    t4: document.getElementById('wa-t4').value,
+    t5: document.getElementById('wa-t5').value
+  };
+  localStorage.setItem(WA_TEMPLATES_KEY, JSON.stringify(templates));
+  var msg = document.getElementById('wa-save-msg');
+  msg.textContent = '[OK] Templates saved successfully!';
+  msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:16px';
+  setTimeout(function(){ msg.style.display = 'none'; }, 3000);
+}
+
+function testWA(id) {
+  var text = document.getElementById(id).value;
+  text = text.replace('{name}', 'Test Parent').replace('{student}', 'Test Student');
+  window.open('https://wa.me/918540016415?text=' + encodeURIComponent(text), '_blank');
+}
+
+function getWATemplate(templateId, name, student) {
+  var saved = localStorage.getItem(WA_TEMPLATES_KEY);
+  var templates = saved ? JSON.parse(saved) : {};
+  var el = document.getElementById(templateId);
+  var text = (templates[templateId.replace('wa-','')] || (el ? el.value : ''));
+  return text.replace(/{name}/g, name || '').replace(/{student}/g, student || '');
+}
+
+// Load templates on page load
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(loadWATemplates, 500);
+});
 
 // ── FILTERS ──
 function filterStudents() {
