@@ -842,6 +842,67 @@ function deleteBlog(idx) {
 
 // Blog table init handled in showSection directly
 
+
+// Admin time display
+function updateTime() {
+  var el = document.getElementById('admin-time');
+  if(el) el.textContent = new Date().toLocaleString('en-IN', {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+updateTime();
+setInterval(updateTime, 60000);
+
+// ── FILTERS ──
+function filterStudents() {
+  var search = (document.getElementById('stu-search').value || '').toLowerCase();
+  var status = document.getElementById('stu-status-filter').value;
+  var cls = document.getElementById('stu-class-filter').value;
+  
+  var rows = document.querySelectorAll('#students-tbody tr');
+  var count = 0;
+  rows.forEach(function(row) {
+    var text = row.textContent.toLowerCase();
+    var rowStatus = row.getAttribute('data-status') || '';
+    var rowClass = row.getAttribute('data-class') || '';
+    
+    var matchSearch = !search || text.includes(search);
+    var matchStatus = !status || rowStatus === status;
+    var matchClass = !cls || rowClass === cls;
+    
+    if(matchSearch && matchStatus && matchClass) {
+      row.style.display = '';
+      count++;
+    } else {
+      row.style.display = 'none';
+    }
+  });
+  var countEl = document.getElementById('stu-count');
+  if(countEl) countEl.textContent = count + ' records';
+}
+
+function filterTeachers() {
+  var search = (document.getElementById('tea-search').value || '').toLowerCase();
+  var status = document.getElementById('tea-status-filter').value;
+  
+  var rows = document.querySelectorAll('#teachers-tbody tr');
+  var count = 0;
+  rows.forEach(function(row) {
+    var text = row.textContent.toLowerCase();
+    var rowStatus = row.getAttribute('data-status') || '';
+    
+    var matchSearch = !search || text.includes(search);
+    var matchStatus = !status || rowStatus === status;
+    
+    if(matchSearch && matchStatus) {
+      row.style.display = '';
+      count++;
+    } else {
+      row.style.display = 'none';
+    }
+  });
+  var countEl = document.getElementById('tea-count');
+  if(countEl) countEl.textContent = count + ' records';
+}
+
 // ── EDIT MODAL ──
 let editType = '';
 let editIdx = 0;
