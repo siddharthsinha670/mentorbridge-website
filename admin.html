@@ -728,10 +728,10 @@ function renderStudents() {
       <td>${getVal(r,'Subjects Required','Subjects','subjects')}</td>
       <td>${getVal(r,'Teaching Mode','Mode','mode')}</td>
       <td>${getVal(r,'Home Address / Area','Address','address')}</td>
-      <td><select class="status-select" onchange="updateStatus('students','${id}',this.value,'srow-${idx}')">
-        <option ${status==='New Enquiry'?'selected':''}>New Enquiry</option>
-        <option ${status==='Contacted'?'selected':''}>Contacted</option>
-        <option ${status==='Demo Scheduled'?'selected':''}>Demo Scheduled</option>
+      <td><select class="status-select" onchange="updateStatus('students','${id}',this.value,'srow-${idx}')" style="padding:5px 8px;border-radius:8px;border:1.5px solid var(--border);font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg)">
+        <option ${status==='New Enquiry'?'selected':''} style="color:#E65100">New Enquiry</option>
+        <option ${status==='Contacted'?'selected':''} style="color:#C9992A">Contacted</option>
+        <option ${status==='Demo Scheduled'?'selected':''} style="color:#1565C0">Demo Scheduled</option>
         <option ${status==='Admitted'?'selected':''}>Admitted</option>
         <option ${status==='Not Interested'?'selected':''}>Not Interested</option>
       </select></td>
@@ -1195,8 +1195,34 @@ function saveEdit() {
   showToast('✅ Changes saved successfully!');
 }
 
-function updateStatus(type, id, status, rowId) {
-  showToast('✅ Status updated to: ' + status);
+async function updateStatus(type, id, status, rowId) {
+  var api = type === 'students' ? APIS.students : APIS.teachers;
+  var idCol = type === 'students' ? 'Student ID' : 'Teacher ID';
+  
+  try {
+    // Update in SheetDB
+    var res = await fetch(api + '/id/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ data: { 'Status': status } })
+    });
+    
+    // Update row color based on status
+    var row = document.getElementById(rowId);
+    if(row) {
+      row.style.transition = 'background .3s';
+      if(status === 'Admitted') row.style.background = '#F0FFF4';
+      else if(status === 'Demo Scheduled') row.style.background = '#EFF6FF';
+      else if(status === 'Contacted') row.style.background = '#FFFBEB';
+      else if(status === 'Not Interested') row.style.background = '#FFF5F5';
+      else row.style.background = '';
+    }
+    
+    showToast('[OK] Status updated: ' + status);
+  } catch(e) {
+    showToast('Error updating status!');
+    console.error(e);
+  }
 }
 
 function showToast(msg) {
