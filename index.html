@@ -366,7 +366,7 @@ input,select,textarea{font-family:'Nunito',sans-serif;outline:none}
 .tc-top{padding:28px 22px 20px;text-align:center;border-bottom:1px solid var(--border);position:relative}
 .tc-top::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--orange),var(--teal2))}
 .tc-ava-wrap{position:relative;width:88px;height:88px;margin:0 auto 14px}
-.tc-ava{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:30px;font-weight:800;border:3px solid var(--border);transition:transform .2s}
+.tc-ava{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:30px;font-weight:800;border:3px solid var(--border);transition:transform .2s;overflow:hidden}
 .tc-card:hover .tc-ava{transform:scale(1.06)}
 .tc-vbadge{position:absolute;bottom:2px;right:2px;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-size:9px;font-weight:800;padding:3px 8px;border-radius:50px;border:2px solid #fff;font-family:'Plus Jakarta Sans',sans-serif}
 .tc-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--navy)}
@@ -2319,9 +2319,11 @@ async function loadTeacherCards() {
       var c = colors[i % colors.length];
       var initials = sanitize((t.name || 'T').split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,2));
       var avatar = t.photo 
-        ? '<img loading="lazy" src="' + t.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
+        ? '<img loading="lazy" src="' + t.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" onerror="this.style.display=\'none\'">'
         : initials;
-      var avatarStyle = t.photo ? 'overflow:hidden' : 'background:' + c.bg + ';color:' + c.col + ';border-color:' + c.bc;
+      var avatarStyle = t.photo 
+        ? 'overflow:hidden;background:#E6F4F1' 
+        : 'background:' + c.bg + ';color:' + c.col + ';border-color:' + c.bc;
       
       return '<div class="tc-card">' +
         '<div class="tc-top">' +
