@@ -812,7 +812,9 @@ async function loadPortalTeachers() {
   var tbody = document.getElementById('portal-teachers-tbody');
   tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px">Loading...</td></tr>';
   try {
-    var data = await supaGet('teachers', 'order=created_at.desc');
+    var resp = await supaGet('teachers', 'order=created_at.desc');
+    var data = Array.isArray(resp) ? resp : [];
+    console.log('Portal teachers:', data.length, data[0]);
     if(!data || !data.length) {
       tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">No registered teachers yet</td></tr>';
       return;
