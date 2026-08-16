@@ -2269,7 +2269,6 @@ async function sub(e, sid) {
     if(sid === 's-teacher') {
       try {
         var supaData = {
-          uid: 'apply-' + Date.now(),
           name: jsonData['Full Name'] || jsonData['full name'] || '',
           email: jsonData['Email Address'] || jsonData['email'] || '',
           phone: jsonData['WhatsApp Number'] || jsonData['phone'] || '',
@@ -2285,7 +2284,7 @@ async function sub(e, sid) {
           role: 'teacher',
           created_at: new Date().toISOString()
         };
-        await fetch(SUPA_URL + '/rest/v1/teachers', {
+        var supaRes = await fetch(SUPA_URL + '/rest/v1/teachers', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -2295,7 +2294,13 @@ async function sub(e, sid) {
           },
           body: JSON.stringify(supaData)
         });
-        console.log('Teacher saved to Supabase!');
+        console.log('Supabase status:', supaRes.status);
+        if(!supaRes.ok) {
+          var err = await supaRes.text();
+          console.log('Supabase error:', err);
+        } else {
+          console.log('Teacher saved to Supabase!');
+        }
       } catch(e) {
         console.log('Supabase save error:', e);
       }
