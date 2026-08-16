@@ -2291,7 +2291,9 @@ async function loadTeacherCards() {
   g.innerHTML = '<div style="text-align:center;padding:40px;color:#888">Loading verified teachers...</div>';
   
   try {
+    console.log('Loading teacher cards...');
     var data = await supaGet('teachers', 'status=eq.approved&order=created_at.asc');
+    console.log('Teacher data:', data);
     
     if(!data || data.length === 0) {
       g.innerHTML = '<div style="text-align:center;padding:60px;color:#888"><div style="font-size:48px;margin-bottom:16px">teacher</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon - we are adding verified teachers in Muzaffarpur!</p></div>';
