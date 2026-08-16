@@ -519,11 +519,13 @@ async function supaUpdate(table, data, filter) {
     headers: {
       'apikey': SUPA_KEY,
       'Authorization': 'Bearer ' + SUPA_KEY,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
     },
     body: JSON.stringify(data)
   });
-  return res.json();
+  // PATCH with return=minimal returns empty body - don't parse JSON
+  return { ok: res.ok, status: res.status };
 }
 
 let allStudents = [];
