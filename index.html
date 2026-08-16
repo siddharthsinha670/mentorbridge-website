@@ -2264,6 +2264,43 @@ async function sub(e, sid) {
     });
     const result = await response.json();
     console.log('Sheet saved:', result);
+
+    // Also save to Supabase if teacher application
+    if(sid === 's-teacher') {
+      try {
+        var supaData = {
+          uid: 'apply-' + Date.now(),
+          name: jsonData['Full Name'] || jsonData['full name'] || '',
+          email: jsonData['Email Address'] || jsonData['email'] || '',
+          phone: jsonData['WhatsApp Number'] || jsonData['phone'] || '',
+          city: jsonData['City / Area'] || '',
+          qualification: jsonData['Highest Qualification'] || '',
+          experience: jsonData['Teaching Experience'] || '',
+          subjects: jsonData['Subjects You Can Teach'] || '',
+          classes: jsonData['Classes You Can Teach'] || '',
+          board: jsonData['Board Expertise'] || '',
+          mode: jsonData['Teaching Mode Preferred'] || '',
+          about: jsonData['Brief Introduction'] || '',
+          status: 'pending',
+          role: 'teacher',
+          created_at: new Date().toISOString()
+        };
+        await fetch(SUPA_URL + '/rest/v1/teachers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPA_KEY,
+            'Authorization': 'Bearer ' + SUPA_KEY,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(supaData)
+        });
+        console.log('Teacher saved to Supabase!');
+      } catch(e) {
+        console.log('Supabase save error:', e);
+      }
+    }
+
   } catch(err) {
     // Fallback: try with no-cors
     try {
