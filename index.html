@@ -2292,8 +2292,10 @@ async function loadTeacherCards() {
   
   try {
     console.log('Loading teacher cards...');
-    var data = await supaGet('teachers', 'status=eq.approved&order=created_at.asc');
-    console.log('Teacher data:', data);
+    var resp = await supaGet('teachers', 'status=eq.approved&order=created_at.asc');
+    console.log('Teacher data:', resp);
+    // Handle array or object response
+    var data = Array.isArray(resp) ? resp : (resp.data || resp.results || []);
     
     if(!data || data.length === 0) {
       g.innerHTML = '<div style="text-align:center;padding:60px;color:#888"><div style="font-size:48px;margin-bottom:16px">teacher</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon - we are adding verified teachers in Muzaffarpur!</p></div>';
@@ -2869,7 +2871,11 @@ async function supaFetch(path, method, body) {
     },
     body: body ? JSON.stringify(body) : undefined
   });
-  try { return await res.json(); } catch(e) { return {}; }
+  try { 
+    var json = await res.json();
+    // Supabase returns array directly for SELECT queries
+    return json;
+  } catch(e) { return []; }
 }
 
 // Auth
