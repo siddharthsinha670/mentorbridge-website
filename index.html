@@ -2291,11 +2291,16 @@ async function loadTeacherCards() {
   g.innerHTML = '<div style="text-align:center;padding:40px;color:#888">Loading verified teachers...</div>';
   
   try {
-    console.log('Loading teacher cards...');
-    var resp = await supaGet('teachers', 'status=eq.approved&order=created_at.asc');
-    console.log('Teacher data:', resp);
-    // Handle array or object response
-    var data = Array.isArray(resp) ? resp : (resp.data || resp.results || []);
+    // Direct fetch from Supabase
+    var fetchRes = await fetch(SUPA_URL + '/rest/v1/teachers?select=*&status=eq.approved&order=created_at.asc', {
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY
+      }
+    });
+    var data = await fetchRes.json();
+    console.log('Teachers:', data);
+    if(!Array.isArray(data)) data = [];
     
     if(!data || data.length === 0) {
       g.innerHTML = '<div style="text-align:center;padding:60px;color:#888"><div style="font-size:48px;margin-bottom:16px">teacher</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon - we are adding verified teachers in Muzaffarpur!</p></div>';
