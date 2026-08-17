@@ -763,6 +763,50 @@ window.addEventListener('load', function(){
   }, 1000);
 });
 
+
+// ── LOAD TEACHER CARDS ──
+async function loadTeacherCards() {
+  var g = document.getElementById('all-tc');
+  if(!g) return;
+  g.innerHTML = '<div style="text-align:center;padding:40px;color:#888;grid-column:1/-1">Loading verified teachers...</div>';
+  try {
+    var res = await fetch(SUPA_URL + '/rest/v1/teachers?select=*&status=eq.approved&order=created_at.asc', {
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+    });
+    var data = await res.json();
+    console.log('Teachers loaded:', Array.isArray(data) ? data.length : data);
+    if(!Array.isArray(data) || data.length === 0) {
+      g.innerHTML = '<div style="text-align:center;padding:60px;color:#888;grid-column:1/-1"><div style="font-size:48px;margin-bottom:16px">👩‍🏫</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon!</p></div>';
+      return;
+    }
+    var colors=[{bg:'#FFF2EA',col:'#E8601A',bc:'#FFD4B8'},{bg:'#E6F4F1',col:'#1D7A6B',bc:'#B2E0D8'},{bg:'#FFF8E6',col:'#C9992A',bc:'#FAE0A0'},{bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},{bg:'#EDE7F6',col:'#5E35B1',bc:'#CE93D8'}];
+    g.innerHTML = data.map(function(t,i){
+      var c=colors[i%colors.length];
+      var initials=(t.name||'T').split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,2);
+      var avatarHtml=t.photo?'<img src="'+t.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">':initials;
+      var avatarStyle=t.photo?'overflow:hidden;background:#E6F4F1':'background:'+c.bg+';color:'+c.col+';border:3px solid '+c.bc;
+      return '<div class="tc-card">'+
+        '<div class="tc-top">'+
+          '<div class="tc-ava-wrap"><div class="tc-ava" style="'+avatarStyle+'">'+avatarHtml+'</div><div class="tc-vbadge">V Verified</div></div>'+
+          '<div class="tc-name">'+(t.name||'Teacher')+'</div>'+
+          '<div class="tc-qual">'+(t.qualification||'Graduate')+' · '+(t.experience||'Experienced')+'</div>'+
+          '<div class="tc-stars">'+getRatingStars(t.rating)+'</div>'+
+        '</div>'+
+        '<div class="tc-bot">'+
+          '<div class="tc-row"><span class="tc-label">Subjects</span><span class="tc-val">'+(t.subjects||'-')+'</span></div>'+
+          '<div class="tc-row"><span class="tc-label">Classes</span><span class="tc-val">'+(t.classes||'-')+'</span></div>'+
+          '<div class="tc-row"><span class="tc-label">Board</span><span class="tc-val">'+(t.board||'All Boards')+'</span></div>'+
+          '<div class="tc-row"><span class="tc-label">Mode</span><span class="tc-val">'+(t.mode||'Home Tuition')+'</span></div>'+
+        '</div>'+
+        '<div class="tc-footer"><button class="btn btn-orange" style="width:100%;padding:14px;font-size:15px;border-radius:12px;cursor:pointer;font-weight:800" onclick="go(this.dataset.page)" data-page="tutor-form">Book Free Demo</button></div>'+
+      '</div>';
+    }).join('');
+  } catch(e) {
+    g.innerHTML = '<div style="text-align:center;padding:40px;color:#888;grid-column:1/-1">Could not load teachers. Please try again.</div>';
+    console.error('Teacher load error:', e);
+  }
+}
+
 // toggleMenu stub
 function toggleMenu(){
   var m=document.getElementById('mob');
