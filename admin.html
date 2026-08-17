@@ -312,7 +312,7 @@ tr:hover td{background:rgba(29,122,107,.03)}
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Subjects</th><th>Classes</th><th>Status</th><th>Joined</th><th>Action</th></tr></thead>
+              <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Subjects</th><th>Classes</th><th>Rating</th><th>Status</th><th>Joined</th><th>Action</th></tr></thead>
               <tbody id="portal-teachers-tbody"><tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">Click Refresh to load</td></tr></tbody>
             </table>
           </div>
@@ -832,15 +832,34 @@ async function loadPortalTeachers() {
         '<td><span class="status-badge ' + (t.status==='approved'?'status-active':'status-new') + '">' + (t.status||'pending') + '</span></td>' +
         '<td>' + (t.created_at ? new Date(t.created_at).toLocaleDateString('en-IN') : '—') + '</td>' +
         '<td>' +
-          (t.status !== 'approved' ?
+          '<td>' +
+          '<div style="display:flex;align-items:center;gap:6px">' +
+            '<select onchange="updateRating('' + t.id + '',this.value)" style="padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer">' +
+              '<option value="0" ' + ((!t.rating||t.rating==0)?'selected':'') + '>-</option>' +
+              '<option value="3.0" ' + (t.rating==3.0?'selected':'') + '>3.0</option>' +
+              '<option value="3.5" ' + (t.rating==3.5?'selected':'') + '>3.5</option>' +
+              '<option value="4.0" ' + (t.rating==4.0?'selected':'') + '>4.0</option>' +
+              '<option value="4.5" ' + (t.rating==4.5?'selected':'') + '>4.5</option>' +
+              '<option value="5.0" ' + (t.rating==5.0?'selected':'') + '>5.0</option>' +
+            '</select>' +
+            '<span style="color:#F59E0B;font-size:13px">★</span>' +
+          '</div>' +
+        '</td>' +
+        (t.status !== 'approved' ?
             '<button onclick="approveTeacher(\'' + t.id + '\')" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">Approve</button>' :
-            '<span style="color:var(--teal);font-weight:700;font-size:12px">✅ Approved</span>') +
+            '<span style="color:var(--teal);font-weight:700;font-size:12px">[OK] Approved</span>') +
         '</td>' +
       '</tr>';
     }).join('');
   } catch(e) {
     tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:red">Error loading data</td></tr>';
   }
+}
+
+
+async function updateRating(id, rating) {
+  await supaUpdate('teachers', {rating: parseFloat(rating)}, 'id=eq.' + id);
+  showToast('[OK] Rating updated: ' + rating);
 }
 
 async function approveTeacher(id) {
