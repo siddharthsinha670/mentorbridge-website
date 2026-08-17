@@ -2368,7 +2368,10 @@ async function loadTeacherCards() {
       }
     });
     var data = await fetchRes.json();
+    console.log('Raw data:', JSON.stringify(data).slice(0, 200));
+    console.log('Is array:', Array.isArray(data));
     if(!Array.isArray(data)) data = [];
+    console.log('Data length:', data.length);
 
     if(data.length === 0) {
       g.innerHTML = '<div style="text-align:center;padding:60px;color:#888"><div style="font-size:48px;margin-bottom:16px">👩‍🏫</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon!</p></div>';
