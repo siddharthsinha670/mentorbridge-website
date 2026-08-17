@@ -751,6 +751,18 @@ function getRatingStars(rating) {
   stars += ' <strong style="color:#0B1E36;font-size:14px">' + r.toFixed(1) + '</strong>';
   return stars;
 }
+// Auto load teachers when page opens
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    if(typeof loadTeacherCards === 'function'){
+      console.log('Auto loading teachers...');
+      loadTeacherCards();
+    } else {
+      console.log('loadTeacherCards not defined yet');
+    }
+  }, 1000);
+});
+
 // toggleMenu stub
 function toggleMenu(){
   var m=document.getElementById('mob');
