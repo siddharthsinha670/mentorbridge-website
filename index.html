@@ -745,9 +745,9 @@ function getRatingStars(rating) {
   var half = (r - full) >= 0.5 ? 1 : 0;
   var empty = 5 - full - half;
   var stars = '';
-  for(var i=0;i<full;i++) stars += '<span style="color:#F59E0B">★</span>';
-  if(half) stars += '<span style="color:#F59E0B">½</span>';
-  for(var j=0;j<empty;j++) stars += '<span style="color:#D1D5DB">★</span>';
+  for(var i=0;i<full;i++) stars += '<span style="color:#F59E0B">*</span>';
+  if(half) stars += '<span style="color:#F59E0B">.5</span>';
+  for(var j=0;j<empty;j++) stars += '<span style="color:#D1D5DB">*</span>';
   stars += ' <strong style="color:#0B1E36;font-size:14px">' + r.toFixed(1) + '</strong>';
   return stars;
 }
@@ -776,7 +776,7 @@ async function loadTeacherCards() {
     var data = await res.json();
     console.log('Teachers loaded:', Array.isArray(data) ? data.length : data);
     if(!Array.isArray(data) || data.length === 0) {
-      g.innerHTML = '<div style="text-align:center;padding:60px;color:#888;grid-column:1/-1"><div style="font-size:48px;margin-bottom:16px">👩‍🏫</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon!</p></div>';
+      g.innerHTML = '<div style="text-align:center;padding:60px;color:#888;grid-column:1/-1"><div style="font-size:48px;margin-bottom:16px">teacher</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon!</p></div>';
       return;
     }
     var colors=[{bg:'#FFF2EA',col:'#E8601A',bc:'#FFD4B8'},{bg:'#E6F4F1',col:'#1D7A6B',bc:'#B2E0D8'},{bg:'#FFF8E6',col:'#C9992A',bc:'#FAE0A0'},{bg:'#E8F5E9',col:'#2E7D32',bc:'#A5D6A7'},{bg:'#EDE7F6',col:'#5E35B1',bc:'#CE93D8'}];
@@ -789,7 +789,7 @@ async function loadTeacherCards() {
         '<div class="tc-top">'+
           '<div class="tc-ava-wrap"><div class="tc-ava" style="'+avatarStyle+'">'+avatarHtml+'</div><div class="tc-vbadge">V Verified</div></div>'+
           '<div class="tc-name">'+(t.name||'Teacher')+'</div>'+
-          '<div class="tc-qual">'+(t.qualification||'Graduate')+' · '+(t.experience||'Experienced')+'</div>'+
+          '<div class="tc-qual">'+(t.qualification||'Graduate')+' - '+(t.experience||'Experienced')+'</div>'+
           '<div class="tc-stars">'+getRatingStars(t.rating)+'</div>'+
         '</div>'+
         '<div class="tc-bot">'+
