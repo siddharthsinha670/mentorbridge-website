@@ -1081,7 +1081,12 @@ function toggleMenu(){
 <div id="p-teachers" class="page">
   <div class="page-hero"><div class="container"><h1>Our <span style="color:var(--orange2)">Verified Teachers</span></h1><p>Qualified, verified educators — ready to teach your child today.</p></div></div>
   <section class="sec"><div class="container">
-    <div class="tc-grid" id="all-tc"></div>
+    <div class="tc-grid" id="all-tc">
+      <div style="text-align:center;padding:40px;color:#888;grid-column:1/-1">
+        <div style="font-size:32px;margin-bottom:12px">👩‍🏫</div>
+        <p>Click "Teachers" to load verified teachers</p>
+      </div>
+    </div>
     <div style="text-align:center;margin-top:40px"><button class="btn btn-orange btn-xl" onclick="go('tutor-form')">Find Your Child's Perfect Teacher →</button></div>
   </div></section>
   <section class="sec" style="background:var(--bg2)"><div class="container">
@@ -2201,6 +2206,10 @@ window.addEventListener('load', function(){
     setTimeout(function(){ showArticle(hash.replace('blog-','')); }, 100);
   } else {
     go(hash);
+  }
+  // Auto load teacher cards if on teachers page
+  if(hash === 'teachers') {
+    setTimeout(function(){ if(typeof loadTeacherCards==='function') loadTeacherCards(); }, 500);
   }
 });
 function toggleMenu(){document.getElementById('mob').classList.toggle('open');}
