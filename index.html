@@ -807,6 +807,245 @@ async function loadTeacherCards() {
   }
 }
 
+
+// ── FIND A TUTOR FORM ──
+var tfChildCount = 0;
+var TF_SUBJECTS = ['Maths','Science','English','Hindi','Social Studies','Physics','Chemistry','Biology','Computer Science','Sanskrit','EVS','GK'];
+var TF_CLASSES  = ['Nursery / KG','1','2','3','4','5','6','7','8','9','10'];
+var TF_BOARDS   = ['CBSE','ICSE','Bihar State Board (BSEB)','Not sure'];
+
+function tfAddChild() {
+  tfChildCount++;
+  var n = tfChildCount;
+  var wrap = document.getElementById('tf-students-wrap');
+  if (!wrap) return;
+
+  var card = document.createElement('div');
+  card.id = 'tf-child-' + n;
+  card.style.cssText = 'background:#fff;border:1.5px solid #D4EAE2;border-radius:14px;padding:20px;margin-bottom:14px';
+
+  var removeBtn = n > 1
+    ? '<button type="button" onclick="tfRemoveChild(' + n + ')" style="background:#fee;color:#c00;border:1px solid #fcc;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">Remove</button>'
+    : '';
+
+  var classOpts = '<option value="">Select class</option>';
+  for (var i = 0; i < TF_CLASSES.length; i++) {
+    var c = TF_CLASSES[i];
+    var label = c === 'Nursery / KG' ? 'Nursery / KG' : 'Class ' + c;
+    classOpts += '<option value="' + c + '">' + label + '</option>';
+  }
+
+  var boardOpts = '<option value="">Select board</option>';
+  for (var j = 0; j < TF_BOARDS.length; j++) {
+    boardOpts += '<option value="' + TF_BOARDS[j] + '">' + TF_BOARDS[j] + '</option>';
+  }
+
+  var chipStyle = 'display:flex;align-items:center;gap:6px;padding:8px 10px;border:1.5px solid #D4EAE2;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;user-select:none;transition:all .15s';
+  var tickStyle = 'width:16px;height:16px;border:1.5px solid #D4EAE2;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0';
+
+  var chips = '<div data-subject="ALL" data-selected="0" id="tfchip-' + n + '-ALL"'
+    + ' onclick="tfToggleAll(this,' + n + ')"'
+    + ' style="' + chipStyle + ';grid-column:1/-1;border-color:#E8601A;background:#FFF2EA;color:#E8601A;font-weight:700">'
+    + '<span class="tf-tick" style="' + tickStyle + ';border-color:#E8601A"></span>'
+    + 'All Subjects</div>';
+
+  for (var k = 0; k < TF_SUBJECTS.length; k++) {
+    var s = TF_SUBJECTS[k];
+    chips += '<div data-subject="' + s + '" data-selected="0" id="tfchip-' + n + '-' + s.replace(/ /g,'-') + '"'
+      + ' onclick="tfToggle(this,' + n + ')"'
+      + ' style="' + chipStyle + '">'
+      + '<span class="tf-tick" style="' + tickStyle + '"></span>'
+      + s + '</div>';
+  }
+
+  var inputStyle = 'width:100%;padding:11px 15px;border:1.5px solid #D4EAE2;border-radius:10px;font-size:14px;font-family:Nunito,sans-serif;box-sizing:border-box';
+  var selStyle   = inputStyle + ';cursor:pointer';
+
+  card.innerHTML =
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">'
+      + '<div style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:800;color:#E8601A">Child ' + n + '</div>'
+      + removeBtn
+    + '</div>'
+    + '<div class="f2">'
+      + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Student Name <span style="color:#E8601A">*</span></label>'
+        + '<input type="text" id="tfc' + n + '-name" name="Student Name ' + n + '" placeholder="Child full name" style="' + inputStyle + '"></div>'
+      + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Teacher Gender Preference</label>'
+        + '<select id="tfc' + n + '-gender" name="Gender Pref ' + n + '" style="' + selStyle + '"><option value="">No preference</option><option value="Male Teacher">Male Teacher</option><option value="Female Teacher">Female Teacher</option></select></div>'
+    + '</div>'
+    + '<div class="f2">'
+      + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Class / Grade <span style="color:#E8601A">*</span></label>'
+        + '<select id="tfc' + n + '-class" name="Class ' + n + '" style="' + selStyle + '">' + classOpts + '</select></div>'
+      + '<div class="fg"><label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Board <span style="color:#E8601A">*</span></label>'
+        + '<select id="tfc' + n + '-board" name="Board ' + n + '" style="' + selStyle + '">' + boardOpts + '</select></div>'
+    + '</div>'
+    + '<div class="fg">'
+      + '<label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Subjects Required <span style="color:#E8601A">*</span> <span style="font-size:11px;color:#527060;font-weight:600;text-transform:none">(Select all that apply)</span></label>'
+      + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">' + chips + '</div>'
+      + '<input type="text" id="tfc' + n + '-othersubj" placeholder="Other subjects (optional)" style="' + inputStyle + ';margin-top:8px">'
+    + '</div>'
+    + '<div class="fg" style="margin-top:8px">'
+      + '<label style="display:block;font-size:12px;font-weight:800;color:#0B1E36;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Special Instructions</label>'
+      + '<input type="text" id="tfc' + n + '-note" placeholder="e.g. weak in Maths, upcoming board exams..." style="' + inputStyle + '">'
+    + '</div>';
+
+  wrap.appendChild(card);
+}
+
+function tfRemoveChild(n) {
+  var card = document.getElementById('tf-child-' + n);
+  if (card) card.remove();
+}
+
+function tfSetChip(el, active) {
+  var tick = el.querySelector('.tf-tick');
+  if (active) {
+    el.setAttribute('data-selected', '1');
+    el.style.borderColor = '#1D7A6B';
+    el.style.background = '#E6F4F1';
+    el.style.color = '#1D7A6B';
+    el.style.fontWeight = '700';
+    if (tick) { tick.style.background = '#1D7A6B'; tick.style.borderColor = '#1D7A6B'; tick.style.color = '#fff'; tick.innerHTML = '&#10003;'; }
+  } else {
+    el.setAttribute('data-selected', '0');
+    el.style.borderColor = '#D4EAE2';
+    el.style.background = '#fff';
+    el.style.color = '#18281E';
+    el.style.fontWeight = '600';
+    if (tick) { tick.style.background = '#fff'; tick.style.borderColor = '#D4EAE2'; tick.style.color = ''; tick.innerHTML = ''; }
+  }
+}
+
+function tfToggle(el, n) {
+  var selected = el.getAttribute('data-selected') === '1';
+  tfSetChip(el, !selected);
+  var allChip = document.getElementById('tfchip-' + n + '-ALL');
+  if (allChip && selected) tfSetChip(allChip, false);
+}
+
+function tfToggleAll(el, n) {
+  var selected = el.getAttribute('data-selected') === '1';
+  var newState = !selected;
+  tfSetChip(el, newState);
+  var card = document.getElementById('tf-child-' + n);
+  if (!card) return;
+  var chipsEls = card.querySelectorAll('[data-subject]');
+  for (var i = 0; i < chipsEls.length; i++) {
+    if (chipsEls[i].getAttribute('data-subject') !== 'ALL') {
+      tfSetChip(chipsEls[i], newState);
+    }
+  }
+}
+
+function tfSubmit() {
+  var parentName = (document.getElementById('tf-parent') || {}).value || '';
+  var phone      = (document.getElementById('tf-phone')  || {}).value || '';
+  var email      = (document.getElementById('tf-email')  || {}).value || '';
+  var address    = (document.getElementById('tf-address')|| {}).value || '';
+  var mode       = (document.getElementById('tf-mode')   || {}).value || '';
+  var timing     = (document.getElementById('tf-timing') || {}).value || '';
+  var notes      = (document.getElementById('tf-notes')  || {}).value || '';
+
+  parentName = parentName.trim(); phone = phone.trim(); address = address.trim();
+
+  if (!parentName || !phone || !address || !mode) {
+    alert('Please fill Parent Name, WhatsApp Number, Address and Teaching Mode!');
+    return;
+  }
+
+  var wrap = document.getElementById('tf-students-wrap');
+  if (!wrap || wrap.children.length === 0) {
+    alert('Please add at least one child!');
+    return;
+  }
+
+  var allData = [];
+  var valid = true;
+
+  for (var i = 0; i < wrap.children.length; i++) {
+    var card = wrap.children[i];
+    var n = card.id.replace('tf-child-', '');
+    var sname    = (document.getElementById('tfc' + n + '-name')    || {}).value || '';
+    var cls      = (document.getElementById('tfc' + n + '-class')   || {}).value || '';
+    var board    = (document.getElementById('tfc' + n + '-board')   || {}).value || '';
+    var gender   = (document.getElementById('tfc' + n + '-gender')  || {}).value || '';
+    var otherSub = (document.getElementById('tfc' + n + '-othersubj') || {}).value || '';
+    var note     = (document.getElementById('tfc' + n + '-note')    || {}).value || '';
+
+    sname = sname.trim();
+    if (!sname || !cls || !board) { valid = false; break; }
+
+    var selectedSubjs = [];
+    var allChipSel = card.querySelector('[data-subject="ALL"][data-selected="1"]');
+    if (allChipSel) {
+      selectedSubjs = TF_SUBJECTS.slice();
+    } else {
+      var chipsSel = card.querySelectorAll('[data-selected="1"]');
+      for (var j = 0; j < chipsSel.length; j++) {
+        var subj = chipsSel[j].getAttribute('data-subject');
+        if (subj !== 'ALL') selectedSubjs.push(subj);
+      }
+    }
+    if (otherSub.trim()) selectedSubjs.push(otherSub.trim());
+
+    allData.push({
+      'Student Name': sname,
+      'Parent / Guardian Name': parentName,
+      'WhatsApp Number': phone,
+      'Email Address': email,
+      'Class / Grade': cls,
+      'Board': board,
+      'Subjects Required': selectedSubjs.join(', ') || 'Not specified',
+      'Teaching Mode': mode,
+      'Preferred Timing': timing,
+      'Teacher Gender Preference': gender || 'No preference',
+      'Home Address / Area': address,
+      'Additional Requirements': note || notes,
+      'Date': new Date().toLocaleString('en-IN')
+    });
+  }
+
+  if (!valid) {
+    alert('Please fill Student Name, Class and Board for all children!');
+    return;
+  }
+
+  var sucBox = document.getElementById('s-tutor');
+  var formEl = document.getElementById('tutor-form-el');
+  if (sucBox) sucBox.classList.add('show');
+  if (formEl) formEl.style.display = 'none';
+  if (sucBox) sucBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  var msg = encodeURIComponent('NEW STUDENT ENQUIRY - MentorBridge\n\n');
+  msg += encodeURIComponent('Parent: ' + parentName + '\nPhone: ' + phone + '\nAddress: ' + address + '\nMode: ' + mode + '\n\n');
+  for (var k = 0; k < allData.length; k++) {
+    var d = allData[k];
+    msg += encodeURIComponent('Child ' + (k+1) + ': ' + d['Student Name'] + '\nClass: ' + d['Class / Grade'] + ' | Board: ' + d['Board'] + '\nSubjects: ' + d['Subjects Required'] + '\n\n');
+  }
+  msg += encodeURIComponent('Notes: ' + (notes || 'None') + '\n\n----\nMentorBridge Website');
+
+  setTimeout(function() {
+    window.open('https://wa.me/918540016415?text=' + msg, '_blank');
+  }, 600);
+
+  for (var m = 0; m < allData.length; m++) {
+    (function(data) {
+      fetch('https://sheetdb.io/api/v1/qmklc1a104hli', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ data: [data] })
+      }).catch(function(e) { console.log('SheetDB error:', e); });
+    })(allData[m]);
+  }
+}
+
+function tfInit() {
+  var wrap = document.getElementById('tf-students-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  tfChildCount = 0;
+  tfAddChild();
+}
+
 // toggleMenu stub
 function toggleMenu(){
   var m=document.getElementById('mob');
