@@ -96,7 +96,8 @@
       ]
     }
   }
-  
+</script>
+<script>
 // Scroll Reveal
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); }});
@@ -3039,7 +3040,7 @@ async function loadTeacherCards() {
       var initials = (t.name || 'T').split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,2);
       
       var avatarHtml = t.photo
-        ? '<img src="' + t.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" onerror="this.style.display='none'">'
+        ? '<img src="' + t.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" onerror=&quot;this.style.display=&#39;none&#39;&quot;>'
         : initials;
       var avatarStyle = t.photo ? 'overflow:hidden;background:#E6F4F1' : 'background:' + c.bg + ';color:' + c.col + ';border:3px solid ' + c.bc;
 
@@ -3073,5 +3074,20 @@ async function loadTeacherCards() {
     console.error('Teacher load error:', e);
   }
 }
+</script>
 
-
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6a6f0c79a16bfc1d4f1a8a4c/1jv0shfmq';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>
