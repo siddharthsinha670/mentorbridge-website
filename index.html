@@ -731,6 +731,30 @@ function go(id){
 var SUPA_URL = 'https://xnsvuucqkdkwnblkmreh.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhuc3Z1dWNxa2Rrd25ibGttcmVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NjYxOTIsImV4cCI6MjEwMTM0MjE5Mn0.hD3N35Olh_IesX1gaU0_ntsettj8328TptVIwv9scKk';
 
+// ── Reusable toast notification ──
+function showAppToast(message, type) {
+  var existing = document.getElementById('app-toast');
+  if(existing) existing.remove();
+  var toast = document.createElement('div');
+  toast.id = 'app-toast';
+  var bg = type === 'error' ? '#C62828' : '#1D7A6B';
+  toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;background:' + bg + ';color:#fff;padding:14px 20px;border-radius:12px;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;max-width:340px;opacity:0;transform:translateY(-10px);transition:opacity .25s ease, transform .25s ease';
+  var icon = type === 'error' ? '\u26A0' : '\u2713';
+  toast.innerHTML = '<span style="font-size:18px">' + icon + '</span><span></span>';
+  toast.querySelector('span:last-child').textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(function(){
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+  });
+  setTimeout(function(){
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-10px)';
+    setTimeout(function(){ toast.remove(); }, 300);
+  }, 4000);
+}
+
+
 // Security: Sanitize user data before inserting into DOM
 function sanitize(str) {
   var div = document.createElement('div');
@@ -1266,34 +1290,47 @@ window.tdShow = function(el, id) {
 
 window.tdSaveProfile = async function() {
   var msg = document.getElementById('td-profile-msg');
+  var btn = event ? event.currentTarget : document.querySelector('#td-profile .td-btn');
+
   if(!currentUser || !currentUser.id) {
     console.error('tdSaveProfile: currentUser missing or has no id', currentUser);
-    if(msg){
-      msg.textContent = 'Not logged in properly. Please logout and login again.';
-      msg.style.cssText = 'display:block;background:#FFEBEE;border:1px solid #EF9A9A;border-radius:10px;padding:12px;color:#C62828;font-weight:700;font-size:14px;margin-top:14px';
-    }
+    showAppToast('Not logged in properly. Please logout and login again.', 'error');
     return;
   }
+
+  var origText = btn ? btn.textContent : '';
+  if(btn) { btn.textContent = 'Saving...'; btn.disabled = true; btn.style.opacity = '0.7'; btn.style.cursor = 'wait'; }
+  if(msg) msg.style.display = 'none';
+
   try {
+    var nowIso = new Date().toISOString();
     var res = await supaUpdate('teachers', {
       name: document.getElementById('td-p-name').value,
       phone: document.getElementById('td-p-phone').value,
       subjects: document.getElementById('td-p-subjects').value,
       classes: document.getElementById('td-p-classes').value,
-      about: document.getElementById('td-p-about').value
+      about: document.getElementById('td-p-about').value,
+      updated_at: nowIso
     }, 'uid=eq.' + currentUser.id);
     console.log('tdSaveProfile result:', res);
+
+    var timeStr = new Date(nowIso).toLocaleString('en-IN', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    showAppToast('Profile saved! Updated at ' + timeStr, 'success');
+
     if(msg){
-      msg.textContent = 'Profile saved!';
+      msg.textContent = 'Saved successfully at ' + timeStr;
       msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:14px';
-      setTimeout(function(){ msg.style.display='none'; }, 3000);
+      setTimeout(function(){ msg.style.display='none'; }, 5000);
     }
   } catch(e) {
     console.error('tdSaveProfile error:', e);
+    showAppToast('Error saving profile. Please try again.', 'error');
     if(msg){
       msg.textContent = 'Error saving profile. Please try again.';
       msg.style.cssText = 'display:block;background:#FFEBEE;border:1px solid #EF9A9A;border-radius:10px;padding:12px;color:#C62828;font-weight:700;font-size:14px;margin-top:14px';
     }
+  } finally {
+    if(btn) { btn.textContent = origText || '\uD83D\uDCBE Save Changes'; btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
   }
 };
 
