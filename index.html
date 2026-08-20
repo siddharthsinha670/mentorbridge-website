@@ -1181,6 +1181,15 @@ window.lSaveProfile = async function() {
   if(!name){ lShowMsg('l-reg-msg','Name is required!','error'); return; }
   var role = localStorage.getItem('mb_role') || selectedRole;
   var user = window._pendingUser;
+  if(!user || !user.id) {
+    lShowMsg('l-reg-msg','Session error. Please login again!','error');
+    console.error('lSaveProfile: window._pendingUser missing or has no id', user);
+    return;
+  }
+  // Guarantee currentUser is correctly set with a valid id for later dashboard actions
+  currentUser = { id: user.id, email: user.email };
+  localStorage.setItem('mb_uid', user.id);
+
   var data = {
     uid: user.id, name: name, email: user.email,
     phone: document.getElementById('l-reg-phone').value.trim(),
@@ -1191,7 +1200,8 @@ window.lSaveProfile = async function() {
     data.subjects = document.getElementById('l-reg-subjects').value.trim();
     data.classes = document.getElementById('l-reg-classes').value.trim();
   }
-  await supaInsert(role + 's', data);
+  var insertRes = await supaInsert(role + 's', data);
+  console.log('Profile insert result:', insertRes);
   currentRole = role;
   if(role === 'teacher'){ loadTeacherDash(data); go('teacher-dash'); }
   else { loadParentDash(data); go('parent-dash'); }
@@ -1255,19 +1265,35 @@ window.tdShow = function(el, id) {
 };
 
 window.tdSaveProfile = async function() {
-  if(!currentUser) return;
-  await supaUpdate('teachers', {
-    name: document.getElementById('td-p-name').value,
-    phone: document.getElementById('td-p-phone').value,
-    subjects: document.getElementById('td-p-subjects').value,
-    classes: document.getElementById('td-p-classes').value,
-    about: document.getElementById('td-p-about').value
-  }, 'uid=eq.' + currentUser.id);
   var msg = document.getElementById('td-profile-msg');
-  if(msg){
-    msg.textContent = 'Profile saved!';
-    msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:14px';
-    setTimeout(function(){ msg.style.display='none'; }, 3000);
+  if(!currentUser || !currentUser.id) {
+    console.error('tdSaveProfile: currentUser missing or has no id', currentUser);
+    if(msg){
+      msg.textContent = 'Not logged in properly. Please logout and login again.';
+      msg.style.cssText = 'display:block;background:#FFEBEE;border:1px solid #EF9A9A;border-radius:10px;padding:12px;color:#C62828;font-weight:700;font-size:14px;margin-top:14px';
+    }
+    return;
+  }
+  try {
+    var res = await supaUpdate('teachers', {
+      name: document.getElementById('td-p-name').value,
+      phone: document.getElementById('td-p-phone').value,
+      subjects: document.getElementById('td-p-subjects').value,
+      classes: document.getElementById('td-p-classes').value,
+      about: document.getElementById('td-p-about').value
+    }, 'uid=eq.' + currentUser.id);
+    console.log('tdSaveProfile result:', res);
+    if(msg){
+      msg.textContent = 'Profile saved!';
+      msg.style.cssText = 'display:block;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:10px;padding:12px;color:#2E7D32;font-weight:700;font-size:14px;margin-top:14px';
+      setTimeout(function(){ msg.style.display='none'; }, 3000);
+    }
+  } catch(e) {
+    console.error('tdSaveProfile error:', e);
+    if(msg){
+      msg.textContent = 'Error saving profile. Please try again.';
+      msg.style.cssText = 'display:block;background:#FFEBEE;border:1px solid #EF9A9A;border-radius:10px;padding:12px;color:#C62828;font-weight:700;font-size:14px;margin-top:14px';
+    }
   }
 };
 
@@ -1277,6 +1303,12 @@ window.tdUploadPhoto = async function(input) {
   var msgEl = document.getElementById('td-photo-msg');
   var img = document.getElementById('td-photo-img');
   var initials = document.getElementById('td-photo-initials');
+
+  if(!currentUser || !currentUser.id) {
+    console.error('tdUploadPhoto: currentUser missing or has no id', currentUser);
+    if(msgEl){ msgEl.textContent='Not logged in properly. Please logout and login again.'; msgEl.style.color='#C62828'; }
+    return;
+  }
   if(file.size > 2*1024*1024){ if(msgEl){ msgEl.textContent='File too large! Max 2MB.'; msgEl.style.color='#C62828'; } return; }
   if(msgEl){ msgEl.textContent='Uploading...'; msgEl.style.color='#1D7A6B'; }
   try {
@@ -1288,11 +1320,16 @@ window.tdUploadPhoto = async function(input) {
       headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + (_token || SUPA_KEY), 'x-upsert': 'true' },
       body: formData
     });
-    if(!uploadRes.ok) throw new Error('Upload failed');
+    if(!uploadRes.ok) {
+      var errBody = await uploadRes.text();
+      console.error('Storage upload failed:', uploadRes.status, errBody);
+      throw new Error('Upload failed: ' + uploadRes.status);
+    }
     var photoUrl = SUPA_URL + '/storage/v1/object/public/teacher-photos/' + fileName;
     if(img){ img.src = photoUrl; img.style.display='block'; }
     if(initials) initials.style.display='none';
-    await supaUpdate('teachers', {photo: photoUrl}, 'uid=eq.' + currentUser.id);
+    var updateRes = await supaUpdate('teachers', {photo: photoUrl}, 'uid=eq.' + currentUser.id);
+    console.log('Photo DB update result:', updateRes);
     var av = document.getElementById('td-av');
     if(av){
       var avImg = document.createElement('img');
@@ -1305,7 +1342,7 @@ window.tdUploadPhoto = async function(input) {
     if(msgEl){ msgEl.textContent='Upload failed. Try again!'; msgEl.style.color='#C62828'; }
     console.error('Photo upload error:', e);
   }
-  if(msgEl) setTimeout(function(){ msgEl.textContent=''; }, 3000);
+  if(msgEl) setTimeout(function(){ msgEl.textContent=''; }, 4000);
 };
 
 var DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
