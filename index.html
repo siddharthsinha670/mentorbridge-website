@@ -1093,12 +1093,41 @@ async function supaFetch(path, method, body) {
   });
   try { var t = await res.text(); return t ? JSON.parse(t) : {}; } catch(e) { return {}; }
 }
+
+// DB operations always use the anon key directly (RLS is disabled on our tables),
+// so a stale/expired user session token never silently breaks a save.
+// This version THROWS on failure so callers' try/catch actually works,
+// instead of swallowing errors and reporting false success.
+async function supaDbFetch(path, method, body) {
+  var res = await fetch(SUPA_URL + path, {
+    method: method || 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Prefer': method === 'PATCH' ? 'return=representation' : (method === 'POST' ? 'return=representation' : '')
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  var text = await res.text();
+  var parsed;
+  try { parsed = text ? JSON.parse(text) : {}; } catch(e) { parsed = text; }
+  if (!res.ok) {
+    console.error('Supabase DB error:', res.status, parsed);
+    var err = new Error('Database error (' + res.status + '): ' + (parsed && parsed.message ? parsed.message : JSON.stringify(parsed)));
+    err.status = res.status;
+    err.body = parsed;
+    throw err;
+  }
+  return parsed;
+}
+
 async function supaSignUp(email, pass) { return supaFetch('/auth/v1/signup', 'POST', {email:email, password:pass}); }
 async function supaSignIn(email, pass) { return supaFetch('/auth/v1/token?grant_type=password', 'POST', {email:email, password:pass}); }
 async function supaSignOut() { await supaFetch('/auth/v1/logout', 'POST', {}); _token=''; localStorage.removeItem('mb_token'); localStorage.removeItem('mb_uid'); }
-async function supaGet(table, filter) { return supaFetch('/rest/v1/' + table + '?select=*&' + filter, 'GET'); }
-async function supaInsert(table, data) { return supaFetch('/rest/v1/' + table, 'POST', data); }
-async function supaUpdate(table, data, filter) { return supaFetch('/rest/v1/' + table + '?' + filter, 'PATCH', data); }
+async function supaGet(table, filter) { return supaDbFetch('/rest/v1/' + table + '?select=*&' + filter, 'GET'); }
+async function supaInsert(table, data) { return supaDbFetch('/rest/v1/' + table, 'POST', data); }
+async function supaUpdate(table, data, filter) { return supaDbFetch('/rest/v1/' + table + '?' + filter, 'PATCH', data); }
 
 window.lSelectRole = function(role) {
   selectedRole = role;
@@ -1188,16 +1217,22 @@ window.lEmailLogin = async function() {
 
 async function lCheckProfile(user) {
   var role = localStorage.getItem('mb_role') || selectedRole;
-  var data = await supaGet(role + 's', 'uid=eq.' + user.id);
-  if(Array.isArray(data) && data.length > 0) {
-    currentRole = role;
-    if(role === 'teacher'){ loadTeacherDash(data[0]); go('teacher-dash'); }
-    else { loadParentDash(data[0]); go('parent-dash'); }
-  } else {
-    window._pendingUser = user;
-    if(role === 'teacher') document.getElementById('l-teacher-extra').style.display='block';
-    lShowStep('ls-register');
+  try {
+    var data = await supaGet(role + 's', 'uid=eq.' + user.id);
+    if(Array.isArray(data) && data.length > 0) {
+      currentRole = role;
+      if(role === 'teacher'){ loadTeacherDash(data[0]); go('teacher-dash'); }
+      else { loadParentDash(data[0]); go('parent-dash'); }
+      return;
+    }
+  } catch(e) {
+    console.error('lCheckProfile error:', e);
+    showAppToast('Could not check your profile. Please try again.', 'error');
+    return;
   }
+  window._pendingUser = user;
+  if(role === 'teacher') document.getElementById('l-teacher-extra').style.display='block';
+  lShowStep('ls-register');
 }
 
 window.lSaveProfile = async function() {
@@ -1224,11 +1259,17 @@ window.lSaveProfile = async function() {
     data.subjects = document.getElementById('l-reg-subjects').value.trim();
     data.classes = document.getElementById('l-reg-classes').value.trim();
   }
-  var insertRes = await supaInsert(role + 's', data);
-  console.log('Profile insert result:', insertRes);
-  currentRole = role;
-  if(role === 'teacher'){ loadTeacherDash(data); go('teacher-dash'); }
-  else { loadParentDash(data); go('parent-dash'); }
+  try {
+    var insertRes = await supaInsert(role + 's', data);
+    console.log('Profile insert result:', insertRes);
+    currentRole = role;
+    if(role === 'teacher'){ loadTeacherDash(data); go('teacher-dash'); }
+    else { loadParentDash(data); go('parent-dash'); }
+    showAppToast('Profile created successfully!', 'success');
+  } catch(e) {
+    console.error('lSaveProfile insert error:', e);
+    lShowMsg('l-reg-msg', 'Could not save profile: ' + e.message, 'error');
+  }
 };
 
 window.lLogout = async function() {
@@ -1354,7 +1395,7 @@ window.tdUploadPhoto = async function(input) {
     formData.append('file', file);
     var uploadRes = await fetch(SUPA_URL + '/storage/v1/object/teacher-photos/' + fileName, {
       method: 'POST',
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + (_token || SUPA_KEY), 'x-upsert': 'true' },
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'x-upsert': 'true' },
       body: formData
     });
     if(!uploadRes.ok) {
@@ -1404,9 +1445,17 @@ window.tdToggleSlot = function(el, key) {
 };
 
 window.tdSaveSchedule = async function() {
-  if(!currentUser) return;
-  await supaUpdate('teachers', {schedule: teacherSchedule}, 'uid=eq.' + currentUser.id);
-  alert('Schedule saved!');
+  if(!currentUser || !currentUser.id) {
+    showAppToast('Not logged in properly. Please logout and login again.', 'error');
+    return;
+  }
+  try {
+    await supaUpdate('teachers', {schedule: teacherSchedule}, 'uid=eq.' + currentUser.id);
+    showAppToast('Schedule saved!', 'success');
+  } catch(e) {
+    console.error('tdSaveSchedule error:', e);
+    showAppToast('Could not save schedule. Please try again.', 'error');
+  }
 };
 
 // ── PARENT DASHBOARD ──
@@ -1462,14 +1511,32 @@ window.addEventListener('load', async function() {
   if(savedToken && savedUid && role) {
     _token = savedToken;
     currentUser = {id: savedUid};
-    var data = await supaGet(role + 's', 'uid=eq.' + savedUid);
-    if(Array.isArray(data) && data.length > 0) {
-      currentRole = role;
-      var btn = document.getElementById('nav-login-btn');
-      if(btn) {
-        btn.textContent = data[0].name ? data[0].name.split(' ')[0] : 'Account';
-        btn.onclick = function(){ go(role === 'teacher' ? 'teacher-dash' : 'parent-dash'); };
+    try {
+      var data = await supaGet(role + 's', 'uid=eq.' + savedUid);
+      if(Array.isArray(data) && data.length > 0) {
+        currentRole = role;
+        var btn = document.getElementById('nav-login-btn');
+        if(btn) {
+          btn.textContent = data[0].name ? data[0].name.split(' ')[0] : 'Account';
+          btn.onclick = function(){
+            go(role === 'teacher' ? 'teacher-dash' : 'parent-dash');
+          };
+        }
+        // Populate the dashboard fields now (hidden pages), so whenever the user
+        // navigates in, or the page was refreshed while already on the dashboard,
+        // their saved data (including photo) is actually shown instead of blank fields.
+        if(role === 'teacher') { loadTeacherDash(data[0]); }
+        else { loadParentDash(data[0]); }
+
+        // If the page was refreshed while sitting on the dashboard itself,
+        // make sure that page is marked active again after data loads.
+        var hash = window.location.hash.replace('#','');
+        if(hash === 'teacher-dash' || hash === 'parent-dash') {
+          go(hash);
+        }
       }
+    } catch(e) {
+      console.error('Session restore error:', e);
     }
   }
 });
