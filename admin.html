@@ -834,7 +834,7 @@ async function loadPortalTeachers() {
         '<td>' +
           '<td>' +
           '<div style="display:flex;align-items:center;gap:6px">' +
-            '<select onchange="updateRating('' + t.id + '',this.value)" style="padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer">' +
+            '<select onchange="updateRating(&quot;' + t.id + '&quot;,this.value)" style="padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer">' +
               '<option value="0" ' + ((!t.rating||t.rating==0)?'selected':'') + '>-</option>' +
               '<option value="3.0" ' + (t.rating==3.0?'selected':'') + '>3.0</option>' +
               '<option value="3.5" ' + (t.rating==3.5?'selected':'') + '>3.5</option>' +
