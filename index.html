@@ -477,7 +477,7 @@ input,select,textarea{font-family:'Nunito',sans-serif;outline:none}
 .form-note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
 .suc-box{display:none;background:linear-gradient(135deg,#E8F5E9,#F1FBF1);border:1.5px solid #4CAF50;border-radius:var(--r);padding:18px 22px;margin-bottom:20px;font-weight:700;color:#1B5E20;font-family:'Plus Jakarta Sans',sans-serif;align-items:flex-start;gap:12px;font-size:15px;flex-direction:column}
 .suc-box.show{display:flex}
-.suc-box .suc-wa{display:flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:8px 16px;border-radius:50px;font-size:13px;margin-top:6px;cursor:pointer;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}
+.suc-box .suc-wa{display:flex;align-items:center;gap:8px;background:#075E54;color:#fff;padding:8px 16px;border-radius:50px;font-size:13px;margin-top:6px;cursor:pointer;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}
 
 /* ── CONTACT ── */
 .contact-layout{display:grid;grid-template-columns:1fr 1.5fr;gap:32px;margin-top:52px}
@@ -489,7 +489,7 @@ input,select,textarea{font-family:'Nunito',sans-serif;outline:none}
 .ci-val{font-size:14px;color:rgba(255,255,255,.88);font-weight:600}
 .ci-val a{color:var(--gold);transition:opacity .2s}
 .ci-val a:hover{opacity:.75}
-.wa-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;border-radius:14px;padding:14px;margin-top:28px;font-size:15px;font-weight:800;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:none;width:100%;transition:all .22s;box-shadow:0 4px 16px rgba(37,211,102,.3)}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#075E54;border-radius:14px;padding:14px;margin-top:28px;font-size:15px;font-weight:800;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:none;width:100%;transition:all .22s;box-shadow:0 4px 16px rgba(37,211,102,.3)}
 .wa-btn:hover{background:#1dab54;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.45)}
 .cf-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r2);padding:36px 32px;box-shadow:var(--sh)}
 
@@ -497,13 +497,13 @@ input,select,textarea{font-family:'Nunito',sans-serif;outline:none}
 footer{background:#060D18;padding:64px 0 28px}
 .foot-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
 .foot-logo-img{height:56px;width:auto;object-fit:contain;display:block;filter:none;margin-bottom:16px;opacity:1}
-.foot-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.85;margin-bottom:20px;max-width:270px}
-.foot-contacts a{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.5);font-size:13px;margin-bottom:8px;font-weight:600;transition:color .2s}
+.foot-desc{font-size:13px;color:rgba(255,255,255,.62);line-height:1.85;margin-bottom:20px;max-width:270px}
+.foot-contacts a{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.68);font-size:13px;margin-bottom:8px;font-weight:600;transition:color .2s}
 .foot-contacts a:hover{color:var(--gold)}
 .foot-col h4{font-size:11px;font-weight:800;color:rgba(255,255,255,.75);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;font-family:'Plus Jakarta Sans',sans-serif}
-.foot-col a{display:block;color:rgba(255,255,255,.4);font-size:13px;margin-bottom:10px;transition:color .2s;font-weight:600;cursor:pointer}
+.foot-col a{display:block;color:rgba(255,255,255,.62);font-size:13px;margin-bottom:10px;transition:color .2s;font-weight:600;cursor:pointer}
 .foot-col a:hover{color:var(--gold)}
-.foot-line{border-top:1px solid rgba(255,255,255,.06);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,.25);flex-wrap:wrap;gap:10px}
+.foot-line{border-top:1px solid rgba(255,255,255,.06);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,.58);flex-wrap:wrap;gap:10px}
 
 
 
@@ -551,7 +551,7 @@ footer{background:#060D18;padding:64px 0 28px}
   .social-btn.insta:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(253,29,29,.4)}
   .social-btn.fb{background:#1877F2;color:#fff}
   .social-btn.fb:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(24,119,242,.4)}
-  .social-btn.wa{background:#25D366;color:#fff}
+  .social-btn.wa{background:#075E54;color:#fff}
   .social-btn.wa:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(37,211,102,.4)}
 
   /* HERO ANIMATIONS */
@@ -1574,7 +1574,7 @@ function toggleMenu(){
       <button class="btn btn-orange btn-sm" onclick="go('teacher-form')">Apply as Tutor ✏️</button>
       <button class="btn btn-sm" id="nav-login-btn" onclick="go('login')" style="background:var(--navy);color:#fff;border-radius:50px;padding:9px 20px;font-size:14px;font-weight:700">Login</button>
     </div>
-    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle Menu" aria-expanded="false" aria-controls="mob"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -1590,6 +1590,7 @@ function toggleMenu(){
   <a onclick="go('contact');toggleMenu()">📞 Contact</a>
 </div>
 
+<main id="main-content">
 <!-- ============ HOME ============ -->
 <div id="p-home" class="page active">
   <section class="hero">
@@ -2907,6 +2908,8 @@ function toggleMenu(){
     </div>
   </div>
 </div>
+
+</main>
 
 <footer>
   <div class="container">
