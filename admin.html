@@ -865,7 +865,12 @@ async function updateRating(id, rating) {
 async function approveTeacher(id) {
   var res = await supaUpdate('teachers', {status: 'approved'}, 'id=eq.' + id);
   console.log('Approve result:', res);
-  showToast('[OK] Teacher approved!');
+  if(res && res.ok) {
+    showToast('[OK] Teacher approved!');
+  } else {
+    showToast('[ERROR] Approve failed (status ' + (res ? res.status : '?') + ')');
+    console.error('approveTeacher failed:', res);
+  }
   loadPortalTeachers();
 }
 
