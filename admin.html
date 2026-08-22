@@ -821,12 +821,12 @@ async function loadPortalTeachers() {
             '<span style="color:#F59E0B;font-size:13px">★</span>' +
           '</div>' +
         '</td>' +
-        '<td><span class="status-badge ' + (t.status==='approved'?'status-active':'status-new') + '">' + (t.status||'pending') + '</span></td>' +
+        '<td><span class="status-badge ' + (t.status==='approved'?'status-active':'status-new') + '">' + (t.status==='approved'?'Approved':'Waiting') + '</span></td>' +
         '<td>' + (t.created_at ? new Date(t.created_at).toLocaleDateString('en-IN') : '—') + '</td>' +
         '<td style="white-space:nowrap">' +
           (t.status !== 'approved' ?
             '<button onclick="approveTeacher(&quot;' + t.id + '&quot;)" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer">Approve</button>' :
-            '<span style="display:inline-flex;align-items:center;gap:4px;background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;border-radius:50px;padding:4px 12px;font-size:11px;font-weight:800">&#10003; Approved</span>') +
+            '<button onclick="unapproveTeacher(&quot;' + t.id + '&quot;)" style="background:#FFEBEE;color:#C62828;border:1px solid #EF9A9A;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer">Unapprove</button>') +
         '</td>' +
       '</tr>';
     }).join('');
@@ -849,6 +849,19 @@ async function approveTeacher(id) {
   } else {
     showToast('[ERROR] Approve failed (status ' + (res ? res.status : '?') + ')');
     console.error('approveTeacher failed:', res);
+  }
+  loadPortalTeachers();
+}
+
+async function unapproveTeacher(id) {
+  if(!confirm('Move this teacher back to Waiting? They will be hidden from the public Teachers page.')) return;
+  var res = await supaUpdate('teachers', {status: 'pending'}, 'id=eq.' + id);
+  console.log('Unapprove result:', res);
+  if(res && res.ok) {
+    showToast('Teacher moved back to Waiting');
+  } else {
+    showToast('[ERROR] Unapprove failed (status ' + (res ? res.status : '?') + ')');
+    console.error('unapproveTeacher failed:', res);
   }
   loadPortalTeachers();
 }
