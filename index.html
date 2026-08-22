@@ -3163,20 +3163,41 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 
 // Accessibility fix: Tawk.to injects its chat widget iframe(s) dynamically,
-// so we can't add a title in our own HTML. Instead, watch the page for any
-// Tawk iframe as it gets added and give it a descriptive title for screen readers.
+// so we can't add a title in our own HTML. This is the only iframe on the
+// page, so we label every iframe we find (immediately, on any DOM change,
+// on attribute changes, and on a short-lived poll) to close every timing
+// gap where the iframe could otherwise briefly be picked up untitled.
 function labelTawkIframes() {
   document.querySelectorAll('iframe').forEach(function(f){
-    var src = f.getAttribute('src') || '';
-    if(src.indexOf('tawk.to') !== -1 && !f.getAttribute('title')) {
-      f.setAttribute('title', 'Chat Support Widget');
+    if (f.getAttribute('title') !== 'Chat support widget') {
+      f.setAttribute('title', 'Chat support widget');
     }
   });
 }
-if(window.MutationObserver) {
-  new MutationObserver(labelTawkIframes).observe(document.body, {childList:true, subtree:true});
+
+// Run immediately in case an iframe already exists.
+labelTawkIframes();
+
+// Catch iframes as soon as they're inserted or their src/attributes change.
+if (window.MutationObserver) {
+  new MutationObserver(labelTawkIframes).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['src', 'id']
+  });
 }
-Tawk_API.onLoad = function(){ labelTawkIframes(); };
+
+// Belt-and-braces: also poll briefly right after load, since some tools
+// inspect the DOM before the widget script has fully initialized.
+var _tawkPollCount = 0;
+var _tawkPoll = setInterval(function () {
+  labelTawkIframes();
+  _tawkPollCount++;
+  if (_tawkPollCount > 20) clearInterval(_tawkPoll); // stop after ~10s
+}, 500);
+
+Tawk_API.onLoad = function () { labelTawkIframes(); };
 </script>
 <!--End of Tawk.to Script-->
 </body>
