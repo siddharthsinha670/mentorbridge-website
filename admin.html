@@ -808,10 +808,7 @@ async function loadPortalTeachers() {
         '<td><a href="https://wa.me/91' + (t.phone||'').replace(/[^0-9]/g,'') + '" target="_blank" style="color:var(--teal)">' + (t.phone||'—') + '</a> <a href="https://wa.me/91' + (t.phone||'').replace(/[^0-9]/g,'') + '?text=Hello!%20MentorBridge%20se%20bol%20raha%20hoon." target="_blank" style="background:#25D366;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none">💬 WA</a></td>' +
         '<td>' + (t.subjects||'—') + '</td>' +
         '<td>' + (t.classes||'—') + '</td>' +
-        '<td><span class="status-badge ' + (t.status==='approved'?'status-active':'status-new') + '">' + (t.status||'pending') + '</span></td>' +
-        '<td>' + (t.created_at ? new Date(t.created_at).toLocaleDateString('en-IN') : '—') + '</td>' +
         '<td>' +
-          '<td>' +
           '<div style="display:flex;align-items:center;gap:6px">' +
             '<select onchange="updateRating(&quot;' + t.id + '&quot;,this.value)" style="padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer">' +
               '<option value="0" ' + ((!t.rating||t.rating==0)?'selected':'') + '>-</option>' +
@@ -824,9 +821,12 @@ async function loadPortalTeachers() {
             '<span style="color:#F59E0B;font-size:13px">★</span>' +
           '</div>' +
         '</td>' +
-        (t.status !== 'approved' ?
-            '<button onclick="approveTeacher(\'' + t.id + '\')" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">Approve</button>' :
-            '<span style="color:var(--teal);font-weight:700;font-size:12px">[OK] Approved</span>') +
+        '<td><span class="status-badge ' + (t.status==='approved'?'status-active':'status-new') + '">' + (t.status||'pending') + '</span></td>' +
+        '<td>' + (t.created_at ? new Date(t.created_at).toLocaleDateString('en-IN') : '—') + '</td>' +
+        '<td style="white-space:nowrap">' +
+          (t.status !== 'approved' ?
+            '<button onclick="approveTeacher(&quot;' + t.id + '&quot;)" style="background:var(--teal);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer">Approve</button>' :
+            '<span style="display:inline-flex;align-items:center;gap:4px;background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;border-radius:50px;padding:4px 12px;font-size:11px;font-weight:800">&#10003; Approved</span>') +
         '</td>' +
       '</tr>';
     }).join('');
