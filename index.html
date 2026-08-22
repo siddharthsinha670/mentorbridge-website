@@ -1284,14 +1284,20 @@ function loadTeacherDash(data) {
   var name = data.name || 'Teacher';
   var initials = name.split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,2);
   var av = document.getElementById('td-av');
+  var avM = document.getElementById('td-av-m');
   var tn = document.getElementById('td-name');
+  var tnM = document.getElementById('td-name-m');
   var ts = document.getElementById('td-status');
+  var tsM = document.getElementById('td-status-m');
   var tw = document.getElementById('td-welcome-name');
   var tb = document.getElementById('td-badge');
   if(av) av.textContent = initials || 'T';
+  if(avM) avM.textContent = initials || 'T';
   if(tn) tn.textContent = name;
+  if(tnM) tnM.textContent = name;
   if(tw) tw.textContent = name.split(' ')[0];
   if(ts) ts.textContent = data.status === 'approved' ? 'Verified' : 'Pending';
+  if(tsM) tsM.textContent = data.status === 'approved' ? 'Verified' : 'Pending';
   if(tb) {
     tb.textContent = data.status === 'approved' ? 'Verified Teacher' : 'Pending Verification';
     if(data.status === 'approved'){ tb.style.background='rgba(76,175,80,.2)'; tb.style.borderColor='rgba(76,175,80,.4)'; }
@@ -1304,11 +1310,14 @@ function loadTeacherDash(data) {
     var ini = document.getElementById('td-photo-initials');
     if(img && data.photo.indexOf('http')===0){ img.src = data.photo; img.style.display='block'; }
     if(ini) ini.style.display='none';
-    if(av && data.photo.indexOf('http')===0) {
-      var avImg = document.createElement('img');
-      avImg.src = data.photo;
-      avImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%';
-      av.innerHTML=''; av.appendChild(avImg);
+    if(data.photo.indexOf('http')===0) {
+      [av, avM].forEach(function(el){
+        if(!el) return;
+        var avImg = document.createElement('img');
+        avImg.src = data.photo;
+        avImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%';
+        el.innerHTML=''; el.appendChild(avImg);
+      });
     }
   }
 
@@ -1408,13 +1417,14 @@ window.tdUploadPhoto = async function(input) {
     if(initials) initials.style.display='none';
     var updateRes = await supaUpdate('teachers', {photo: photoUrl}, 'uid=eq.' + currentUser.id);
     console.log('Photo DB update result:', updateRes);
-    var av = document.getElementById('td-av');
-    if(av){
+    ['td-av','td-av-m'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
       var avImg = document.createElement('img');
       avImg.src = photoUrl;
       avImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%';
-      av.innerHTML=''; av.appendChild(avImg);
-    }
+      el.innerHTML=''; el.appendChild(avImg);
+    });
     if(msgEl){ msgEl.textContent='Photo uploaded!'; msgEl.style.color='#2E7D32'; }
   } catch(e) {
     if(msgEl){ msgEl.textContent='Upload failed. Try again!'; msgEl.style.color='#C62828'; }
@@ -2479,6 +2489,9 @@ function toggleMenu(){
 .td-nav-item:hover{color:#fff;background:rgba(255,255,255,.06)}
 .td-nav-item.active{color:#fff;background:rgba(37,160,144,.2);border-left-color:#25A090}
 .td-main{flex:1;background:#F4F7F6;overflow-y:auto;padding:24px}
+.td-mobile-header{display:none}
+.td-mobile-tabs{display:none}
+.td-mobile-logout{background:rgba(220,50,50,.1);color:#C62828;border:1px solid rgba(220,50,50,.25);border-radius:10px;width:38px;height:38px;font-size:16px;cursor:pointer;flex-shrink:0}
 .td-page{display:none}.td-page.active{display:block}
 .td-card{background:#fff;border:1.5px solid #D4EAE2;border-radius:16px;padding:22px;margin-bottom:18px}
 .td-card h2{font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:800;color:#0B1E36;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #D4EAE2;display:flex;align-items:center;justify-content:space-between}
@@ -2507,7 +2520,35 @@ function toggleMenu(){
 .slot.on{background:#1D7A6B;color:#fff;border-color:#1D7A6B}
 .empty-state{text-align:center;padding:40px;color:#888}
 .empty-state .ei{font-size:48px;margin-bottom:12px}
-@media(max-width:768px){.td-sidebar{display:none}.td-stats{grid-template-columns:repeat(2,1fr)}.td-grid2{grid-template-columns:1fr}}
+@media(max-width:480px){
+  #login-card{padding:28px 20px!important}
+}
+@media(max-width:768px){
+  .td-sidebar{display:none}
+  .td-stats{grid-template-columns:repeat(2,1fr)}
+  .td-grid2{grid-template-columns:1fr}
+  .td-main{padding:16px}
+  .td-mobile-header{
+    display:flex;align-items:center;justify-content:space-between;
+    background:#0B1E36;border-radius:14px;padding:12px 14px;margin-bottom:12px;
+  }
+  .td-mobile-header-info{display:flex;align-items:center;gap:10px;min-width:0}
+  .td-mobile-header .td-avatar{width:38px;height:38px;font-size:14px;flex-shrink:0}
+  .td-mobile-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+  .td-mobile-status{font-size:11px;color:#C9992A;font-weight:600;margin-top:1px}
+  .td-mobile-tabs{
+    display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .td-mobile-tabs::-webkit-scrollbar{display:none}
+  .td-mobile-tabs .td-nav-item{
+    flex-shrink:0;background:#fff;border:1.5px solid #D4EAE2;border-radius:50px;
+    color:#527060;padding:9px 16px;font-size:12px;white-space:nowrap;
+  }
+  .td-mobile-tabs .td-nav-item.active{
+    background:#1D7A6B;border-color:#1D7A6B;color:#fff;
+  }
+}
 </style>
 
 <div class="td-wrap">
@@ -2532,6 +2573,25 @@ function toggleMenu(){
 
   <!-- Main -->
   <div class="td-main">
+
+    <!-- Mobile-only header + tab bar (sidebar is hidden below 768px) -->
+    <div class="td-mobile-header">
+      <div class="td-mobile-header-info">
+        <div class="td-avatar" id="td-av-m">T</div>
+        <div>
+          <div class="td-mobile-name" id="td-name-m">Loading...</div>
+          <div class="td-mobile-status" id="td-status-m">⏳ Pending</div>
+        </div>
+      </div>
+      <button onclick="lLogout()" class="td-mobile-logout" aria-label="Logout">🚪</button>
+    </div>
+    <div class="td-mobile-tabs">
+      <div class="td-nav-item active" onclick="tdShow(this,'overview')">📊 Overview</div>
+      <div class="td-nav-item" onclick="tdShow(this,'profile')">👤 Profile</div>
+      <div class="td-nav-item" onclick="tdShow(this,'schedule')">📅 Schedule</div>
+      <div class="td-nav-item" onclick="tdShow(this,'students')">🎓 Students</div>
+      <div class="td-nav-item" onclick="tdShow(this,'earnings')">💰 Earnings</div>
+    </div>
 
     <!-- Overview -->
     <div id="td-overview" class="td-page active">
