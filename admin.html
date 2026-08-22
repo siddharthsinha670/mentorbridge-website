@@ -579,12 +579,6 @@ async function loadStudents() {
   try {
     const res = await fetch(APIS.students + '?limit=500');
     const data = await res.json();
-    console.log('Student data raw:', data);
-    if(Array.isArray(data) && data.length > 0) {
-      console.log('Student columns:', Object.keys(data[0]));
-      console.log('First record:', data[0]);
-
-    }
     allStudents = Array.isArray(data) ? data : [];
     renderStudents();
     renderDashStudents();
@@ -599,11 +593,6 @@ async function loadTeachers() {
   try {
     const res = await fetch(APIS.teachers + '?limit=500');
     const data = await res.json();
-    console.log('Teacher data:', data);
-    if(Array.isArray(data) && data.length > 0) {
-      console.log('Teacher columns:', Object.keys(data[0]));
-      console.log('First teacher record:', data[0]);
-    }
     allTeachers = Array.isArray(data) ? data : [];
     renderTeachers();
     renderDashTeachers();
@@ -684,16 +673,6 @@ function getVal(r, ...keys) {
     if(partial && r[partial] !== '' && r[partial] !== null) return r[partial];
   }
   return '—';
-}
-
-// Debug: log all keys of first student record
-function debugStudent() {
-  if(allStudents.length > 0) {
-    console.log('=== STUDENT RECORD KEYS ===');
-    console.log(Object.keys(allStudents[0]));
-    console.log('=== STUDENT RECORD VALUES ===');
-    console.log(allStudents[0]);
-  }
 }
 
 function renderStudents() {
@@ -816,7 +795,7 @@ async function loadPortalTeachers() {
   try {
     var resp = await supaGet('teachers', 'order=created_at.desc');
     var data = Array.isArray(resp) ? resp : [];
-    console.log('Portal teachers:', data.length, data[0]);
+    console.log('Portal teachers loaded:', data.length);
     if(!data || !data.length) {
       tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--muted)">No registered teachers yet</td></tr>';
       return;
