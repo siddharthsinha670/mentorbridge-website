@@ -1221,6 +1221,7 @@ async function lCheckProfile(user) {
     var data = await supaGet(role + 's', 'uid=eq.' + user.id);
     if(Array.isArray(data) && data.length > 0) {
       currentRole = role;
+      updateLoginNavUI(data[0].name, role);
       if(role === 'teacher'){ loadTeacherDash(data[0]); go('teacher-dash'); }
       else { loadParentDash(data[0]); go('parent-dash'); }
       return;
@@ -1263,6 +1264,7 @@ window.lSaveProfile = async function() {
     var insertRes = await supaInsert(role + 's', data);
     console.log('Profile insert result:', insertRes);
     currentRole = role;
+    updateLoginNavUI(data.name, role);
     if(role === 'teacher'){ loadTeacherDash(data); go('teacher-dash'); }
     else { loadParentDash(data); go('parent-dash'); }
     showAppToast('Profile created successfully!', 'success');
@@ -1272,10 +1274,42 @@ window.lSaveProfile = async function() {
   }
 };
 
+// Keep the desktop Login button and the mobile-menu Login link in sync,
+// since nav-links/nav-ctas (which contain the desktop button) are hidden
+// below 960px and the hamburger menu is the only nav mobile users have.
+function updateLoginNavUI(name, role) {
+  var label = name ? name.split(' ')[0] : 'Account';
+  var target = role === 'teacher' ? 'teacher-dash' : 'parent-dash';
+  var btn = document.getElementById('nav-login-btn');
+  if (btn) {
+    btn.textContent = label;
+    btn.onclick = function () { go(target); };
+  }
+  var mobLink = document.getElementById('mob-login-link');
+  if (mobLink) {
+    mobLink.textContent = '\uD83D\uDC64 ' + label;
+    mobLink.onclick = function () { go(target); toggleMenu(); };
+  }
+}
+
+function resetLoginNavUI() {
+  var btn = document.getElementById('nav-login-btn');
+  if (btn) {
+    btn.textContent = 'Login';
+    btn.onclick = function () { go('login'); };
+  }
+  var mobLink = document.getElementById('mob-login-link');
+  if (mobLink) {
+    mobLink.textContent = '\uD83D\uDD10 Login';
+    mobLink.onclick = function () { go('login'); toggleMenu(); };
+  }
+}
+
 window.lLogout = async function() {
   await supaSignOut();
   localStorage.removeItem('mb_role');
   currentUser = null; currentRole='';
+  resetLoginNavUI();
   go('home');
 };
 
@@ -1525,13 +1559,7 @@ window.addEventListener('load', async function() {
       var data = await supaGet(role + 's', 'uid=eq.' + savedUid);
       if(Array.isArray(data) && data.length > 0) {
         currentRole = role;
-        var btn = document.getElementById('nav-login-btn');
-        if(btn) {
-          btn.textContent = data[0].name ? data[0].name.split(' ')[0] : 'Account';
-          btn.onclick = function(){
-            go(role === 'teacher' ? 'teacher-dash' : 'parent-dash');
-          };
-        }
+        updateLoginNavUI(data[0].name, role);
         // Populate the dashboard fields now (hidden pages), so whenever the user
         // navigates in, or the page was refreshed while already on the dashboard,
         // their saved data (including photo) is actually shown instead of blank fields.
@@ -1597,6 +1625,7 @@ function toggleMenu(){
   <a onclick="go('blog');toggleMenu()">📝 Blog</a>
   <a onclick="go('tutor-form');toggleMenu()">🔍 Find a Tutor</a>
   <a onclick="go('teacher-form');toggleMenu()">✏️ Apply as Tutor</a>
+  <a id="mob-login-link" onclick="go('login');toggleMenu()">🔐 Login</a>
   <a onclick="go('contact');toggleMenu()">📞 Contact</a>
 </div>
 
