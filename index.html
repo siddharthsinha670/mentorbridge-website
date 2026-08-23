@@ -795,11 +795,18 @@ async function loadTeacherCards() {
   if(!g) return;
   g.innerHTML = '<div style="text-align:center;padding:40px;color:#888;grid-column:1/-1">Loading verified teachers...</div>';
   try {
-    var res = await fetch(SUPA_URL + '/rest/v1/teachers?select=name,qualification,experience,subjects,classes,board,mode,photo,rating&status=eq.approved&order=created_at.asc', {
+    var res = await fetch(SUPA_URL + '/rest/v1/teachers?select=name,qualification,experience,subjects,classes,board,mode,photo,rating,status&order=created_at.asc', {
       headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
     });
     var data = await res.json();
-    console.log('Teachers loaded:', Array.isArray(data) ? data.length : data);
+    // Filter client-side with a normalized comparison (trimmed, case-insensitive),
+    // so a stray extra space or different casing in the status column set from
+    // the admin panel (e.g. "Approved " vs "approved") can never silently hide
+    // an otherwise-approved teacher from this page.
+    data = Array.isArray(data)
+      ? data.filter(function(t){ return (t.status || '').trim().toLowerCase() === 'approved'; })
+      : [];
+    console.log('Teachers loaded:', data.length);
     if(!Array.isArray(data) || data.length === 0) {
       g.innerHTML = '<div style="text-align:center;padding:60px;color:#888;grid-column:1/-1"><div style="font-size:48px;margin-bottom:16px">teacher</div><p style="font-size:16px;font-weight:700;color:#0B1E36">Our teachers are being verified</p><p style="font-size:14px;margin-top:8px">Check back soon!</p></div>';
       return;
