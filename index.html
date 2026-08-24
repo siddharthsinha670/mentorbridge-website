@@ -818,7 +818,7 @@ function renderTeacherCard(t, i) {
   var avatarStyle=t.photo?'overflow:hidden;background:#E6F4F1':'background:'+c.bg+';color:'+c.col+';border:3px solid '+c.bc;
   return '<div class="tc-card">'+
     '<div class="tc-top">'+
-      '<div class="tc-ava-wrap"><div class="tc-ava" style="'+avatarStyle+'">'+avatarHtml+'</div><div class="tc-vbadge">V Verified</div></div>'+
+      '<div class="tc-ava-wrap"><div class="tc-ava" style="'+avatarStyle+'">'+avatarHtml+'</div><div class="tc-vbadge">&#10003; Verified</div></div>'+
       '<div class="tc-name">'+(t.name||'Teacher')+'</div>'+
       '<div class="tc-qual">'+(t.qualification||'Graduate')+' - '+(t.experience||'Experienced')+'</div>'+
       '<div class="tc-stars">'+getRatingStars(t.rating)+'</div>'+
