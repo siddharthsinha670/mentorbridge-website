@@ -1560,7 +1560,7 @@ async function loadParentDash(data) {
     if(enqEl) enqEl.innerHTML = mine.map(function(d) {
       var st = d['Status'] || 'New Enquiry';
       return '<div style="background:#F4F7F6;border-radius:12px;padding:16px;margin-bottom:10px">' +
-        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:8px">' +
           '<strong style="font-size:14px;color:#0B1E36">' + (d['Student Name']||'Student') + '</strong>' +
           '<span style="background:#FFF3E0;color:#E65100;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800">' + st + '</span>' +
         '</div>' +
@@ -2792,6 +2792,15 @@ function toggleMenu(){
 .pd-status-active{background:#E8F5E9;color:#2E7D32;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800;font-family:"Plus Jakarta Sans",sans-serif}
 .pd-status-demo{background:#E3F2FD;color:#1565C0;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:800;font-family:"Plus Jakarta Sans",sans-serif}
 @media(max-width:600px){.pd-stats{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){
+  .pd-hero{padding:20px 0}
+  .pd-hero h2{font-size:18px}
+  .pd-hero p{font-size:13px}
+  .pd-hero .container>div{flex-wrap:wrap;gap:12px}
+  .pd-card{padding:16px}
+  .pd-card h2{flex-wrap:wrap;gap:10px}
+  .pd-card h2 button{flex-shrink:0}
+}
 </style>
 
 <div class="pd-hero">
