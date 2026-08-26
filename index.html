@@ -720,8 +720,9 @@ function go(id){
   if(id==='home'){history.pushState(null,null,window.location.pathname);}
   else{history.pushState(null,null,'#'+id);}
   // Special inits
-  if(id==='tutor-form'){setTimeout(function(){if(typeof tfInit==='function')tfInit();},100);}
+  if(id==='tutor-form'){setTimeout(function(){if(typeof tfInit==='function')tfInit();if(typeof tfPrefillFromParent==='function')tfPrefillFromParent();},100);}
   if(id==='teacher-dash'){if(typeof buildScheduleGrid==='function')buildScheduleGrid();}
+  if(id==='parent-dash'){if(typeof loadParentDash==='function'&&window._parentProfileData)loadParentDash(window._parentProfileData);}
   if(id==='teachers'){setTimeout(function(){if(typeof loadTeacherCards==='function')loadTeacherCards();},200);}
   if(id==='home'){setTimeout(function(){if(typeof loadHomeTeacherPreview==='function')loadHomeTeacherPreview();},200);}
   if(id==='blog'){if(typeof showBlogList==='function')showBlogList();}
@@ -1089,6 +1090,21 @@ function tfSubmit() {
       }).catch(function(e) { console.log('SheetDB error:', e); });
     })(allData[m]);
   }
+}
+
+// If a logged-in parent opens the Find a Tutor form, pre-fill their name/phone/email
+// from their portal profile so the enquiry always matches the same phone number their
+// dashboard looks up by - typing a different/differently-formatted number here was
+// the main reason a submitted enquiry could silently fail to show up afterwards.
+function tfPrefillFromParent() {
+  if (currentRole !== 'parent' || !window._parentProfileData) return;
+  var d = window._parentProfileData;
+  var nameEl = document.getElementById('tf-parent');
+  var phoneEl = document.getElementById('tf-phone');
+  var emailEl = document.getElementById('tf-email');
+  if (nameEl && !nameEl.value && d.name) nameEl.value = d.name;
+  if (phoneEl && !phoneEl.value && d.phone) phoneEl.value = d.phone;
+  if (emailEl && !emailEl.value && d.email) emailEl.value = d.email;
 }
 
 function tfInit() {
@@ -1532,6 +1548,9 @@ window.tdSaveSchedule = async function() {
 
 // ── PARENT DASHBOARD ──
 async function loadParentDash(data) {
+  // Cache so we can refresh the dashboard (or pre-fill the tutor form) every
+  // time the user revisits, without needing another Supabase round-trip.
+  window._parentProfileData = data;
   var pdName = document.getElementById('pd-name');
   if(pdName) pdName.textContent = (data.name || 'Parent').split(' ')[0];
   var phone = (data.phone || '').split('').filter(function(c){return c>='0'&&c<='9';}).join('').slice(-10);
@@ -3096,9 +3115,11 @@ function go(id){
   if(id==='tutor-form'){
     setTimeout(function(){
       if(typeof tfInit === 'function') tfInit();
+      if(typeof tfPrefillFromParent === 'function') tfPrefillFromParent();
     }, 100);
   }
   if(id==='teacher-dash') buildScheduleGrid();
+  if(id==='parent-dash'){ if(typeof loadParentDash==='function' && window._parentProfileData) loadParentDash(window._parentProfileData); }
   if(id==='teachers') setTimeout(function(){ if(typeof loadTeacherCards==='function') loadTeacherCards(); }, 200);
   if(id==='home') setTimeout(function(){ if(typeof loadHomeTeacherPreview==='function') loadHomeTeacherPreview(); }, 200);
 }
