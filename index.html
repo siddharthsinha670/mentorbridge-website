@@ -76,13 +76,6 @@
       {"@type": "State", "name": "Bihar"}
     ],
     "sameAs": [],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "200",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "Home Tutoring Services",
@@ -102,37 +95,12 @@
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); }});
 }, {threshold: 0.12});
-document.querySelectorAll('.why-card,.srv-card,.tc-card,.rv-card,.step-item,.stat').forEach(el => {
+document.querySelectorAll('.why-card,.srv-card,.tc-card,.rv-card,.step-item').forEach(el => {
   el.classList.add('reveal');
   observer.observe(el);
 });
 
-// Counter Animation for stats
-function animateCounter(el, target, suffix='') {
-  let start = 0;
-  const duration = 1800;
-  const step = (timestamp) => {
-    if (!start) start = timestamp;
-    const progress = Math.min((timestamp - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.floor(eased * target) + suffix;
-    if (progress < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-}
-const statsObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if(e.isIntersecting && !e.target.dataset.counted) {
-      e.target.dataset.counted = true;
-      const nums = e.target.querySelectorAll('.stat-num');
-      const targets = [150, 500, 98, 5];
-      const suffixes = ['+', '+', '%', '+'];
-      nums.forEach((n, i) => animateCounter(n, targets[i], suffixes[i]));
-    }
-  });
-}, {threshold: 0.3});
-const statsBand = document.querySelector('.stats-band');
-if(statsBand) statsObserver.observe(statsBand);
+// (fake stats counter removed)
 
 
 ;
@@ -381,7 +349,7 @@ input,select,textarea{font-family:'Nunito',sans-serif;outline:none}
 .tc-bot .btn{width:100%;justify-content:center;margin-top:16px;border-radius:12px}
 
 /* ── REVIEWS ── */
-.rv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
+.rv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:52px}
 .rv-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r2);padding:28px;position:relative;transition:all .25s}
 .rv-card:hover{box-shadow:var(--sh);transform:translateY(-4px);border-color:rgba(232,96,26,.25)}
 .rv-quote-mark{position:absolute;top:20px;right:22px;font-size:48px;color:var(--orange);opacity:.12;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;line-height:1;pointer-events:none}
@@ -724,7 +692,7 @@ function go(id){
   if(id==='teacher-dash'){if(typeof buildScheduleGrid==='function')buildScheduleGrid();}
   if(id==='parent-dash'){if(typeof loadParentDash==='function'&&window._parentProfileData)loadParentDash(window._parentProfileData);}
   if(id==='teachers'){setTimeout(function(){if(typeof loadTeacherCards==='function')loadTeacherCards();},200);}
-  if(id==='home'){setTimeout(function(){if(typeof loadHomeTeacherPreview==='function')loadHomeTeacherPreview();},200);}
+  if(id==='home'){setTimeout(function(){if(typeof loadHomeTeacherPreview==='function')loadHomeTeacherPreview();if(typeof loadHeroTeacherPreview==='function')loadHeroTeacherPreview();},200);}
   if(id==='blog'){if(typeof showBlogList==='function')showBlogList();}
 }
 
@@ -859,6 +827,39 @@ async function loadTeacherCards() {
 
 async function loadHomeTeacherPreview() {
   await loadTeacherCardsInto('home-tc-grid', 3);
+}
+
+async function loadHeroTeacherPreview() {
+  var g = document.getElementById('hero-tc-list');
+  if (!g) return;
+  try {
+    var data = await fetchApprovedTeachers();
+    if (!data.length) {
+      g.innerHTML = '<div style="padding:16px 0;text-align:center;color:#888;font-size:13px">We are verifying our first teachers - check back soon!</div>';
+      return;
+    }
+    var colors = [
+      {bg:'#FFF2EA',col:'#E8601A',bc:'#FFD4B8'},
+      {bg:'#E6F4F1',col:'#1D7A6B',bc:'#B2E0D8'},
+      {bg:'#FFF8E6',col:'#8A6516',bc:'#FAE0A0'},
+      {bg:'#F3E8FF',col:'#7B2D8B',bc:'#DCBAFF'}
+    ];
+    g.innerHTML = data.slice(0, 4).map(function(t, i) {
+      var c = colors[i % colors.length];
+      var initials = (t.name || 'T').split(' ').map(function(n){ return n[0] || ''; }).join('').toUpperCase().slice(0, 2);
+      var avatarInner = t.photo
+        ? '<img src="' + t.photo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">'
+        : initials;
+      var avatarStyle = t.photo ? 'overflow:hidden;background:#E6F4F1' : 'background:' + c.bg + ';color:' + c.col + ';border-color:' + c.bc;
+      var ratingLabel = (t.rating && parseFloat(t.rating) > 0) ? ('&#9733; ' + parseFloat(t.rating).toFixed(1)) : 'New';
+      return '<div class="hc-teacher"><div class="hc-ava" style="' + avatarStyle + '">' + avatarInner + '<div class="vdot"></div></div>' +
+        '<div class="hc-info"><div class="hc-name">' + (t.name || 'Teacher') + '</div><div class="hc-sub">' + (t.subjects || 'Multiple Subjects') + ' - ' + (t.classes || 'All Classes') + '</div></div>' +
+        '<div class="hc-right"><div class="hc-stars">' + ratingLabel + '</div><div class="hc-exp">' + (t.experience || 'Verified') + '</div></div></div>';
+    }).join('');
+  } catch (e) {
+    g.innerHTML = '<div style="padding:16px 0;text-align:center;color:#888;font-size:13px">Could not load teachers.</div>';
+    console.error('Hero teacher preview error:', e);
+  }
 }
 
 
@@ -1701,23 +1702,13 @@ function toggleMenu(){
       </div>
       <div class="hero-card">
         <div class="hc-head"><h3>🎓 Featured Teachers</h3><div class="hc-badge">All Verified</div></div>
-        <div class="hc-teacher"><div class="hc-ava" style="background:#FFF2EA;color:#E8601A;border-color:#FFD4B8">PK<div class="vdot"></div></div><div class="hc-info"><div class="hc-name">Coming Soon</div><div class="hc-sub">Maths & Science · Class 6–10</div></div><div class="hc-right"><div class="hc-stars">★ 4.9</div><div class="hc-exp">5 yrs exp</div></div></div>
-        <div class="hc-teacher"><div class="hc-ava" style="background:#E6F4F1;color:#1D7A6B;border-color:#B2E0D8">RS<div class="vdot"></div></div><div class="hc-info"><div class="hc-name">Verified Teachers</div><div class="hc-sub">English & SST · Class 1–8</div></div><div class="hc-right"><div class="hc-stars">★ 4.8</div><div class="hc-exp">7 yrs exp</div></div></div>
-        <div class="hc-teacher"><div class="hc-ava" style="background:#FFF8E6;color:#8A6516;border-color:#FAE0A0">SK<div class="vdot"></div></div><div class="hc-info"><div class="hc-name">Expert Tutors</div><div class="hc-sub">Hindi & EVS · Class 1–5</div></div><div class="hc-right"><div class="hc-stars">★ 5.0</div><div class="hc-exp">4 yrs exp</div></div></div>
-        <div class="hc-teacher"><div class="hc-ava" style="background:#F3E8FF;color:#7B2D8B;border-color:#DCBAFF">MV<div class="vdot"></div></div><div class="hc-info"><div class="hc-name">All Subjects</div><div class="hc-sub">Physics & Maths · Class 8–10</div></div><div class="hc-right"><div class="hc-stars">★ 4.9</div><div class="hc-exp">6 yrs exp</div></div></div>
+        <div id="hero-tc-list"><div style="padding:20px 0;text-align:center;color:#888;font-size:13px">Loading verified teachers...</div></div>
         <button class="btn btn-orange hc-cta" onclick="go('tutor-form')">Book Free Demo Class 🎯</button>
       </div>
     </div>
   </section>
 
-  <div class="stats-band">
-    <div class="container stats-grid">
-      <div class="stat"><div class="stat-num">50<sup>+</sup></div><div class="stat-label">Verified Teachers</div></div>
-      <div class="stat"><div class="stat-num">500<sup>+</sup></div><div class="stat-label">Happy Students</div></div>
-      <div class="stat"><div class="stat-num">98<sup>%</sup></div><div class="stat-label">Parent Satisfaction</div></div>
-      <div class="stat"><div class="stat-num">5<sup>+</sup></div><div class="stat-label">Cities in Bihar</div></div>
-    </div>
-  </div>
+
 
   <section class="sec">
     <div class="container">
@@ -1766,28 +1757,15 @@ function toggleMenu(){
   <section class="sec">
     <div class="container">
       <div class="center">
-        <div class="sec-eyebrow orange" style="justify-content:center">Parent Reviews</div>
-        <h2 class="sec-title center">What Bihar Families <span>Say About Us</span></h2>
-        <p class="sec-sub center">Real reviews from verified parents across Muzaffarpur, Patna, Darbhanga & more.</p>
+        <div class="sec-eyebrow orange" style="justify-content:center">Why Parents Trust Us</div>
+        <h2 class="sec-title center">Built On <span>Verification, Not Promises</span></h2>
+        <p class="sec-sub center">We're a growing Muzaffarpur platform — here's exactly what we do for every family, no exceptions.</p>
       </div>
       <div class="rv-grid">
-        <div class="rv-card"><div class="rv-quote-mark">"</div><div class="rv-stars">★★★★★</div><p class="rv-text">Mere bete ke Maths marks 52 se 87 ho gaye sirf 3 mahine mein. Teacher bahut patient aur dedicated hain. Best decision tha MentorBridge choose karna!</p><div class="rv-author"><div class="rv-ava" style="background:#FFF2EA;color:#E8601A">SC</div><div><div class="rv-name">Sunita Chaudhary</div><div class="rv-role">Parent · Class 8 · Muzaffarpur</div><div class="rv-verified">Verified Parent</div></div></div></div>
-        <div class="rv-card"><div class="rv-quote-mark">"</div><div class="rv-stars">★★★★★</div><p class="rv-text">Monthly progress report se mujhe pata rehta hai kya padhaya gaya, homework kya mila. Poori transparency hai — kisi bhi consultancy se behtar!</p><div class="rv-author"><div class="rv-ava" style="background:#E6F4F1;color:#1D7A6B">AV</div><div><div class="rv-name">Amit Verma</div><div class="rv-role">Parent · Class 5 · Sitamarhi</div><div class="rv-verified">Verified Parent</div></div></div></div>
-        <div class="rv-card"><div class="rv-quote-mark">"</div><div class="rv-stars">★★★★★</div><p class="rv-text">Teacher replacement request ki aur 2 din mein naya teacher aa gaya. Itna responsive support pehle kabhi nahi mila kisi se. Highly recommended!</p><div class="rv-author"><div class="rv-ava" style="background:#FFF8E6;color:#8A6516">RD</div><div><div class="rv-name">Rekha Devi</div><div class="rv-role">Parent · Class 10 · Darbhanga</div><div class="rv-verified">Verified Parent</div></div></div></div>
-        <div class="rv-card"><div class="rv-quote-mark">"</div><div class="rv-stars">★★★★★</div><p class="rv-text">Meri beti English mein bahut weak thi. Ab uska confidence kaafi badh gaya hai. Spoken English program bhi bahut effective hai!</p><div class="rv-author"><div class="rv-ava" style="background:#E8F5E9;color:#2E7D32">NP</div><div><div class="rv-name">Neha Prasad</div><div class="rv-role">Parent · Class 6 · Muzaffarpur</div><div class="rv-verified">Verified Parent</div></div></div></div>
-        <div class="rv-card"><div class="rv-quote-mark">"</div><div class="rv-stars">★★★★★</div><p class="rv-text">Police verified teachers — yahi sabse badi baat hai. Ghar mein bacche ke saath trusted person aana chahiye. MentorBridge ne yeh ensure kiya.</p><div class="rv-author"><div class="rv-ava" style="background:#F3E8FF;color:#7B2D8B">RK</div><div><div class="rv-name">Rajesh Kumar</div><div class="rv-role">Parent · Class 3 · Patna</div><div class="rv-verified">Verified Parent</div></div></div></div>
-        <div class="rv-card"><div class="rv-quote-mark">"</div><div class="rv-stars">★★★★★</div><p class="rv-text">Demo class bilkul free thi. Teacher ne pehle hi session mein mera beta engage kar liya. 4 mahine ho gaye — progress outstanding hai!</p><div class="rv-author"><div class="rv-ava" style="background:#FFF2EA;color:#E8601A">PS</div><div><div class="rv-name">Pooja Singh</div><div class="rv-role">Parent · Class 4 · Muzaffarpur</div><div class="rv-verified">Verified Parent</div></div></div></div>
-      </div>
-      <div class="rating-wrap">
-        <div class="rating-big"><div class="rating-score">4.9</div><div class="rating-stars-big">★★★★★</div><div class="rating-count">200+ verified reviews</div></div>
-        <div class="rating-bars">
-          <div class="rb-row"><span class="rb-label">5★</span><div class="rb-track"><div class="rb-fill" style="width:88%"></div></div><span class="rb-pct">88%</span></div>
-          <div class="rb-row"><span class="rb-label">4★</span><div class="rb-track"><div class="rb-fill" style="width:9%"></div></div><span class="rb-pct">9%</span></div>
-          <div class="rb-row"><span class="rb-label">3★</span><div class="rb-track"><div class="rb-fill" style="width:2%"></div></div><span class="rb-pct">2%</span></div>
-          <div class="rb-row"><span class="rb-label">2★</span><div class="rb-track"><div class="rb-fill" style="width:1%"></div></div><span class="rb-pct">1%</span></div>
-          <div class="rb-row"><span class="rb-label">1★</span><div class="rb-track"><div class="rb-fill" style="width:0%"></div></div><span class="rb-pct">0%</span></div>
-        </div>
-        <div class="rating-cta"><p>98% parents recommend MentorBridge to other families</p><button class="btn btn-orange btn-sm" onclick="go('tutor-form')">Join Them Today</button></div>
+        <div class="rv-card"><div class="rv-stars" style="font-size:28px">🪪</div><p class="rv-text" style="font-weight:700;color:var(--navy);margin-bottom:6px">Every Teacher ID + Police Verified</p><p class="rv-text" style="font-size:13px">Aadhaar checked, police verification done, and a demo class assessed before any teacher is approved on our platform.</p></div>
+        <div class="rv-card"><div class="rv-stars" style="font-size:28px">📊</div><p class="rv-text" style="font-weight:700;color:var(--navy);margin-bottom:6px">Monthly Progress Reports</p><p class="rv-text" style="font-size:13px">You always know exactly what was taught, homework given, and how your child is improving — every single month.</p></div>
+        <div class="rv-card"><div class="rv-stars" style="font-size:28px">🎯</div><p class="rv-text" style="font-weight:700;color:var(--navy);margin-bottom:6px">First Demo Class — 100% Free</p><p class="rv-text" style="font-size:13px">Meet your teacher and see how they teach before you decide anything. No payment, no commitment.</p></div>
+        <div class="rv-card"><div class="rv-stars" style="font-size:28px">🔁</div><p class="rv-text" style="font-weight:700;color:var(--navy);margin-bottom:6px">Free Teacher Replacement</p><p class="rv-text" style="font-size:13px">Not the right fit? We replace your teacher at no extra cost until you're satisfied.</p></div>
       </div>
     </div>
   </section>
@@ -1923,7 +1901,7 @@ function toggleMenu(){
     </div>
     <div class="founder-box"><div class="f-ava">S</div><div><div class="f-name">Siddharth</div><div class="f-role">Founder, MentorBridge</div><p class="f-bio">I grew up watching families in Muzaffarpur struggle to find a trustworthy tutor. Local consultancies took commission and disappeared. Parents had zero visibility into what was actually being taught. Children fell behind while parents kept searching.<br><br>MentorBridge was built to fix exactly this — bringing structure, accountability, and transparency to home tutoring in Bihar. Every parent deserves to know exactly who is teaching their child, what is being taught, and how their child is growing. Every single month.</p></div></div>
   </div></section>
-  <section class="cta-sec"><div class="container"><h2>Join 500+ Bihar Families</h2><p>Book your child's first free demo class today — no commitment needed.</p><div class="cta-btns"><button class="btn btn-white btn-xl" onclick="go('tutor-form')">Find a Tutor — Free</button><button class="btn btn-glass btn-xl" onclick="go('contact')">Contact Us</button></div></div></section>
+  <section class="cta-sec"><div class="container"><h2>Give Your Child the Attention They Deserve</h2><p>Book your child's first free demo class today — no commitment needed.</p><div class="cta-btns"><button class="btn btn-white btn-xl" onclick="go('tutor-form')">Find a Tutor — Free</button><button class="btn btn-glass btn-xl" onclick="go('contact')">Contact Us</button></div></div></section>
 </div>
 
 <!-- ============ SERVICES ============ -->
@@ -3121,7 +3099,7 @@ function go(id){
   if(id==='teacher-dash') buildScheduleGrid();
   if(id==='parent-dash'){ if(typeof loadParentDash==='function' && window._parentProfileData) loadParentDash(window._parentProfileData); }
   if(id==='teachers') setTimeout(function(){ if(typeof loadTeacherCards==='function') loadTeacherCards(); }, 200);
-  if(id==='home') setTimeout(function(){ if(typeof loadHomeTeacherPreview==='function') loadHomeTeacherPreview(); }, 200);
+  if(id==='home') setTimeout(function(){ if(typeof loadHomeTeacherPreview==='function') loadHomeTeacherPreview(); if(typeof loadHeroTeacherPreview==='function') loadHeroTeacherPreview(); }, 200);
 }
 
 // Handle browser back/forward
