@@ -3,7 +3,6 @@
 **Bihar's home tutoring platform** — connects parents in Muzaffarpur (and across Bihar) with verified home tutors for students from Nursery to Class 10.
 
 🔗 **Live site:** [mentorbridge.info](https://mentorbridge.info)
-🔗 **Admin panel:** [mentorbridge.info/admin.html](https://mentorbridge.info/admin.html)
 
 ---
 
